@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "concurrently \"node server.js\" \"lite-server\"",
+    "start": "node server.js",
     "server": "node server.js",
     "dev": "lite-server"
   },
