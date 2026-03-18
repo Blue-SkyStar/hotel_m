@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script>
+        if (localStorage.getItem("role") !== "student") { window.location.href = "../login.html"; }
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Complaints</title>
+    <link rel="stylesheet" href="../css/bootstrap.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/animate.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="../js/sweetalert.js"></script>
+    <script src="../js/storage.js"></script>
+</head>
+
+<body class="bg-light">
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark shadow-lg fixed-top">
+        <div class="container-fluid">
+            <img src="../img/logo.jpg" class="rounded-circle" width="45">
+            <a class="navbar-brand mx-3 fw-bold">Student Portal</a>
+            <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#menu"><span
+                    class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="menu">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="profileDropdown"
+                            role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa fa-user-circle fs-4 me-2 text-white-50"></i>
+                            <span id="welcomeUser" class="text-white">Student</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2 animate__animated animate__fadeIn"
+                            aria-labelledby="profileDropdown" style="border-radius: 12px;">
+                            <li><a class="dropdown-item py-2" href="student_profile.html"><i
+                                        class="fa fa-user me-2 text-primary"></i> My Profile</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item py-2 text-danger" href="#" onclick="logout()"><i
+                                        class="fa fa-sign-out-alt me-2"></i> Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid" style="margin-top:80px">
+        <div class="row">
+            <div class="col-md-2 bg-dark text-white p-3" style="min-height:100vh">
+                <h5 class="text-center mt-2 mb-3">MENU</h5>
+                <hr>
+                <ul class="nav flex-column">
+                    <li class="nav-item mb-3"><a href="student_dashboard.html" class="nav-link text-white"><i
+                                class="fa fa-home me-2"></i> Dashboard</a></li>
+                    <li class="nav-item mb-3"><a href="student_profile.html" class="nav-link text-white"><i
+                                class="fa fa-user me-2"></i> Profile</a></li>
+                    <li class="nav-item mb-3"><a href="student_room.html" class="nav-link text-white"><i
+                                class="fa fa-bed me-2"></i> My Room</a></li>
+                    <li class="nav-item mb-3"><a href="student_room_details.html" class="nav-link text-white"><i
+                                class="fa fa-building me-2"></i> Room Details</a></li>
+                    <li class="nav-item mb-3"><a href="student_application_status.html" class="nav-link text-white"><i
+                                class="fa fa-file-signature me-2"></i> My Applications</a></li>
+                    <li class="nav-item mb-3"><a href="student_payments.html" class="nav-link text-white"><i
+                                class="fa fa-credit-card me-2"></i> Fees / Payments</a></li>
+                    <li class="nav-item mb-3"><a href="student_complaints.html" class="nav-link text-white active"
+                            style="background:rgba(255,255,255,0.1); border-radius:8px;"><i
+                                class="fa fa-exclamation-circle me-2"></i> Complaints</a></li>
+                    <li class="nav-item mb-3"><a href="student_notices.html" class="nav-link text-white"><i
+                                class="fa fa-bullhorn me-2"></i> Notices</a></li>
+                </ul>
+            </div>
+
+            <div class="col-md-10 p-4">
+                <h2 class="mb-4"><i class="fa fa-exclamation-triangle me-2 text-danger"></i>My Complaints</h2>
+
+                <!-- Submit Complaint Form -->
+                <div class="card shadow border-0 mb-4" style="border-radius:16px;">
+                    <div class="card-header bg-dark text-white py-3 px-4" style="border-radius:16px 16px 0 0;">
+                        <h5 class="mb-0 fw-bold"><i class="fa fa-plus-circle me-2"></i> Submit New Complaint</h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <form id="complaintForm">
+                            <div class="row g-4">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold text-muted small text-uppercase">Room
+                                        Number</label>
+                                    <input type="text" id="cRoom" class="form-control form-control-lg bg-light border-0"
+                                        placeholder="Your room number" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold text-muted small text-uppercase">Complaint
+                                        Type</label>
+                                    <select id="cType" class="form-select form-select-lg bg-light border-0">
+                                        <option>Electricity</option>
+                                        <option>Water</option>
+                                        <option>Cleaning</option>
+                                        <option>Internet</option>
+                                        <option>Other</option>
+                                    </select>
+                                </div>
+                                <div class="col-12">
+                                    <label
+                                        class="form-label fw-bold text-muted small text-uppercase">Description</label>
+                                    <textarea id="cDesc" class="form-control bg-light border-0" rows="3"
+                                        placeholder="Describe the issue in detail..." required></textarea>
+                                </div>
+                            </div>
+                            <hr class="my-4">
+                            <div class="text-end">
+                                <button type="reset" class="btn btn-light px-4 py-2 me-2">Clear</button>
+                                <button type="submit" class="btn btn-danger px-5 py-2 rounded-pill fw-bold shadow-sm"><i
+                                        class="fa fa-paper-plane me-2"></i> Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Complaint History -->
+                <div class="card shadow border-0" style="border-radius:16px; overflow:hidden;">
+                    <div class="card-header bg-dark text-white py-3 px-4">
+                        <h5 class="mb-0 fw-bold"><i class="fa fa-list me-2"></i> My Complaint History</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="ps-4 py-3">ID</th>
+                                    <th class="py-3">Room</th>
+                                    <th class="py-3">Type</th>
+                                    <th class="py-3">Description</th>
+                                    <th class="py-3">Date</th>
+                                    <th class="py-3">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="cBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let username = localStorage.getItem("loggedUser") || "";
+
+        function loadMyComplaints() {
+            let tbody = document.getElementById("cBody");
+            let myComplaints = complaints.filter(c => c.student && c.student.toLowerCase() === username.toLowerCase());
+            tbody.innerHTML = "";
+            if (myComplaints.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted py-4">You have not submitted any complaints yet.</td></tr>';
+                return;
+            }
+            myComplaints.forEach(c => {
+                let statusBadge = c.status === "Resolved"
+                    ? '<span class="badge bg-success bg-opacity-10 text-success border border-success">Resolved</span>'
+                    : '<span class="badge bg-warning bg-opacity-10 text-warning border border-warning">Pending</span>';
+                tbody.innerHTML += `<tr>
+                    <td class="ps-4">${c.id}</td>
+                    <td>${c.room}</td>
+                    <td><span class="badge bg-secondary">${c.type}</span></td>
+                    <td class="text-muted">${c.description}</td>
+                    <td>${c.date}</td>
+                    <td>${statusBadge}</td>
+                </tr>`;
+            });
+        }
+
+        document.getElementById("complaintForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+            let room = document.getElementById("cRoom").value;
+            let type = document.getElementById("cType").value;
+            let desc = document.getElementById("cDesc").value;
+
+            addComplaint(username, room, type, desc);
+
+            Swal.fire({ icon: 'success', title: 'Submitted!', text: 'Your complaint has been registered.' });
+            document.getElementById("complaintForm").reset();
+            loadMyComplaints();
+        });
+
+        window.onload = async function () {
+            await initData(); loadMyComplaints();
+        }
+
+    </script>
+    <script src="../js/bootstrap.js"></script>
+</body>
+
+</html>

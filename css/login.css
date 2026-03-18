@@ -1,0 +1,130 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-container {
+    padding: 20px;
+    width: 100%;
+}
+
+.login-card {
+    background: #ffffff;
+    max-width: 450px;
+    margin: 0 auto;
+    border-radius: 20px;
+    padding: 50px 40px;
+    position: relative;
+    overflow: hidden;
+}
+
+.login-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 8px;
+    background: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%);
+}
+
+.login-header h3 {
+    margin-bottom: 5px;
+    font-size: 26px;
+    color: #2c3e50;
+}
+
+.login-header p {
+    font-size: 14px;
+    margin-bottom: 30px;
+}
+
+/* Custom Input Wrapper for styling icons */
+.input-group-custom {
+    position: relative;
+}
+
+.input-group-custom .icon {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 15px;
+    color: #a0a5b1;
+    font-size: 18px;
+}
+
+.input-group-custom .form-control {
+    padding-left: 45px;
+    height: 55px;
+    border-radius: 12px;
+    border: 1px solid #e1e5ee;
+    background: #f8f9fa;
+    font-size: 15px;
+    color: #495057;
+    transition: all 0.3s ease;
+}
+
+.input-group-custom .form-control:focus {
+    background: #ffffff;
+    border-color: #3a7bd5;
+    box-shadow: 0 0 0 0.25rem rgba(58, 123, 213, 0.25);
+}
+
+.forgot-password {
+    color: #3a7bd5;
+    font-size: 14px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.forgot-password:hover {
+    color: #00d2ff;
+}
+
+.form-check-label {
+    font-size: 14px;
+    user-select: none;
+}
+
+.login-btn {
+    height: 55px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%);
+    border: none;
+    font-weight: 600;
+    font-size: 16px;
+    letter-spacing: 0.5px;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.login-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(58, 123, 213, 0.4);
+}
+
+.login-footer {
+    font-size: 13px;
+}
+
+.login-footer a {
+    color: #3a7bd5;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.login-footer a:hover {
+    text-decoration: underline;
+}

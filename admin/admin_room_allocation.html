@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>
+if(localStorage.getItem("role") !== "admin"){
+    window.location.href = "../login.html";
+}
+</script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Room Allocation Dashboard</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/bootstrap.css">
+    <link rel="stylesheet" href="../css/animate.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- JS -->
+    <script src="../js/sweetalert.js"></script>
+    <script src="../js/storage.js"></script>
+    <script src="../js/bootstrap.js"></script>
+    <style>
+        .status-badge {
+            font-size: 0.85rem;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+        .status-pending { background-color: #fff3cd; color: #856404; }
+        .status-approved { background-color: #d4edda; color: #155724; }
+        .status-allocated { background-color: #cce5ff; color: #004085; }
+        .status-rejected { background-color: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body class="bg-light">
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-md bg-dark shadow-lg fixed-top navbar-dark">
+        <div class="container-fluid">
+
+            <img src="../img/logo.jpg" class="rounded-circle" width="50">
+
+            <a class="navbar-brand mx-3">Hostel Dashboard</a>
+
+            <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="menu">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="admin_manage_students.html">Students</a></li>
+                    <li class="nav-item"><a class="nav-link" href="admin_manage_rooms.html">Rooms</a></li>
+                    <li class="nav-item"><a class="nav-link" href="admin_manage_payments.html">Payments</a></li>
+                    <li class="nav-item"><a class="nav-link" href="admin_manage_complaints.html">Complaints</a></li>
+                    
+                    <li class="nav-item">
+                        <button class="btn btn-outline-light ms-3 me-2 align-self-center mt-1 border-0" onclick="toggleDarkMode()" title="Toggle Dark Mode">
+                            <i class="fa fa-moon"></i>
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="btn btn-sm btn-danger ms-2 px-3 align-self-center mt-1" style="border-radius:20px; font-weight: 500;" onclick="logout()">
+                            <i class="fa fa-sign-out"></i> Logout
+                        </button>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </nav>
+
+    <div class="container-fluid" style="margin-top:90px">
+
+        <div class="row">
+
+            <!-- Sidebar -->
+            <div class="col-md-2 bg-dark text-white vh-100 p-3">
+
+                <h4 class="text-center">MENU</h4>
+                <hr>
+
+                <ul class="nav flex-column">
+
+                    <li class="nav-item mb-3">
+                        <a href="admin_home.html" class="nav-link text-white">
+                            <i class="fa fa-home"></i> Dashboard
+                        </a>
+                    </li>
+
+                    <li class="nav-item mb-3">
+                        <a href="admin_manage_students.html" class="nav-link text-white">
+                            <i class="fa fa-user"></i> Students
+                        </a>
+                    </li>
+                    <li class="nav-item mb-3">
+                        <a href="admin_add_student.html" class="nav-link text-white">
+                            <i class="fa fa-user-plus"></i> Add Student
+                        </a>
+                    </li>
+
+                    <li class="nav-item mb-3">
+                        <a href="admin_manage_rooms.html" class="nav-link text-white">
+                            <i class="fa fa-bed"></i> Rooms
+                        </a>
+                    </li>
+
+                    <li class="nav-item mb-3">
+                        <a href="admin_manage_payments.html" class="nav-link text-white">
+                            <i class="fa fa-money-bill"></i> Payments
+                        </a>
+                    </li>
+
+                    <li class="nav-item mb-3">
+                        <a href="admin_manage_complaints.html" class="nav-link text-white">
+                            <i class="fa fa-exclamation-circle"></i> Complaints
+                        </a>
+                    </li>
+
+                
+                    <li class="nav-item mb-3">
+                        <a href="admin_room_allocation.html" class="nav-link text-white active" style="background:rgba(255,255,255,0.1); border-radius:8px;">
+                            <i class="fa fa-key"></i> Room Allocation
+                        </a>
+                    </li>
+                    <li class="nav-item mb-3">
+                        <a href="admin_reports.html" class="nav-link text-white">
+                            <i class="fa fa-file-invoice"></i> Reports
+                        </a>
+                    </li>
+                    <li class="nav-item mb-3">
+                        <a href="admin_visitor_log.html" class="nav-link text-white">
+                            <i class="fa fa-address-book"></i> Visitor Log
+                        </a>
+                    </li>
+                    <li class="nav-item mb-3">
+                        <a href="admin_profile.html" class="nav-link text-white">
+                            <i class="fa fa-user-shield"></i> Admin Profile
+                        </a>
+                    </li>
+                </ul>
+
+
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-10 p-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2><i class="fa fa-key me-2 text-primary"></i>Room Applications & Allocation</h2>
+                    <div>
+                        <button class="btn btn-outline-secondary" onclick="loadApplications()"><i class="fa fa-sync-alt"></i> Refresh</button>
+                    </div>
+                </div>
+                
+                <div class="card shadow-sm border-0" style="border-radius: 16px;">
+                    <div class="card-header bg-white border-bottom py-3">
+                        <ul class="nav nav-tabs card-header-tabs" id="appTabs">
+                            <li class="nav-item"><a class="nav-link active fw-bold text-dark" href="#" onclick="event.preventDefault(); filterApps('Pending Review', this)">Pending Review</a></li>
+                            <li class="nav-item"><a class="nav-link text-muted" href="#" onclick="event.preventDefault(); filterApps('Approved - Awaiting Payment', this)">Awaiting Payment</a></li>
+                            <li class="nav-item"><a class="nav-link text-muted" href="#" onclick="event.preventDefault(); filterApps('Allocated', this)">Allocated</a></li>
+                            <li class="nav-item"><a class="nav-link text-muted" href="#" onclick="event.preventDefault(); filterApps('Rejected', this)">Rejected</a></li>
+                        </ul>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="table-light text-muted small text-uppercase">
+                                    <tr>
+                                        <th class="ps-4">App ID</th>
+                                        <th>Date</th>
+                                        <th>Student</th>
+                                        <th>Course</th>
+                                        <th>Room</th>
+                                        <th>Price</th>
+                                        <th>Status</th>
+                                        <th class="text-end pe-4">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="appsTableBody">
+                                    <tr><td colspan="8" class="text-center p-5"><div class="spinner-border text-primary" role="status"></div></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Details Modal -->
+    <div class="modal fade" id="appDetailsModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content" style="border-radius: 16px;">
+                <div class="modal-header border-bottom-0 bg-light" style="border-radius: 16px 16px 0 0;">
+                    <h5 class="modal-title fw-bold"><i class="fa fa-file-contract me-2 text-primary"></i> Application Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4" id="modalDetailsContent">
+                    <!-- Loaded dynamically -->
+                </div>
+                <div class="modal-footer border-top-0 d-flex justify-content-between bg-light" style="border-radius: 0 0 16px 16px;" id="modalActions">
+                    <!-- Actions -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JS -->
+    <script>
+        let allApplications = [];
+        let currentFilter = 'Pending Review';
+
+        window.onload = async function(){
+            await initData();
+            await loadApplications();
+        }
+
+        async function loadApplications() {
+            try {
+                const res = await fetch('http://localhost:5000/api/data/applications');
+                allApplications = await res.json();
+                renderTable();
+            } catch(e) {
+                console.error(e);
+            }
+        }
+
+        function filterApps(status, element) {
+            currentFilter = status;
+            document.querySelectorAll('#appTabs .nav-link').forEach(el => {
+                el.classList.remove('active', 'fw-bold', 'text-dark');
+                el.classList.add('text-muted');
+            });
+            element.classList.add('active', 'fw-bold', 'text-dark');
+            element.classList.remove('text-muted');
+            renderTable();
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById("appsTableBody");
+            let filtered = allApplications.filter(a => a.status === currentFilter);
+            
+            if(filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="8" class="text-center p-5 text-muted">No applications found in this category.</td></tr>`;
+                return;
+            }
+
+            let html = '';
+            filtered.sort((a,b)=>b.id-a.id).forEach(app => {
+                let badgeClass = 'status-pending';
+                if(app.status === 'Approved - Awaiting Payment') badgeClass = 'status-approved';
+                if(app.status === 'Allocated') badgeClass = 'status-allocated';
+                if(app.status === 'Rejected') badgeClass = 'status-rejected';
+
+                html += `
+                    <tr>
+                        <td class="ps-4 fw-bold text-muted">#${app.id}</td>
+                        <td>${app.date}</td>
+                        <td>
+                            <div class="fw-bold">${app.studentName}</div>
+                            <div class="small text-muted">${app.phone}</div>
+                        </td>
+                        <td>${app.course}</td>
+                        <td>
+                            <div class="fw-bold">${app.roomNumber}</div>
+                            <div class="small text-muted">${app.roomType}</div>
+                        </td>
+                        <td class="fw-bold">₹${app.totalPrice}</td>
+                        <td><span class="badge ${badgeClass}">${app.status}</span></td>
+                        <td class="text-end pe-4">
+                            <button class="btn btn-sm btn-outline-primary rounded-pill px-3" onclick="viewDetails(${app.id})">Review/View</button>
+                        </td>
+                    </tr>
+                `;
+            });
+            tbody.innerHTML = html;
+        }
+
+        function viewDetails(id) {
+            let app = allApplications.find(a => a.id == id);
+            if(!app) return;
+
+            let badgeClass = 'status-pending';
+            if(app.status === 'Approved - Awaiting Payment') badgeClass = 'status-approved';
+            if(app.status === 'Allocated') badgeClass = 'status-allocated';
+            if(app.status === 'Rejected') badgeClass = 'status-rejected';
+
+            // Build document preview HTML
+            function docPreview(docObj, label) {
+                if (!docObj || !docObj.data) return `<div class="text-muted small fst-italic">Not provided</div>`;
+                if (docObj.data.startsWith('data:image')) {
+                    return `
+                        <div class="mt-1">
+                            <img src="${docObj.data}" alt="${label}" style="max-width:100%; max-height:160px; border-radius:8px; border:1px solid #dee2e6;">
+                            <div class="small text-muted mt-1">${docObj.name}</div>
+                        </div>`;
+                } else {
+                    return `<a href="${docObj.data}" download="${docObj.name}" class="btn btn-sm btn-outline-primary mt-1"><i class="fa fa-download me-1"></i>${docObj.name}</a>`;
+                }
+            }
+
+            let content = `
+                <div class="d-flex justify-content-between mb-4">
+                    <h4 class="fw-bold m-0">Room ${app.roomNumber} - ${app.roomType}</h4>
+                    <span class="badge ${badgeClass} fs-6">${app.status}</span>
+                </div>
+                <div class="row g-4 mb-4">
+                    <div class="col-md-6">
+                        <label class="text-muted small text-uppercase fw-bold">Applicant Name</label>
+                        <div class="fs-5">${app.studentName} (${app.student})</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="text-muted small text-uppercase fw-bold">Course</label>
+                        <div class="fs-5">${app.course}</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="text-muted small text-uppercase fw-bold">Phone</label>
+                        <div class="fs-5">${app.phone}</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="text-muted small text-uppercase fw-bold">Guardian</label>
+                        <div class="fs-5">${app.guardian}</div>
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-6">
+                        <label class="text-muted small text-uppercase fw-bold">ID Proof</label>
+                        ${docPreview(app.idProof, 'ID Proof')}
+                    </div>
+                    <div class="col-6">
+                        <label class="text-muted small text-uppercase fw-bold">Passport Photo</label>
+                        ${docPreview(app.photo, 'Passport Photo')}
+                    </div>
+                </div>
+
+                <div class="p-3 rounded-3 mb-3" style="background:#1a1a2e; color:#fff;">
+                    <div class="row align-items-center">
+                        <div class="col-7">
+                            <label class="text-white-50 small text-uppercase fw-bold d-block mb-1">Included Facilities</label>
+                            <span class="fw-bold text-white">${app.facilities || 'None'}</span>
+                        </div>
+                        <div class="col-5 text-end">
+                            <label class="text-white-50 small text-uppercase fw-bold d-block mb-1">Total Cost / Month</label>
+                            <h3 class="fw-bold mb-0" style="color:#ffd700;">₹${app.totalPrice}</h3>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('modalDetailsContent').innerHTML = content;
+
+            let actionsHtml = `<button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">Close</button>`;
+            
+            if(app.status === 'Pending Review') {
+                actionsHtml += `
+                    <div>
+                        <button class="btn btn-danger rounded-pill px-4 me-2" onclick="updateStatus(${app.id}, 'Rejected')"><i class="fa fa-times me-2"></i> Reject</button>
+                        <button class="btn btn-success rounded-pill px-4" onclick="updateStatus(${app.id}, 'Approved - Awaiting Payment')"><i class="fa fa-check me-2"></i> Approve Request</button>
+                    </div>
+                `;
+            } else if (app.status === 'Approved - Awaiting Payment') {
+                actionsHtml += `<div class="text-muted small fst-italic py-2"><i class="fa fa-info-circle me-1"></i> Waiting for student to complete ₹1000 down payment.</div>`;
+            }
+
+            document.getElementById('modalActions').innerHTML = actionsHtml;
+
+            let modal = new bootstrap.Modal(document.getElementById('appDetailsModal'));
+            modal.show();
+        }
+
+        async function updateStatus(id, newStatus) {
+            let app = allApplications.find(a => a.id == id);
+            app.status = newStatus;
+
+            try {
+                await fetch(`http://localhost:5000/api/data/applications/${id}`, {
+                    method: 'PUT',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(app)
+                });
+                
+                let modal = bootstrap.Modal.getInstance(document.getElementById('appDetailsModal'));
+                modal.hide();
+
+                Swal.fire({
+                    icon: newStatus === 'Rejected' ? 'info' : 'success',
+                    title: 'Application ' + (newStatus === 'Rejected' ? 'Rejected' : 'Approved'),
+                    text: 'The student will see the updated status in their portal.',
+                }).then(() => {
+                    loadApplications(); // refresh table
+                });
+            } catch(e) {
+                console.error(e);
+                Swal.fire('Error', 'Failed to update Application Status', 'error');
+            }
+        }
+
+    </script>
+</body>
+</html>

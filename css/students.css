@@ -1,0 +1,143 @@
+/* Students Page Specific Styles */
+
+/* Search Bar Enhancement */
+.input-group {
+    background: #ffffff;
+    border-radius: 50px;
+    padding: 5px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.input-group:focus-within {
+    box-shadow: 0 6px 20px rgba(58, 123, 213, 0.15);
+    border-color: rgba(58, 123, 213, 0.3);
+}
+
+.input-group-text {
+    border-radius: 50px 0 0 50px !important;
+    padding-left: 20px;
+    background: transparent !important;
+    border: none;
+}
+
+.form-control {
+    border-radius: 0 50px 50px 0 !important;
+    background: transparent;
+    border: none;
+    padding-left: 10px;
+}
+
+.form-control:focus {
+    box-shadow: none;
+    background: transparent;
+}
+
+/* Add Button Enhancement */
+.btn-primary {
+    border-radius: 50px !important;
+    padding: 10px 25px !important;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    box-shadow: 0 6px 15px rgba(58, 123, 213, 0.3);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(58, 123, 213, 0.4);
+}
+
+/* Table Enhancements */
+.card {
+    border-radius: 16px;
+    overflow: hidden;
+    border: none;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.08) !important;
+}
+
+.card-header {
+    background: linear-gradient(135deg, #2b5876 0%, #4e4376 100%) !important;
+    border-bottom: none;
+    padding: 20px 25px !important;
+}
+
+.card-header h5 {
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+table.table th {
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+    padding: 18px 25px;
+    color: #6c757d;
+    background-color: #f8f9fa;
+    border-bottom: 2px solid #e9ecef;
+}
+
+table.table td {
+    padding: 18px 25px;
+    vertical-align: middle;
+    font-size: 0.95rem;
+    color: #495057;
+    border-bottom: 1px solid #f1f3f5;
+}
+
+table.table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+table.table-hover tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+table.table-hover tbody tr:hover {
+    background-color: #f8faff;
+    transform: scale(1.002);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+}
+
+/* Badges / Status */
+.badge {
+    padding: 8px 12px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    border-radius: 6px;
+}
+
+/* Action Buttons */
+.btn-sm {
+    width: 35px;
+    height: 35px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.btn-outline-primary {
+    border-color: rgba(58, 123, 213, 0.3);
+    color: #3a7bd5;
+}
+
+.btn-outline-primary:hover {
+    background-color: rgba(58, 123, 213, 0.1);
+    color: #3a7bd5;
+    border-color: #3a7bd5;
+}
+
+.btn-outline-danger {
+    border-color: rgba(220, 53, 69, 0.3);
+    color: #dc3545;
+}
+
+.btn-outline-danger:hover {
+    background-color: rgba(220, 53, 69, 0.1);
+    color: #dc3545;
+    border-color: #dc3545;
+}

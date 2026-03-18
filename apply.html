@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apply for Room – HostelSphere</title>
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0d6efd;
+            --primary-dark: #0a58ca;
+            --dark: #0f0f1a;
+            --card-bg: #1a1a2e;
+            --accent: #4e9fff;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: var(--dark);
+            color: #e0e0e0;
+            min-height: 100vh;
+        }
+
+        /* ── Navbar ── */
+        .top-nav {
+            background: rgba(10,10,25,0.95);
+            backdrop-filter: blur(10px);
+            padding: 14px 0;
+            position: sticky;
+            top: 0;
+            z-index: 999;
+            border-bottom: 1px solid #1e1e3a;
+        }
+        .top-nav .brand {
+            display: flex; align-items: center; gap: 10px;
+            text-decoration: none; color: #fff;
+            font-weight: 700; font-size: 1.2rem;
+        }
+        .top-nav .brand i { color: var(--primary); font-size: 1.5rem; }
+        .top-nav .brand small { display: block; font-size: 0.65rem; letter-spacing: 1.5px; color: #888; font-weight: 400; }
+
+        /* ── Hero Banner ── */
+        .apply-hero {
+            background: linear-gradient(135deg, #0d1b3e 0%, #0a0a1a 50%, #0d3b2e 100%);
+            padding: 80px 0 60px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .apply-hero::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: radial-gradient(ellipse at 50% 0%, rgba(13,110,253,0.15) 0%, transparent 70%);
+        }
+        .apply-hero h1 { font-size: 2.8rem; font-weight: 800; color: #fff; position: relative; }
+        .apply-hero h1 span { color: var(--accent); }
+        .apply-hero p { font-size: 1.1rem; color: #aaa; max-width: 600px; margin: 16px auto 0; position: relative; }
+
+        /* ── Section titles ── */
+        .section-title {
+            font-size: 1.6rem; font-weight: 700; color: #fff;
+            margin-bottom: 8px;
+        }
+        .section-subtitle { color: #888; font-size: 0.95rem; margin-bottom: 36px; }
+
+        /* ── Steps ── */
+        .steps-section { padding: 70px 0; }
+        .step-card {
+            background: var(--card-bg);
+            border: 1px solid #1e2a4a;
+            border-radius: 16px;
+            padding: 32px 24px;
+            position: relative;
+            transition: border-color 0.3s, transform 0.3s;
+            height: 100%;
+        }
+        .step-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-4px);
+        }
+        .step-num {
+            width: 48px; height: 48px;
+            background: linear-gradient(135deg, var(--primary), #6610f2);
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.1rem; font-weight: 800; color: #fff;
+            margin-bottom: 16px;
+        }
+        .step-card h5 { color: #fff; font-weight: 700; margin-bottom: 8px; }
+        .step-card p { color: #888; font-size: 0.9rem; line-height: 1.7; margin: 0; }
+        .step-connector {
+            display: none;
+        }
+        @media(min-width:768px){
+            .step-connector { display: flex; align-items: center; justify-content: center; }
+            .step-connector i { color: #2a3a5a; font-size: 1.5rem; }
+        }
+
+        /* ── Rules ── */
+        .rules-section {
+            background: linear-gradient(135deg, #0a1020, #0d1e10);
+            padding: 70px 0;
+            border-top: 1px solid #1a2a1a;
+            border-bottom: 1px solid #1a2a1a;
+        }
+        .rules-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+        .rule-item {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid #1e3a1e;
+            border-radius: 12px;
+            padding: 20px 24px;
+            display: flex; align-items: flex-start; gap: 14px;
+            transition: background 0.3s;
+        }
+        .rule-item:hover { background: rgba(13,110,253,0.05); border-color: #1e3a6e; }
+        .rule-icon { color: var(--accent); font-size: 1.2rem; margin-top: 2px; flex-shrink: 0; }
+        .rule-item h6 { color: #ddd; font-weight: 600; margin-bottom: 4px; font-size: 0.95rem; }
+        .rule-item p { color: #777; font-size: 0.85rem; margin: 0; line-height: 1.6; }
+
+        /* ── CTA ── */
+        .cta-section { padding: 70px 0; text-align: center; }
+        .cta-btn {
+            display: inline-flex; align-items: center; gap: 10px;
+            background: linear-gradient(135deg, var(--primary), #6610f2);
+            color: #fff; font-size: 1.1rem; font-weight: 700;
+            padding: 16px 48px; border-radius: 50px;
+            text-decoration: none; border: none; cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 8px 24px rgba(13,110,253,0.35);
+        }
+        .cta-btn:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(13,110,253,0.5); color: #fff; }
+
+        /* ── Help Button (floating) ── */
+        .help-fab {
+            position: fixed; bottom: 32px; right: 32px; z-index: 1000;
+            width: 60px; height: 60px;
+            background: linear-gradient(135deg, #0d6efd, #6610f2);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; color: #fff; font-size: 1.4rem;
+            box-shadow: 0 6px 24px rgba(13,110,253,0.5);
+            transition: transform 0.2s;
+            border: none;
+        }
+        .help-fab:hover { transform: scale(1.1); }
+
+        /* ── Help Modal ── */
+        .help-modal-overlay {
+            display: none;
+            position: fixed; inset: 0; z-index: 2000;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(4px);
+            justify-content: center; align-items: center;
+        }
+        .help-modal-overlay.open { display: flex; }
+        .help-modal {
+            background: #141428;
+            border: 1px solid #2a2a50;
+            border-radius: 20px;
+            width: 100%; max-width: 520px;
+            max-height: 85vh;
+            overflow-y: auto;
+            margin: 16px;
+            animation: slideUp 0.3s ease;
+        }
+        @keyframes slideUp {
+            from { transform: translateY(40px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .help-modal-header {
+            background: linear-gradient(135deg, #0d6efd20, #6610f220);
+            border-bottom: 1px solid #2a2a50;
+            padding: 24px 28px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .help-modal-header h4 { color: #fff; font-weight: 700; margin: 0; }
+        .help-close {
+            background: none; border: none; color: #888; font-size: 1.4rem; cursor: pointer; line-height: 1;
+        }
+        .help-close:hover { color: #fff; }
+        .help-modal-body { padding: 24px 28px; }
+
+        /* Contact cards in modal */
+        .contact-card {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid #2a2a50;
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 12px;
+            display: flex; align-items: center; gap: 14px;
+        }
+        .contact-card i { color: var(--accent); font-size: 1.3rem; flex-shrink: 0; }
+        .contact-card span { font-size: 0.8rem; color: #666; display: block; }
+        .contact-card strong { color: #ddd; font-size: 0.95rem; }
+
+        /* FAQ accordion in modal */
+        .faq-item { border-bottom: 1px solid #2a2a50; }
+        .faq-question {
+            padding: 14px 0;
+            cursor: pointer; display: flex; justify-content: space-between; align-items: center;
+            color: #ccc; font-size: 0.92rem; font-weight: 600;
+            list-style: none;
+        }
+        .faq-question:hover { color: var(--accent); }
+        .faq-answer { color: #888; font-size: 0.88rem; line-height: 1.7; padding-bottom: 14px; display: none; }
+        .faq-item.open .faq-answer { display: block; }
+        .faq-item.open .faq-question { color: var(--accent); }
+        .faq-item.open .faq-arrow { transform: rotate(180deg); }
+        .faq-arrow { transition: transform 0.2s; }
+
+        /* Footer strip */
+        .mini-footer {
+            background: #0a0a15;
+            border-top: 1px solid #1a1a30;
+            padding: 20px 0;
+            text-align: center;
+            color: #444;
+            font-size: 0.82rem;
+        }
+        .mini-footer a { color: #555; text-decoration: none; }
+        .mini-footer a:hover { color: #aaa; }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="top-nav">
+        <div class="container d-flex justify-content-between align-items-center">
+            <a href="home.html" class="brand">
+                <i class="fa fa-building"></i>
+                <div>
+                    HostelSphere
+                    <small>INTELLIGENT HOSTEL MANAGEMENT</small>
+                </div>
+            </a>
+            <a href="login.html" class="btn btn-outline-primary rounded-pill px-4" style="font-size:0.9rem;">
+                <i class="fa fa-user-circle me-2"></i>Student Login
+            </a>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="apply-hero">
+        <div class="container">
+            <div class="d-inline-flex align-items-center gap-2 mb-3" style="background:rgba(13,110,253,0.1);border:1px solid rgba(13,110,253,0.3);border-radius:50px;padding:6px 18px;">
+                <i class="fa fa-door-open" style="color:var(--accent);"></i>
+                <span style="font-size:0.85rem;color:#aaa;">Hostel Room Application</span>
+            </div>
+            <h1>Apply for Your <span>Hostel Room</span></h1>
+            <p>Follow the simple steps below to secure your accommodation. Make sure to read all rules & regulations before proceeding.</p>
+        </div>
+    </section>
+
+    <!-- Step-by-Step Process -->
+    <section class="steps-section">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="section-title">📋 How to Apply — Step by Step</h2>
+                <p class="section-subtitle">Complete these 5 steps to successfully book your hostel room</p>
+            </div>
+
+            <div class="row g-4 align-items-stretch">
+
+                <div class="col-md-2 col-sm-4 col-6 step-connector d-none d-md-flex"></div>
+
+                <div class="col-md col-sm-6">
+                    <div class="step-card">
+                        <div class="step-num">1</div>
+                        <h5>Create Account</h5>
+                        <p>Register with your student ID and valid institutional email address to access the portal.</p>
+                    </div>
+                </div>
+
+                <div class="step-connector d-none d-md-flex col-auto px-0 align-items-center">
+                    <i class="fa fa-chevron-right" style="color:#2a3a5a;font-size:1.2rem;"></i>
+                </div>
+
+                <div class="col-md col-sm-6">
+                    <div class="step-card">
+                        <div class="step-num">2</div>
+                        <h5>Fill Application</h5>
+                        <p>Complete the room application form with your personal details, preferences, and required documents.</p>
+                    </div>
+                </div>
+
+                <div class="step-connector d-none d-md-flex col-auto px-0 align-items-center">
+                    <i class="fa fa-chevron-right" style="color:#2a3a5a;font-size:1.2rem;"></i>
+                </div>
+
+                <div class="col-md col-sm-6">
+                    <div class="step-card">
+                        <div class="step-num">3</div>
+                        <h5>Choose Room Type</h5>
+                        <p>Select your preferred room — Single, Double Sharing, or Triple Sharing — based on availability.</p>
+                    </div>
+                </div>
+
+                <div class="step-connector d-none d-md-flex col-auto px-0 align-items-center">
+                    <i class="fa fa-chevron-right" style="color:#2a3a5a;font-size:1.2rem;"></i>
+                </div>
+
+                <div class="col-md col-sm-6">
+                    <div class="step-card">
+                        <div class="step-num">4</div>
+                        <h5>Pay Registration Fee</h5>
+                        <p>Submit the non-refundable registration fee online via UPI, Net Banking, or Card payment.</p>
+                    </div>
+                </div>
+
+                <div class="step-connector d-none d-md-flex col-auto px-0 align-items-center">
+                    <i class="fa fa-chevron-right" style="color:#2a3a5a;font-size:1.2rem;"></i>
+                </div>
+
+                <div class="col-md col-sm-6">
+                    <div class="step-card">
+                        <div class="step-num">5</div>
+                        <h5>Confirmation</h5>
+                        <p>Receive your room allotment letter via email within 3–5 working days after admin verification.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Rules & Regulations -->
+    <section class="rules-section">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="section-title">📜 Hostel Rules & Regulations</h2>
+                <p class="section-subtitle">All residents must adhere to the following rules. Violations may result in disciplinary action.</p>
+            </div>
+
+            <div class="rules-grid">
+
+                <div class="rule-item">
+                    <i class="fa fa-clock rule-icon"></i>
+                    <div>
+                        <h6>Entry Curfew</h6>
+                        <p>All students must return to the hostel by 10:00 PM. Late entry requires prior written permission from the warden.</p>
+                    </div>
+                </div>
+
+                <div class="rule-item">
+                    <i class="fa fa-ban rule-icon"></i>
+                    <div>
+                        <h6>No Alcohol or Smoking</h6>
+                        <p>Consumption or possession of alcohol, tobacco, or any illegal substances on hostel premises is strictly prohibited.</p>
+                    </div>
+                </div>
+
+                <div class="rule-item">
+                    <i class="fa fa-volume-xmark rule-icon"></i>
+                    <div>
+                        <h6>Noise & Silence Hours</h6>
+                        <p>Maintain silence between 10:00 PM – 6:00 AM. Loud music or noise disturbances are not permitted at any time.</p>
+                    </div>
+                </div>
+
+                <div class="rule-item">
+                    <i class="fa fa-user-xmark rule-icon"></i>
+                    <div>
+                        <h6>No Unauthorized Visitors</h6>
+                        <p>Visitors are only allowed in designated common areas between 10:00 AM and 7:00 PM with valid ID.</p>
+                    </div>
+                </div>
+
+                <div class="rule-item">
+                    <i class="fa fa-broom rule-icon"></i>
+                    <div>
+                        <h6>Room Cleanliness</h6>
+                        <p>Residents must keep their rooms and shared spaces clean. Rooms are subject to weekly inspection by hostel staff.</p>
+                    </div>
+                </div>
+
+                <div class="rule-item">
+                    <i class="fa fa-id-card rule-icon"></i>
+                    <div>
+                        <h6>ID Card Mandatory</h6>
+                        <p>Students must carry their hostel ID card at all times. Lost cards must be reported immediately to the office.</p>
+                    </div>
+                </div>
+
+                <div class="rule-item">
+                    <i class="fa fa-plug rule-icon"></i>
+                    <div>
+                        <h6>Electrical Appliances</h6>
+                        <p>Only approved appliances (laptop, phone charger) are permitted. Hotplates and high-wattage devices are banned.</p>
+                    </div>
+                </div>
+
+                <div class="rule-item">
+                    <i class="fa fa-money-bill rule-icon"></i>
+                    <div>
+                        <h6>Fee Payment Deadline</h6>
+                        <p>Monthly hostel fees must be paid by the 5th of each month. Late payment attracts a penalty of $10 per week.</p>
+                    </div>
+                </div>
+
+                <div class="rule-item">
+                    <i class="fa fa-triangle-exclamation rule-icon"></i>
+                    <div>
+                        <h6>Property Damage</h6>
+                        <p>Any damage to hostel property must be reported and the cost of repairs will be deducted from the security deposit.</p>
+                    </div>
+                </div>
+
+                <div class="rule-item">
+                    <i class="fa fa-right-from-bracket rule-icon"></i>
+                    <div>
+                        <h6>Checkout Notice</h6>
+                        <p>A minimum 15-day written notice is required before vacating the hostel. Security deposit is refunded within 30 days.</p>
+                    </div>
+                </div>
+
+                <div class="rule-item">
+                    <i class="fa fa-fire-extinguisher rule-icon"></i>
+                    <div>
+                        <h6>Fire Safety</h6>
+                        <p>Familiarize yourself with emergency exits and fire assembly points. Tampering with fire equipment is a serious offence.</p>
+                    </div>
+                </div>
+
+                <div class="rule-item">
+                    <i class="fa fa-handshake rule-icon"></i>
+                    <div>
+                        <h6>Respectful Conduct</h6>
+                        <p>Bullying, ragging, discrimination, or harassment of any form will result in immediate expulsion from the hostel.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA to Proceed -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="mb-4">
+                <i class="fa fa-circle-check" style="font-size:3rem;color:#22c55e;"></i>
+            </div>
+            <h2 class="section-title mb-2">Ready to Apply?</h2>
+            <p class="section-subtitle mb-5">By clicking below you confirm that you have read and agree to all the rules & regulations above.</p>
+            <a href="login.html" class="cta-btn">
+                <i class="fa fa-door-open"></i>
+                Proceed to Application Form
+            </a>
+            <p class="mt-4" style="color:#555;font-size:0.85rem;">Already have an account? <a href="login.html" style="color:var(--accent);text-decoration:none;">Login here →</a></p>
+        </div>
+    </section>
+
+    <!-- Mini Footer -->
+    <div class="mini-footer">
+        <div class="container">
+            <span>&copy; 2026 HostelSphere &mdash; Intelligent Hostel Management System. &nbsp;|&nbsp;
+                <a href="home.html">Back to Home</a> &nbsp;|&nbsp;
+                <a href="login.html">Student Login</a>
+            </span>
+        </div>
+    </div>
+
+    <!-- Help FAB Button -->
+    <button class="help-fab" onclick="openHelp()" title="Help & Support" id="helpFab">
+        <i class="fa fa-circle-question"></i>
+    </button>
+
+    <!-- Help Modal -->
+    <div class="help-modal-overlay" id="helpOverlay" onclick="closeHelpOnOverlay(event)">
+        <div class="help-modal">
+            <div class="help-modal-header">
+                <h4><i class="fa fa-headset me-2" style="color:var(--accent);"></i>Help & Support</h4>
+                <button class="help-close" onclick="closeHelp()">&times;</button>
+            </div>
+            <div class="help-modal-body">
+
+                <!-- Contact Cards -->
+                <p style="font-size:0.75rem;letter-spacing:1.5px;color:#555;text-transform:uppercase;margin-bottom:14px;">Contact Us Directly</p>
+
+                <div class="contact-card">
+                    <i class="fa fa-phone"></i>
+                    <div>
+                        <span>Admissions Helpline (24/7)</span>
+                        <strong>+1 (555) 123-4567</strong>
+                    </div>
+                </div>
+
+                <div class="contact-card">
+                    <i class="fa fa-phone"></i>
+                    <div>
+                        <span>Warden Office</span>
+                        <strong>+1 (555) 987-6543</strong>
+                    </div>
+                </div>
+
+                <div class="contact-card">
+                    <i class="fa fa-envelope"></i>
+                    <div>
+                        <span>Email Support</span>
+                        <strong>admissions@hostelsphere.edu</strong>
+                    </div>
+                </div>
+
+                <div class="contact-card">
+                    <i class="fa fa-location-dot"></i>
+                    <div>
+                        <span>Hostel Office</span>
+                        <strong>123 University Road, Education City, CA 90210</strong>
+                    </div>
+                </div>
+
+                <div class="contact-card">
+                    <i class="fa fa-clock"></i>
+                    <div>
+                        <span>Office Hours</span>
+                        <strong>Mon–Sat: 9:00 AM – 6:00 PM</strong>
+                    </div>
+                </div>
+
+                <!-- FAQ -->
+                <p style="font-size:0.75rem;letter-spacing:1.5px;color:#555;text-transform:uppercase;margin:24px 0 14px;">Frequently Asked Questions</p>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        Who is eligible to apply for a hostel room?
+                        <i class="fa fa-chevron-down faq-arrow" style="font-size:0.8rem;color:#555;"></i>
+                    </div>
+                    <div class="faq-answer">Any currently enrolled student with a valid student ID from the partner institution is eligible to apply for hostel accommodation.</div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        How long does the allotment process take?
+                        <i class="fa fa-chevron-down faq-arrow" style="font-size:0.8rem;color:#555;"></i>
+                    </div>
+                    <div class="faq-answer">After submitting a complete application, allotment confirmation is typically issued within 3–5 working days, subject to room availability.</div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        Is the registration fee refundable?
+                        <i class="fa fa-chevron-down faq-arrow" style="font-size:0.8rem;color:#555;"></i>
+                    </div>
+                    <div class="faq-answer">The registration fee is non-refundable. However, the security deposit is fully refundable upon checkout, subject to room condition inspection.</div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        Can I request a specific roommate?
+                        <i class="fa fa-chevron-down faq-arrow" style="font-size:0.8rem;color:#555;"></i>
+                    </div>
+                    <div class="faq-answer">Yes, roommate preferences can be submitted in the application form. We will do our best to accommodate requests based on availability.</div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        What documents are required?
+                        <i class="fa fa-chevron-down faq-arrow" style="font-size:0.8rem;color:#555;"></i>
+                    </div>
+                    <div class="faq-answer">You'll need: valid student ID, admission letter, passport-size photo, parent/guardian contact details, and a medical fitness certificate.</div>
+                </div>
+
+                <div class="faq-item" style="border-bottom:none;">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        How do I track my application status?
+                        <i class="fa fa-chevron-down faq-arrow" style="font-size:0.8rem;color:#555;"></i>
+                    </div>
+                    <div class="faq-answer">Log in to the Student Portal using your credentials. Your application status updates in real-time on your dashboard.</div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="js/bootstrap.bundle.js"></script>
+    <script>
+        function openHelp() {
+            document.getElementById('helpOverlay').classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeHelp() {
+            document.getElementById('helpOverlay').classList.remove('open');
+            document.body.style.overflow = '';
+        }
+        function closeHelpOnOverlay(e) {
+            if (e.target === document.getElementById('helpOverlay')) closeHelp();
+        }
+        function toggleFaq(el) {
+            const item = el.closest('.faq-item');
+            const isOpen = item.classList.contains('open');
+            document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+            if (!isOpen) item.classList.add('open');
+        }
+        // Pulse animation on help fab
+        const fab = document.getElementById('helpFab');
+        setTimeout(() => {
+            fab.style.animation = 'pulse 2s infinite';
+        }, 2000);
+    </script>
+    <style>
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 6px 24px rgba(13,110,253,0.5); }
+            50% { box-shadow: 0 6px 40px rgba(13,110,253,0.85), 0 0 0 12px rgba(13,110,253,0.1); }
+        }
+    </style>
+</body>
+</html>

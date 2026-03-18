@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script>
+        if (localStorage.getItem("role") !== "student") {
+            window.location.href = "../login.html";
+        }
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <link rel="stylesheet" href="../css/bootstrap.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/animate.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="../js/sweetalert.js"></script>
+    <script src="../js/storage.js"></script>
+    <style>
+        .sidebar {
+            min-height: 100vh;
+        }
+
+        .stat-card {
+            border: none;
+            border-radius: 16px;
+            transition: transform 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .welcome-banner {
+            border-radius: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+    </style>
+</head>
+
+<body class="bg-light">
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark shadow-lg fixed-top">
+        <div class="container-fluid">
+            <img src="../img/logo.jpg" class="rounded-circle" width="45">
+            <a class="navbar-brand mx-3 fw-bold">Student Portal</a>
+            <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="menu">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="profileDropdown"
+                            role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa fa-user-circle fs-4 me-2 text-white-50"></i>
+                            <span id="welcomeUser" class="text-white">Student</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2 animate__animated animate__fadeIn"
+                            aria-labelledby="profileDropdown" style="border-radius: 12px;">
+                            <li><a class="dropdown-item py-2" href="student_profile.html"><i
+                                        class="fa fa-user me-2 text-primary"></i> My Profile</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item py-2 text-danger" href="#" onclick="logout()"><i
+                                        class="fa fa-sign-out-alt me-2"></i> Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid" style="margin-top:80px">
+        <div class="row">
+
+            <!-- Sidebar -->
+            <div class="col-md-2 bg-dark text-white sidebar p-3">
+                <h5 class="text-center mt-2 mb-3">MENU</h5>
+                <hr>
+                <ul class="nav flex-column">
+                    <li class="nav-item mb-3">
+                        <a href="student_dashboard.html" class="nav-link text-white active"
+                            style="background:rgba(255,255,255,0.1); border-radius:8px;">
+                            <i class="fa fa-home me-2"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item mb-3">
+                        <a href="student_profile.html" class="nav-link text-white">
+                            <i class="fa fa-user me-2"></i> Profile
+                        </a>
+                    </li>
+                    <li class="nav-item mb-3">
+                        <a href="student_room.html" class="nav-link text-white"><i class="fa fa-bed me-2"></i> My
+                            Room</a>
+                    </li>
+                    <li class="nav-item mb-3"><a href="student_room_details.html" class="nav-link text-white"><i
+                                class="fa fa-building me-2"></i> Room Details</a></li>
+                    <li class="nav-item mb-3"><a href="student_application_status.html" class="nav-link text-white"><i
+                                class="fa fa-file-signature me-2"></i> My Applications</a></li>
+                    <li class="nav-item mb-3">
+                        <a href="student_payments.html" class="nav-link text-white">
+                            <i class="fa fa-credit-card me-2"></i> Fees / Payments
+                        </a>
+                    </li>
+                    <li class="nav-item mb-3">
+                        <a href="student_complaints.html" class="nav-link text-white">
+                            <i class="fa fa-exclamation-circle me-2"></i> Complaints
+                        </a>
+                    </li>
+                    <li class="nav-item mb-3">
+                        <a href="student_notices.html" class="nav-link text-white">
+                            <i class="fa fa-bullhorn me-2"></i> Notices
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-10 p-4">
+
+                <!-- Welcome Banner -->
+                <div class="welcome-banner text-white p-5 mb-4 shadow">
+                    <h2 class="fw-bold mb-2"><i class="fa fa-graduation-cap me-2"></i> Welcome back, <span
+                            id="dashUsername">Student</span>!</h2>
+                    <p class="mb-0 text-white-50 fs-5">Here's your hostel overview at a glance.</p>
+                </div>
+
+                <!-- Stats -->
+                <div class="row g-4 mb-4">
+                    <div class="col-md-3">
+                        <div class="card stat-card bg-primary text-white shadow">
+                            <div class="card-body text-center p-4">
+                                <i class="fa fa-bed fs-1 mb-2 opacity-75"></i>
+                                <h4 class="fw-bold mb-1" id="myRoom">Not Assigned</h4>
+                                <p class="mb-0 text-white-50">My Room</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card stat-card bg-success text-white shadow">
+                            <div class="card-body text-center p-4">
+                                <i class="fa fa-check-circle fs-1 mb-2 opacity-75"></i>
+                                <h4 class="fw-bold mb-1" id="paymentStatus">Pending</h4>
+                                <p class="mb-0 text-white-50">Payment Status</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card stat-card bg-warning text-dark shadow">
+                            <div class="card-body text-center p-4">
+                                <i class="fa fa-comment-dots fs-1 mb-2 opacity-75"></i>
+                                <h4 class="fw-bold mb-1" id="complaintCount">0</h4>
+                                <p class="mb-0">My Complaints</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card stat-card bg-info text-white shadow">
+                            <div class="card-body text-center p-4">
+                                <i class="fa fa-bell fs-1 mb-2 opacity-75"></i>
+                                <h4 class="fw-bold mb-1" id="noticeCount">0</h4>
+                                <p class="mb-0 text-white-50">Notices</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="card shadow border-0 mb-5" style="border-radius:16px;">
+                    <div class="card-header bg-dark text-white py-3 px-4" style="border-radius:16px 16px 0 0;">
+                        <h5 class="mb-0 fw-bold"><i class="fa fa-bolt me-2"></i> Quick Actions</h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <a href="student_complaints.html"
+                                    class="btn btn-outline-danger w-100 py-3 fw-bold rounded-pill"><i
+                                        class="fa fa-plus me-2"></i> Submit Complaint</a>
+                            </div>
+                            <div class="col-md-4">
+                                <a href="student_payments.html"
+                                    class="btn btn-outline-success w-100 py-3 fw-bold rounded-pill"><i
+                                        class="fa fa-receipt me-2"></i> View Payments</a>
+                            </div>
+                            <div class="col-md-4">
+                                <a href="student_profile.html"
+                                    class="btn btn-outline-primary w-100 py-3 fw-bold rounded-pill"><i
+                                        class="fa fa-edit me-2"></i> Update Profile</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Popular Rooms Section -->
+                <div class="mb-5">
+                    <h2 class="mb-4">Popular Rooms</h2>
+                    <div class="row g-4" id="popularRoomsGrid">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <!-- Room Detail View (Hidden by default) -->
+                <div id="roomDetailContainer" class="room-detail-view shadow-lg animate__animated animate__fadeInUp">
+                    <!-- Populated dynamically -->
+                </div>
+
+                <!-- World-Class Facilities Section -->
+                <div class="mb-5 mt-5">
+                    <h2 class="text-center mb-5 fw-bold">World-Class Facilities</h2>
+                    <div class="row g-4" id="facilitiesGrid">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.onload = async function () {
+            await initData();
+            let user = localStorage.getItem("loggedUser") || "Student";
+            document.getElementById("dashUsername").textContent = user;
+            document.getElementById("welcomeUser").textContent = "Hi, " + user;
+
+            let notices = JSON.parse(localStorage.getItem("notices")) || [];
+            document.getElementById("noticeCount").textContent = notices.length;
+
+            let myComplaints = complaints.filter(c => c.student && c.student.toLowerCase() === user.toLowerCase());
+            document.getElementById("complaintCount").textContent = myComplaints.length;
+
+            loadFacilities();
+            loadPopularRooms();
+        }
+
+        function loadFacilities() {
+            const grid = document.getElementById("facilitiesGrid");
+            const facilities = [
+                { title: "High-Speed WiFi", icon: "fa-wifi", desc: "Uninterrupted internet connectivity 24/7 for all your academic needs." },
+                { title: "Laundry Service", icon: "fa-soap", desc: "In-house premium laundry facilities with modern machines." },
+                { title: "24/7 Security", icon: "fa-shield-halved", desc: "CCTV surveillance and biometric access for your safety." },
+                { title: "Mess Facility", icon: "fa-utensils", desc: "Hygienic and nutritious meals prepared daily in clean kitchens." },
+                { title: "Study Rooms", icon: "fa-book-open", desc: "Quiet air-conditioned spaces dedicated to focused reading." },
+                { title: "Gymnasium", icon: "fa-dumbbell", desc: "A fully equipped modern gym to keep you fit and healthy." },
+                { title: "Parking", icon: "fa-car", desc: "Spacious and secure parking designated safely for students." },
+                { title: "Recreation Area", icon: "fa-gamepad", desc: "Indoor game zone with table tennis and pool tables." },
+                { title: "Medical Assistance", icon: "fa-briefcase-medical", desc: "24/7 on-call doctor and first-aid ambulance on premises." }
+            ];
+
+            grid.innerHTML = facilities.map(f => `
+                <div class="col-md-4">
+                    <div class="facility-card shadow-sm">
+                        <i class="fa ${f.icon}"></i>
+                        <h5>${f.title}</h5>
+                        <p>${f.desc}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function loadPopularRooms() {
+            const grid = document.getElementById("popularRoomsGrid");
+            grid.innerHTML = rooms.slice(0, 3).map(room => `
+                <div class="col-md-4 col-sm-6">
+                    <div class="room-card shadow-sm">
+                        <div class="room-img-wrapper">
+                            <span class="room-badge">${room.status}</span>
+                            <div class="wishlist-btn"><i class="fa fa-heart"></i></div>
+                            <img src="${room.image}" alt="Room">
+                        </div>
+                        <div class="room-info">
+                            <h6>${room.type}</h6>
+                            <div class="rating">
+                                <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>
+                                <span>(4.9)</span>
+                            </div>
+                            <div class="room-price">
+                                <span class="price-tag">₹${room.price}</span>
+                                <button class="buy-btn" onclick="showRoomDetail(${room.id})">View Details</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function showRoomDetail(roomId) {
+            const room = rooms.find(r => r.id == roomId);
+            if (!room) return;
+
+            const container = document.getElementById("roomDetailContainer");
+            container.style.display = "block";
+
+            container.innerHTML = `
+                <div class="row">
+                    <div class="col-md-6">
+                        <img src="${room.image}" class="img-fluid rounded-4 mb-3" alt="Room Main" style="width:100%; height:400px; object-fit:cover;">
+                        <div class="d-flex gap-2">
+                            <img src="${room.image}" class="detail-thumb active">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h2 class="fw-bold">${room.type}</h2>
+                        <div class="rating fs-5 mb-3">
+                            <i class="fa fa-star text-warning"></i><i class="fa fa-star text-warning"></i><i class="fa fa-star text-warning"></i><i class="fa fa-star text-warning"></i><i class="fa fa-star text-warning"></i>
+                            <span class="text-muted small">(${room.rating || '4.9'})</span>
+                        </div>
+                        <p class="text-muted mb-4">${room.description || 'Experience comfort and style in our premium student housing.'}</p>
+                        <h3 class="fw-bold mb-4">₹${room.price} <small class="text-muted text-decoration-line-through fs-6">₹${room.oldPrice || room.price + 500}</small></h3>
+                        
+                        <div class="mb-4">
+                            <div class="row text-muted small">
+                                <div class="col-4"><strong>Capacity:</strong> ${room.capacity} Person</div>
+                                <div class="col-4"><strong>Status:</strong> ${room.status}</div>
+                                <div class="col-4"><strong>Number:</strong> ${room.number}</div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <h6 class="fw-bold mb-3">Room Facilities:</h6>
+                            <div class="d-flex flex-wrap gap-2">
+                                ${room.facilities ? room.facilities.map(f => `<span class="badge bg-light text-dark border px-3 py-2 rounded-pill">${f}</span>`).join('') : ''}
+                            </div>
+                        </div>
+
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <button class="btn btn-outline-dark w-100 py-3 rounded-3" onclick="document.getElementById('roomDetailContainer').style.display='none'">Back</button>
+                            </div>
+                            <div class="col-6">
+                                <button class="btn-buy-now" onclick="bookRoom(${room.id})">Book now</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function bookRoom(roomId) {
+            const room = rooms.find(r => r.id == roomId);
+            if (!room) return;
+
+            let params = new URLSearchParams();
+            params.append('roomId', room.id);
+            params.append('total', room.price);
+            params.append('facilities', 'None');
+
+            window.location.href = `student_room_application.html?${params.toString()}`;
+        }
+
+    </script>
+    <script src="../js/bootstrap.js"></script>
+</body>
+
+</html>

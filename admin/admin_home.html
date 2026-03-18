@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>
+if(localStorage.getItem("role") !== "admin"){
+    window.location.href = "../login.html";
+}
+</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hostel Dashboard</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/bootstrap.css">
+    <link rel="stylesheet" href="../css/animate.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- JS -->
+    <script src="../js/sweetalert.js"></script>
+    <script src="../js/storage.js"></script>
+
+
+</head>
+<body class="bg-light">
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-md bg-dark shadow-lg fixed-top navbar-dark">
+        <div class="container-fluid">
+
+            <img src="../img/logo.jpg" class="rounded-circle" width="50">
+
+            <a class="navbar-brand mx-3">Hostel Dashboard</a>
+
+            <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="menu">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="admin_manage_students.html">Students</a></li>
+                    <li class="nav-item"><a class="nav-link" href="admin_manage_rooms.html">Rooms</a></li>
+                    <li class="nav-item"><a class="nav-link" href="admin_manage_payments.html">Payments</a></li>
+                    <li class="nav-item"><a class="nav-link" href="admin_manage_complaints.html">Complaints</a></li>
+                    
+                    <li class="nav-item">
+                        <button class="btn btn-outline-light ms-3 me-2 align-self-center mt-1 border-0" onclick="toggleDarkMode()" title="Toggle Dark Mode">
+                            <i class="fa fa-moon"></i>
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="btn btn-sm btn-danger ms-2 px-3 align-self-center mt-1" style="border-radius:20px; font-weight: 500;" onclick="logout()">
+                            <i class="fa fa-sign-out"></i> Logout
+                        </button>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </nav>
+
+    <div class="container-fluid" style="margin-top:90px">
+
+        <div class="row">
+
+            <!-- Sidebar -->
+            <div class="col-md-2 bg-dark text-white vh-100 p-3">
+
+                <h4 class="text-center">MENU</h4>
+                <hr>
+
+                <ul class="nav flex-column">
+
+                    <li class="nav-item mb-3">
+                        <a href="#" class="nav-link text-white">
+                            <i class="fa fa-home"></i> Dashboard
+                        </a>
+                    </li>
+
+                    <li class="nav-item mb-3">
+                        <a href="admin_manage_students.html" class="nav-link text-white">
+                            <i class="fa fa-user"></i> Students
+                        </a>
+                    </li>
+                    <li class="nav-item mb-3">
+                        <a href="admin_add_student.html" class="nav-link text-white">
+                            <i class="fa fa-user-plus"></i> Add Student
+                        </a>
+                    </li>
+
+                    <li class="nav-item mb-3">
+                        <a href="admin_manage_rooms.html" class="nav-link text-white">
+                            <i class="fa fa-bed"></i> Rooms
+                        </a>
+                    </li>
+
+                    <li class="nav-item mb-3">
+                        <a href="admin_manage_payments.html" class="nav-link text-white">
+                            <i class="fa fa-money-bill"></i> Payments
+                        </a>
+                    </li>
+
+                    <li class="nav-item mb-3">
+                        <a href="admin_manage_complaints.html" class="nav-link text-white">
+                            <i class="fa fa-exclamation-circle"></i> Complaints
+                        </a>
+                    </li>
+
+                
+                    <li class="nav-item mb-3">
+                        <a href="admin_room_allocation.html" class="nav-link text-white">
+                            <i class="fa fa-key"></i> Room Allocation
+                        </a>
+                    </li>
+                    <li class="nav-item mb-3">
+                        <a href="admin_reports.html" class="nav-link text-white">
+                            <i class="fa fa-file-invoice"></i> Reports
+                        </a>
+                    </li>
+                    <li class="nav-item mb-3">
+                        <a href="admin_visitor_log.html" class="nav-link text-white">
+                            <i class="fa fa-address-book"></i> Visitor Log
+                        </a>
+                    </li>
+                    <li class="nav-item mb-3">
+                        <a href="admin_profile.html" class="nav-link text-white">
+                            <i class="fa fa-user-shield"></i> Admin Profile
+                        </a>
+                    </li>
+                </ul>
+
+
+            </div>
+
+            <!-- Main Dashboard -->
+            <div class="col-md-10 p-4">
+
+                <h2 class="mb-4">Dashboard</h2>
+
+                <div class="row">
+
+                    <!-- Students -->
+                    <div class="col-md-3">
+                        <div class="card text-white bg-primary shadow">
+                            <div class="card-body text-center">
+                                <h3><span id="dash_students">0</span></h3>
+                                <p>Total Students</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Rooms -->
+                    <div class="col-md-3">
+                        <div class="card text-white bg-success shadow">
+                            <div class="card-body text-center">
+                                <h3><span id="dash_rooms">0</span></h3>
+                                <p>Total Rooms</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Complaints -->
+                    <div class="col-md-3">
+                        <div class="card text-white bg-warning shadow">
+                            <div class="card-body text-center">
+                                <h3><span id="dash_complaints">0</span></h3>
+                                <p>Complaints</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payments -->
+                    <div class="col-md-3">
+                        <div class="card text-white bg-danger shadow">
+                            <div class="card-body text-center">
+                                <h3>₹<span id="dash_fees">0</span></h3>
+                                <p>Total Fees</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                
+                <!-- Charts Row -->
+                <div class="row mt-5 mb-4">
+                    <div class="col-md-4">
+                        <div class="card shadow border-0 h-100" style="border-radius: 16px;">
+                            <div class="card-header bg-white border-0 pt-4 pb-0">
+                                <h6 class="fw-bold text-muted"><i class="fa fa-chart-pie me-2"></i>Room Occupancy</h6>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="roomChart" height="200"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card shadow border-0 h-100" style="border-radius: 16px;">
+                            <div class="card-header bg-white border-0 pt-4 pb-0">
+                                <h6 class="fw-bold text-muted"><i class="fa fa-chart-line me-2"></i>Payments Collected</h6>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="paymentChart" height="200"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card shadow border-0 h-100" style="border-radius: 16px;">
+                            <div class="card-header bg-white border-0 pt-4 pb-0">
+                                <h6 class="fw-bold text-muted"><i class="fa fa-chart-bar me-2"></i>Complaint Categories</h6>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="complaintChart" height="200"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Table -->
+                <div class="card shadow border-0" style="border-radius: 16px; overflow:hidden;">
+
+                    <div class="card-header bg-dark text-white">
+                        Recent Students
+                    </div>
+
+                    <div class="card-body">
+
+                        <table class="table table-bordered table-hover">
+
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Room</th>
+                                    <th>Course</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="recentStudentsTable">
+                                <!-- Dynamic JS Population -->
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- JS -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../js/index.js"></script>
+    <script>
+        window.onload = async function() {
+            await initData();
+            document.getElementById("dash_students").textContent = students.length;
+            document.getElementById("dash_rooms").textContent = rooms.length;
+            document.getElementById("dash_complaints").textContent = complaints.length;
+            
+            let totalFees = payments.reduce((sum, payment) => sum + Number(payment.amount), 0);
+            document.getElementById("dash_fees").textContent = totalFees;
+
+            let table = document.getElementById("recentStudentsTable");
+            table.innerHTML = "";
+            let recent = [...students].reverse().slice(0, 5);
+            if (recent.length === 0) {
+                table.innerHTML = `<tr><td colspan="5" class="text-center text-muted py-4">No recent students found.</td></tr>`;
+            } else {
+                recent.forEach(student => {
+                    let statusClass = student.status === "Active" ? "bg-success text-success border-success" : "bg-warning text-warning border-warning";
+                    table.innerHTML += `
+                    <tr>
+                        <td>${student.id}</td>
+                        <td class="fw-medium">${student.name}</td>
+                        <td>${student.room}</td>
+                        <td><span class="badge bg-secondary">${student.course}</span></td>
+                        <td><span class="badge bg-opacity-10 border ${statusClass}">${student.status || 'Active'}</span></td>
+                    </tr>`;
+                });
+            }
+            if (typeof renderCharts === 'function') renderCharts();
+        }
+    </script>
+    <script src="../js/bootstrap.js"></script>
+</body>
+</html>

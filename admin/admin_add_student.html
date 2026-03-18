@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<script>
+if(localStorage.getItem("role") !== "admin"){
+    window.location.href = "../login.html";
+}
+</script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Student</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../css/bootstrap.css">
+    <link rel="stylesheet" href="../css/animate.css">
+    <link rel="stylesheet" href="../css/index.css"> <!-- Reusing global dashboard styles -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- JS -->
+    <script src="../js/sweetalert.js"></script>
+    <script src="../js/storage.js"></script>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark shadow-lg fixed-top">
+        <div class="container-fluid">
+            <img src="../img/logo.jpg" width="45" class="rounded-circle border shadow-sm" alt="Logo">
+            <a class="navbar-brand mx-3">Hostel Management</a>
+
+            <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="menu">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="admin_home.html">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="admin_manage_students.html">Students</a></li>
+                    <li class="nav-item"><a class="nav-link" href="admin_manage_rooms.html">Rooms</a></li>
+                    <li class="nav-item"><a class="nav-link" href="admin_manage_complaints.html">Complaints</a></li>
+                    <li class="nav-item">
+                        <button class="btn btn-sm btn-danger ms-2 px-3 align-self-center mt-1" style="border-radius:20px; font-weight:500;" onclick="logout()">
+                            <i class="fa fa-sign-out me-1"></i> Logout
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+    <div class="container-fluid" style="margin-top:90px">
+        <div class="row">
+
+            <!-- Sidebar -->
+            <div class="col-md-2 bg-dark text-white vh-100 p-3">
+                <h4 class="text-center">MENU</h4>
+                <hr>
+
+                <ul class="nav flex-column">
+                    <li class="nav-item mb-3">
+                        <a href="admin_home.html" class="nav-link text-white">
+                            <i class="fa fa-home"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item mb-3">
+                        <a href="admin_manage_students.html" class="nav-link text-white">
+                            <i class="fa fa-user"></i> Students
+                        </a>
+                    </li>
+                    <li class="nav-item mb-3">
+                        <a href="admin_add_student.html" class="nav-link active text-white" style="background-color: rgba(255, 255, 255, 0.1); border-radius: 8px;">
+                            <i class="fa fa-user-plus"></i> Add Student
+                        </a>
+                    </li>
+                    <li class="nav-item mb-3">
+                        <a href="admin_manage_rooms.html" class="nav-link text-white">
+                            <i class="fa fa-bed"></i> Rooms
+                        </a>
+                    </li>
+                    <li class="nav-item mb-3">
+                        <a href="admin_manage_payments.html" class="nav-link text-white">
+                            <i class="fa fa-money-bill"></i> Payments
+                        </a>
+                    </li>
+                    <li class="nav-item mb-3">
+                        <a href="admin_manage_complaints.html" class="nav-link text-white">
+                            <i class="fa fa-exclamation-circle"></i> Complaints
+                        </a>
+                    </li>
+                
+                    <li class="nav-item mb-3">
+                        <a href="admin_room_allocation.html" class="nav-link text-white">
+                            <i class="fa fa-key"></i> Room Allocation
+                        </a>
+                    </li>
+                    <li class="nav-item mb-3">
+                        <a href="admin_reports.html" class="nav-link text-white">
+                            <i class="fa fa-file-invoice"></i> Reports
+                        </a>
+                    </li>
+                    <li class="nav-item mb-3">
+                        <a href="admin_visitor_log.html" class="nav-link text-white">
+                            <i class="fa fa-address-book"></i> Visitor Log
+                        </a>
+                    </li>
+                    <li class="nav-item mb-3">
+                        <a href="admin_profile.html" class="nav-link text-white">
+                            <i class="fa fa-user-shield"></i> Admin Profile
+                        </a>
+                    </li>
+                </ul>
+
+            </div>
+
+
+            <!-- Main Content -->
+            <div class="col-md-10 p-4">
+                <h2 class="mb-4">Add New Student</h2>
+
+                <div class="card shadow animate__animated animate__fadeInUp border-0" style="border-radius: 16px;">
+                    <div class="card-header bg-dark text-white py-3 px-4" style="border-radius: 16px 16px 0 0;">
+                        <h5 class="mb-0 fw-bold"><i class="fa fa-id-card me-2"></i> Student Registration Form</h5>
+                    </div>
+
+                    <div class="card-body p-4">
+                        <form id="addStudentForm">
+                            <div class="row g-4">
+
+                                <!-- Student Name -->
+                                <div class="col-md-6 border-start border-3 border-primary ps-3">
+                                    <label class="form-label text-muted fw-bold small text-uppercase">Student Name</label>
+                                    <input type="text" id="s_name" class="form-control form-control-lg bg-light border-0" placeholder="Enter Student Name" required>
+                                </div>
+
+                                <!-- Email -->
+                                <div class="col-md-6 border-start border-3 border-primary ps-3">
+                                    <label class="form-label text-muted fw-bold small text-uppercase">Email</label>
+                                    <input type="email" id="s_email" class="form-control form-control-lg bg-light border-0" placeholder="Enter Email" required>
+                                </div>
+
+                                <!-- Phone -->
+                                <div class="col-md-6 border-start border-3 border-primary ps-3">
+                                    <label class="form-label text-muted fw-bold small text-uppercase">Phone Number</label>
+                                    <input type="text" id="s_phone" class="form-control form-control-lg bg-light border-0" placeholder="Enter Phone Number" required>
+                                </div>
+
+                                <!-- Course -->
+                                <div class="col-md-6 border-start border-3 border-primary ps-3">
+                                    <label class="form-label text-muted fw-bold small text-uppercase">Course</label>
+                                    <select id="s_course" class="form-select form-select-lg bg-light border-0">
+                                        <option>BSc IT</option>
+                                        <option>BSc CS</option>
+                                        <option>BCom</option>
+                                        <option>BA</option>
+                                    </select>
+                                </div>
+
+                                <!-- Gender -->
+                                <div class="col-md-6 border-start border-3 border-primary ps-3">
+                                    <label class="form-label text-muted fw-bold small text-uppercase">Gender</label>
+                                    <select id="s_gender" class="form-select form-select-lg bg-light border-0">
+                                        <option>Male</option>
+                                        <option>Female</option>
+                                    </select>
+                                </div>
+
+                                <!-- Room Number -->
+                                <div class="col-md-6 border-start border-3 border-primary ps-3">
+                                    <label class="form-label text-muted fw-bold small text-uppercase">Room Number</label>
+                                    <input type="text" id="s_room" class="form-control form-control-lg bg-light border-0" placeholder="Enter Room Number">
+                                </div>
+
+                                <!-- Guardian Name -->
+                                <div class="col-md-6 border-start border-3 border-primary ps-3">
+                                    <label class="form-label text-muted fw-bold small text-uppercase">Guardian Name</label>
+                                    <input type="text" id="s_gname" class="form-control form-control-lg bg-light border-0" placeholder="Enter Guardian Name">
+                                </div>
+
+                                <!-- Guardian Phone -->
+                                <div class="col-md-6 border-start border-3 border-primary ps-3">
+                                    <label class="form-label text-muted fw-bold small text-uppercase">Guardian Phone</label>
+                                    <input type="text" id="s_gphone" class="form-control form-control-lg bg-light border-0" placeholder="Enter Guardian Phone">
+                                </div>
+
+                                <!-- Address -->
+                                <div class="col-md-12 border-start border-3 border-primary ps-3">
+                                    <label class="form-label text-muted fw-bold small text-uppercase">Address</label>
+                                    <textarea id="s_address" class="form-control bg-light border-0" rows="3" placeholder="Enter Full Address"></textarea>
+                                </div>
+
+                            </div>
+
+                            <hr class="my-4 text-muted">
+
+                            <!-- Buttons -->
+                            <div class="text-end">
+                                <button type="reset" class="btn btn-light px-4 py-2 me-2">Cancel</button>
+                                <button type="submit" class="btn btn-primary px-5 py-2" style="background: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%); border: none; font-weight: 600;">
+                                    <i class="fa fa-save me-2"></i> Save Student
+                                </button>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.onload = async function() {
+            await initData();
+        }
+
+        document.getElementById('addStudentForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            let name = document.getElementById('s_name').value;
+            let email = document.getElementById('s_email').value;
+            let phone = document.getElementById('s_phone').value;
+            let course = document.getElementById('s_course').value;
+            let room = document.getElementById('s_room').value;
+            let gender = document.getElementById('s_gender').value;
+            let gname = document.getElementById('s_gname').value;
+            let gphone = document.getElementById('s_gphone').value;
+            let address = document.getElementById('s_address').value;
+            
+            await addStudent(name, email, phone, course, room, gender, gname, gphone, address);
+            
+            Swal.fire({
+                icon: 'success',
+                title: 'Student Saved!',
+                text: 'The student has been successfully registered.',
+                confirmButtonColor: '#3a7bd5'
+            }).then(() => {
+                window.location.href = 'admin_manage_students.html';
+            });
+        });
+    </script>
+    <script src="../js/bootstrap.bundle.js"></script>
+</body>
+</html>

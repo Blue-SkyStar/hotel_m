@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<script>
+if(localStorage.getItem("role") !== "admin"){
+    window.location.href = "../login.html";
+}
+</script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complaints Management</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../css/bootstrap.css">
+    <link rel="stylesheet" href="../css/animate.css">
+    <link rel="stylesheet" href="../css/index.css"> <!-- Reusing global dashboard styles -->
+    <link rel="stylesheet" href="../css/students.css"> <!-- Reusing form and table styles -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- JS -->
+    <script src="../js/sweetalert.js"></script>
+    <script src="../js/storage.js"></script>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark shadow-lg fixed-top">
+        <div class="container-fluid">
+            <img src="../img/logo.jpg" width="45" class="rounded-circle border shadow-sm" alt="Logo">
+            <a class="navbar-brand mx-3">Hostel Management</a>
+
+            <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="menu">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="admin_home.html">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="admin_manage_students.html">Students</a></li>
+                    <li class="nav-item"><a class="nav-link" href="admin_manage_rooms.html">Rooms</a></li>
+                    <li class="nav-item"><a class="nav-link" href="admin_manage_payments.html">Payments</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="admin_manage_complaints.html">Complaints</a></li>
+                    <li class="nav-item">
+                        <button class="btn btn-sm btn-danger ms-2 px-3 align-self-center mt-1" style="border-radius:20px; font-weight:500;" onclick="logout()">
+                            <i class="fa fa-sign-out me-1"></i> Logout
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+    <div class="container-fluid" style="margin-top:90px">
+        <div class="row">
+
+            <!-- Sidebar -->
+            <div class="col-md-2 bg-dark text-white vh-100 p-3">
+                <h4 class="text-center">MENU</h4>
+                <hr>
+
+                <ul class="nav flex-column">
+                    <li class="nav-item mb-3">
+                        <a href="admin_home.html" class="nav-link text-white">
+                            <i class="fa fa-home"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item mb-3">
+                        <a href="admin_manage_students.html" class="nav-link text-white">
+                            <i class="fa fa-user"></i> Students
+                        </a>
+                    </li>
+                    <li class="nav-item mb-3">
+                        <a href="admin_add_student.html" class="nav-link text-white">
+                            <i class="fa fa-user-plus"></i> Add Student
+                        </a>
+                    </li>
+                    <li class="nav-item mb-3">
+                        <a href="admin_manage_rooms.html" class="nav-link text-white">
+                            <i class="fa fa-bed"></i> Rooms
+                        </a>
+                    </li>
+                    <li class="nav-item mb-3">
+                        <a href="admin_manage_payments.html" class="nav-link text-white">
+                            <i class="fa fa-money-bill"></i> Payments
+                        </a>
+                    </li>
+                    <li class="nav-item mb-3">
+                        <a href="admin_manage_complaints.html" class="nav-link active text-white" style="background-color: rgba(255, 255, 255, 0.1); border-radius: 8px;">
+                            <i class="fa fa-exclamation-circle"></i> Complaints
+                        </a>
+                    </li>
+                
+                    <li class="nav-item mb-3">
+                        <a href="admin_room_allocation.html" class="nav-link text-white">
+                            <i class="fa fa-key"></i> Room Allocation
+                        </a>
+                    </li>
+                    <li class="nav-item mb-3">
+                        <a href="admin_reports.html" class="nav-link text-white">
+                            <i class="fa fa-file-invoice"></i> Reports
+                        </a>
+                    </li>
+                    <li class="nav-item mb-3">
+                        <a href="admin_visitor_log.html" class="nav-link text-white">
+                            <i class="fa fa-address-book"></i> Visitor Log
+                        </a>
+                    </li>
+                    <li class="nav-item mb-3">
+                        <a href="admin_profile.html" class="nav-link text-white">
+                            <i class="fa fa-user-shield"></i> Admin Profile
+                        </a>
+                    </li>
+                </ul>
+
+            </div>
+
+
+            <!-- Main Content -->
+            <div class="col-md-10 p-4">
+                <h2 class="mb-4">Complaint Management</h2>
+
+                <!-- Complaint Form -->
+                <div class="card shadow animate__animated animate__fadeInUp border-0 mb-5" style="border-radius: 16px;">
+                    <div class="card-header bg-dark text-white py-3 px-4" style="border-radius: 16px 16px 0 0;">
+                        <h5 class="mb-0 fw-bold"><i class="fa fa-comment-dots me-2"></i> Submit Complaint</h5>
+                    </div>
+
+                    <div class="card-body p-4">
+                        <form id="complaintForm">
+                            <div class="row g-4">
+                                <div class="col-md-6 border-start border-3 border-danger ps-3">
+                                    <label class="form-label text-muted fw-bold small text-uppercase">Student Name</label>
+                                    <input type="text" id="c_student" class="form-control form-control-lg bg-light border-0" placeholder="Enter Student Name" required>
+                                </div>
+
+                                <div class="col-md-6 border-start border-3 border-danger ps-3">
+                                    <label class="form-label text-muted fw-bold small text-uppercase">Room Number</label>
+                                    <input type="text" id="c_room" class="form-control form-control-lg bg-light border-0" placeholder="Enter Room Number" required>
+                                </div>
+
+                                <div class="col-md-12 border-start border-3 border-danger ps-3">
+                                    <label class="form-label text-muted fw-bold small text-uppercase">Complaint Type</label>
+                                    <select id="c_type" class="form-select form-select-lg bg-light border-0">
+                                        <option>Electricity</option>
+                                        <option>Water</option>
+                                        <option>Cleaning</option>
+                                        <option>Internet</option>
+                                        <option>Other</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-12 border-start border-3 border-danger ps-3">
+                                    <label class="form-label text-muted fw-bold small text-uppercase">Complaint Description</label>
+                                    <textarea id="c_desc" class="form-control bg-light border-0" rows="3" placeholder="Describe the issue in detail..." required></textarea>
+                                </div>
+                            </div>
+
+                            <hr class="my-4 text-muted">
+
+                            <div class="text-end">
+                                <button type="reset" class="btn btn-light px-4 py-2 me-2">Clear</button>
+                                <button type="submit" class="btn btn-danger px-5 py-2" style="background: linear-gradient(135deg, #f85032 0%, #e73827 100%); border: none; font-weight: 600;">
+                                    <i class="fa fa-paper-plane me-2"></i> Submit Complaint
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Complaint Table -->
+                <div class="card shadow animate__animated animate__fadeInUp border-0" style="animation-delay: 0.1s; border-radius: 16px; overflow: hidden;">
+                    <div class="card-header bg-dark text-white py-3 px-4 d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0 fw-bold"><i class="fa fa-list-alt me-2"></i> Complaint List</h5>
+                        <div class="input-group" style="width: 250px;">
+                            <span class="input-group-text bg-white border-0"><i class="fa fa-search text-muted"></i></span>
+                            <input type="text" id="searchComplaints" onkeyup="searchTable('searchComplaints', 'complaintsTable')" class="form-control border-0 ps-0" placeholder="Search Complaints..." style="box-shadow: none;">
+                        </div>
+                    </div>
+
+                    <div class="card-body p-0">
+                        <table class="table table-hover mb-0" id="complaintsTable">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="ps-4 py-3">ID</th>
+                                    <th class="py-3">Student</th>
+                                    <th class="py-3">Room</th>
+                                    <th class="py-3">Type</th>
+                                    <th class="py-3">Description</th>
+                                    <th class="py-3">Date</th>
+                                    <th class="py-3">Status</th>
+                                    <th class="pe-4 py-3 text-center">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Data rendered by js -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function loadComplaints() {
+            let table = document.querySelector("#complaintsTable tbody");
+            table.innerHTML = "";
+            
+            if(complaints.length === 0) {
+                table.innerHTML = `<tr><td colspan="8" class="text-center text-muted py-4">No complaints found.</td></tr>`;
+                return;
+            }
+
+            complaints.forEach(complaint => {
+                let badgeClass = "bg-secondary";
+                if(complaint.type === "Water") badgeClass = "bg-info text-dark";
+                if(complaint.type === "Internet") badgeClass = "bg-primary";
+                
+                let statusBadge = '';
+                let disableBtn = '';
+                if(complaint.status === "Resolved") {
+                    statusBadge = '<span class="badge bg-success bg-opacity-10 text-success border border-success">Resolved</span>';
+                    disableBtn = 'disabled';
+                } else {
+                    statusBadge = '<span class="badge bg-warning bg-opacity-10 text-warning border border-warning">Pending</span>';
+                }
+
+                let row = `
+                <tr>
+                    <td class="ps-4">${complaint.id}</td>
+                    <td class="fw-medium text-dark">${complaint.student}</td>
+                    <td>${complaint.room}</td>
+                    <td><span class="badge ${badgeClass}">${complaint.type}</span></td>
+                    <td class="text-muted">${complaint.description}</td>
+                    <td>${complaint.date}</td>
+                    <td>${statusBadge}</td>
+                    <td class="pe-4 text-center">
+                        <button class="btn btn-sm btn-outline-success" onclick="resolveComplaint(${complaint.id})" ${disableBtn}><i class="fa fa-check"></i></button>
+                    </td>
+                </tr>
+                `;
+                table.innerHTML += row;
+            });
+        }
+
+        function resolveComplaint(id) {
+            Swal.fire({
+                title: 'Mark as Resolved?',
+                text: "Have you fixed this complaint?",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#28a745',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, mark resolved!'
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    const success = await updateData('complaints', id, { status: "Resolved" });
+                    if (success) {
+                        loadComplaints();
+                        Swal.fire('Resolved!', 'Complaint status updated.', 'success');
+                    } else {
+                        Swal.fire('Error', 'Could not update complaint.', 'error');
+                    }
+                }
+            })
+        }
+
+        document.getElementById("complaintForm").addEventListener("submit", async function(e) {
+            e.preventDefault();
+            let student = document.getElementById("c_student").value;
+            let room = document.getElementById("c_room").value;
+            let type = document.getElementById("c_type").value;
+            let desc = document.getElementById("c_desc").value;
+            
+            await addComplaint(student, room, type, desc);
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Complaint Submitted!',
+                text: 'We will look into this right away.',
+                confirmButtonColor: '#e73827'
+            });
+
+            document.getElementById("complaintForm").reset();
+            loadComplaints();
+        });
+
+        window.onload = async function() {
+            await initData();
+            loadComplaints();
+        }
+    </script>
+    <script src="../js/bootstrap.bundle.js"></script>
+</body>
+</html>

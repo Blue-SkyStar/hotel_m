@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>
+if(localStorage.getItem("role") !== "student"){ window.location.href = "../login.html"; }
+</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile</title>
+    <link rel="stylesheet" href="../css/bootstrap.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/animate.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="../js/sweetalert.js"></script>
+    <script src="../js/storage.js"></script>
+</head>
+<body class="bg-light">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark shadow-lg fixed-top">
+        <div class="container-fluid">
+            <img src="../img/logo.jpg" class="rounded-circle" width="45">
+            <a class="navbar-brand mx-3 fw-bold">Student Portal</a>
+            <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#menu"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="menu">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa fa-user-circle fs-4 me-2 text-white-50"></i>
+                            <span id="welcomeUser" class="text-white">Student</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2 animate__animated animate__fadeIn" aria-labelledby="profileDropdown" style="border-radius: 12px;">
+                            <li><a class="dropdown-item py-2" href="student_profile.html"><i class="fa fa-user me-2 text-primary"></i> My Profile</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item py-2 text-danger" href="#" onclick="logout()"><i class="fa fa-sign-out-alt me-2"></i> Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid" style="margin-top:80px">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-2 bg-dark text-white p-3" style="min-height:100vh">
+                <h5 class="text-center mt-2 mb-3">MENU</h5><hr>
+                <ul class="nav flex-column">
+                    <li class="nav-item mb-3"><a href="student_dashboard.html" class="nav-link text-white"><i class="fa fa-home me-2"></i> Dashboard</a></li>
+                    <li class="nav-item mb-3"><a href="student_profile.html" class="nav-link text-white active" style="background:rgba(255,255,255,0.1); border-radius:8px;"><i class="fa fa-user me-2"></i> Profile</a></li>
+                    <li class="nav-item mb-3"><a href="student_room.html" class="nav-link text-white"><i class="fa fa-bed me-2"></i> My Room</a></li>
+                    <li class="nav-item mb-3"><a href="student_room_details.html" class="nav-link text-white"><i class="fa fa-building me-2"></i> Room Details</a></li>
+                    <li class="nav-item mb-3"><a href="student_application_status.html" class="nav-link text-white"><i class="fa fa-file-signature me-2"></i> My Applications</a></li>
+                    <li class="nav-item mb-3"><a href="student_payments.html" class="nav-link text-white"><i class="fa fa-credit-card me-2"></i> Fees / Payments</a></li>
+                    <li class="nav-item mb-3"><a href="student_complaints.html" class="nav-link text-white"><i class="fa fa-exclamation-circle me-2"></i> Complaints</a></li>
+                    <li class="nav-item mb-3"><a href="student_notices.html" class="nav-link text-white"><i class="fa fa-bullhorn me-2"></i> Notices</a></li>
+                </ul>
+            </div>
+
+            <!-- Main -->
+            <div class="col-md-10 p-4">
+                <h2 class="mb-4"><i class="fa fa-user-circle me-2 text-primary"></i>My Profile</h2>
+
+                <div class="card shadow border-0" style="border-radius:16px;">
+                    <div class="card-header bg-dark text-white py-3 px-4" style="border-radius:16px 16px 0 0;">
+                        <h5 class="mb-0 fw-bold"><i class="fa fa-id-card me-2"></i> Personal Details</h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <form id="profileForm">
+                            <div class="row g-4">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold text-muted small text-uppercase">Full Name</label>
+                                    <input type="text" id="pName" class="form-control form-control-lg bg-light border-0" placeholder="Your full name" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold text-muted small text-uppercase">Username</label>
+                                    <input type="text" id="pUsername" class="form-control form-control-lg bg-light border-0" readonly>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold text-muted small text-uppercase">Email</label>
+                                    <input type="email" id="pEmail" class="form-control form-control-lg bg-light border-0" readonly>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold text-muted small text-uppercase">Phone Number</label>
+                                    <input type="tel" id="pPhone" class="form-control form-control-lg bg-light border-0" placeholder="Your phone number">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold text-muted small text-uppercase">Course</label>
+                                    <input type="text" id="pCourse" class="form-control form-control-lg bg-light border-0" placeholder="e.g. B.Tech CSE">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold text-muted small text-uppercase">Guardian Name</label>
+                                    <input type="text" id="pGuardian" class="form-control form-control-lg bg-light border-0" placeholder="Parent/Guardian name">
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label fw-bold text-muted small text-uppercase">Address</label>
+                                    <textarea id="pAddress" class="form-control bg-light border-0" rows="2" placeholder="Your home address"></textarea>
+                                </div>
+                            </div>
+                            <hr class="my-4">
+                            <div class="text-end">
+                                <button type="submit" class="btn btn-primary px-5 py-2 rounded-pill fw-bold shadow-sm"><i class="fa fa-save me-2"></i> Save Profile</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.onload = async function(){
+            await initData();
+            let username = localStorage.getItem("loggedUser") || "";
+            let users = JSON.parse(localStorage.getItem("users")) || [];
+            let user = users.find(u => u.username === username);
+
+            document.getElementById("pUsername").value = username;
+            if(user){
+                document.getElementById("pEmail").value = user.email || "";
+                document.getElementById("pName").value = user.fullName || "";
+                document.getElementById("pPhone").value = user.phone || "";
+                document.getElementById("pCourse").value = user.course || "";
+                document.getElementById("pGuardian").value = user.guardian || "";
+                document.getElementById("pAddress").value = user.address || "";
+            }
+        }
+
+        document.getElementById("profileForm").addEventListener("submit", function(e){
+            e.preventDefault();
+            let username = localStorage.getItem("loggedUser");
+            let users = JSON.parse(localStorage.getItem("users")) || [];
+            let idx = users.findIndex(u => u.username === username);
+            if(idx !== -1){
+                users[idx].fullName = document.getElementById("pName").value;
+                users[idx].phone = document.getElementById("pPhone").value;
+                users[idx].course = document.getElementById("pCourse").value;
+                users[idx].guardian = document.getElementById("pGuardian").value;
+                users[idx].address = document.getElementById("pAddress").value;
+                localStorage.setItem("users", JSON.stringify(users));
+                Swal.fire({ icon:'success', title:'Saved!', text:'Profile updated successfully.' });
+            }
+        });
+
+
+    </script>
+    <script src="../js/bootstrap.js"></script>
+</body>
+</html>

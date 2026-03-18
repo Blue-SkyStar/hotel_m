@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script>
+        if (localStorage.getItem("role") !== "student") { window.location.href = "../login.html"; }
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hostel Notices</title>
+    <link rel="stylesheet" href="../css/bootstrap.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/animate.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="../js/sweetalert.js"></script>
+    <script src="../js/storage.js"></script>
+</head>
+
+<body class="bg-light">
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark shadow-lg fixed-top">
+        <div class="container-fluid">
+            <img src="../img/logo.jpg" class="rounded-circle" width="45">
+            <a class="navbar-brand mx-3 fw-bold">Student Portal</a>
+            <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#menu"><span
+                    class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="menu">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="profileDropdown"
+                            role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa fa-user-circle fs-4 me-2 text-white-50"></i>
+                            <span id="welcomeUser" class="text-white">Student</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2 animate__animated animate__fadeIn"
+                            aria-labelledby="profileDropdown" style="border-radius: 12px;">
+                            <li><a class="dropdown-item py-2" href="student_profile.html"><i
+                                        class="fa fa-user me-2 text-primary"></i> My Profile</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item py-2 text-danger" href="#" onclick="logout()"><i
+                                        class="fa fa-sign-out-alt me-2"></i> Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid" style="margin-top:80px">
+        <div class="row">
+            <div class="col-md-2 bg-dark text-white p-3" style="min-height:100vh">
+                <h5 class="text-center mt-2 mb-3">MENU</h5>
+                <hr>
+                <ul class="nav flex-column">
+                    <li class="nav-item mb-3"><a href="student_dashboard.html" class="nav-link text-white"><i
+                                class="fa fa-home me-2"></i> Dashboard</a></li>
+                    <li class="nav-item mb-3"><a href="student_profile.html" class="nav-link text-white"><i
+                                class="fa fa-user me-2"></i> Profile</a></li>
+                    <li class="nav-item mb-3"><a href="student_room.html" class="nav-link text-white"><i
+                                class="fa fa-bed me-2"></i> My Room</a></li>
+                    <li class="nav-item mb-3"><a href="student_room_details.html" class="nav-link text-white"><i
+                                class="fa fa-building me-2"></i> Room Details</a></li>
+                    <li class="nav-item mb-3"><a href="student_application_status.html" class="nav-link text-white"><i
+                                class="fa fa-file-signature me-2"></i> My Applications</a></li>
+                    <li class="nav-item mb-3"><a href="student_payments.html" class="nav-link text-white"><i
+                                class="fa fa-credit-card me-2"></i> Fees / Payments</a></li>
+                    <li class="nav-item mb-3"><a href="student_complaints.html" class="nav-link text-white"><i
+                                class="fa fa-exclamation-circle me-2"></i> Complaints</a></li>
+                    <li class="nav-item mb-3"><a href="student_notices.html" class="nav-link text-white active"
+                            style="background:rgba(255,255,255,0.1); border-radius:8px;"><i
+                                class="fa fa-bullhorn me-2"></i> Notices</a></li>
+                </ul>
+            </div>
+
+            <div class="col-md-10 p-4">
+                <h2 class="mb-4"><i class="fa fa-bullhorn me-2 text-info"></i>Hostel Notices & Announcements</h2>
+
+                <div id="noticeContainer">
+                    <!-- Notices loaded dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.onload = async function () {
+            await initData();
+            let notices = JSON.parse(localStorage.getItem("notices")) || [];
+            let container = document.getElementById("noticeContainer");
+
+            if (notices.length === 0) {
+                container.innerHTML = `
+                    <div class="card shadow border-0 text-center p-5" style="border-radius:16px;">
+                        <i class="fa fa-inbox fs-1 text-muted mb-3"></i>
+                        <h5 class="text-muted">No notices at the moment</h5>
+                        <p class="text-muted">Check back later for announcements from the hostel administration.</p>
+                    </div>`;
+                return;
+            }
+
+            // Show latest first
+            [...notices].reverse().forEach((notice, i) => {
+                let colors = ['primary', 'success', 'info', 'warning', 'danger'];
+                let color = colors[i % colors.length];
+                let icon = 'fa-bell';
+                if (notice.type === 'Important') icon = 'fa-exclamation-triangle';
+                if (notice.type === 'Event') icon = 'fa-calendar';
+                if (notice.type === 'Maintenance') icon = 'fa-wrench';
+
+                container.innerHTML += `
+                <div class="card shadow border-0 border-start border-4 border-${color} mb-3" style="border-radius:16px;">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h5 class="fw-bold mb-1"><i class="fa ${icon} text-${color} me-2"></i>${notice.title || 'Notice'}</h5>
+                                <p class="text-muted mb-2">${notice.message || notice.description || ''}</p>
+                                <small class="text-muted"><i class="fa fa-clock me-1"></i> ${notice.date || '—'}</small>
+                            </div>
+                            <span class="badge bg-${color} bg-opacity-10 text-${color} border border-${color} px-3 py-2">${notice.type || 'General'}</span>
+                        </div>
+                    </div>
+                </div>`;
+            });
+        }
+
+    </script>
+    <script src="../js/bootstrap.js"></script>
+</body>
+
+</html>

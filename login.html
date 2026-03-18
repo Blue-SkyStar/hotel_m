@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hostel Login</title>
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+
+        .login-card {
+            border-radius: 1rem;
+            border: none;
+            overflow: hidden;
+            box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175);
+        }
+
+        .login-header {
+            background: #212529;
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .login-body {
+            padding: 2.5rem;
+            background: white;
+        }
+
+        .form-control,
+        .form-select {
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
+            background-color: #fff;
+        }
+
+        .toggle-link {
+            cursor: pointer;
+            color: #0d6efd;
+            text-decoration: underline;
+        }
+
+        .toggle-link:hover {
+            color: #0a58ca;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row justify-content-center align-items-center vh-100">
+            <div class="col-md-5 col-lg-4">
+
+                <!-- ===== LOGIN FORM ===== -->
+                <div id="loginBox" class="card login-card">
+                    <div class="login-header">
+                        <i class="fa fa-building-user mb-3" style="font-size: 3rem;"></i>
+                        <h4 class="fw-bold mb-0">System Access</h4>
+                        <p class="text-white-50 mb-0 small mt-1">Please login to your account</p>
+                    </div>
+                    <div class="card-body login-body">
+                        <form id="loginForm">
+                            <div class="mb-4">
+                                <label class="fw-bold text-muted small mb-2 text-uppercase">Select Role</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0"><i
+                                            class="fa fa-id-badge text-muted"></i></span>
+                                    <select id="role" class="form-select border-start-0 ps-0 text-dark fw-medium">
+                                        <option value="student">Student</option>
+                                        <option value="warden">Warden</option>
+                                        <option value="admin">Admin</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <label class="fw-bold text-muted small mb-2 text-uppercase">Email Address</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0"><i
+                                            class="fa fa-envelope text-muted"></i></span>
+                                    <input type="email" id="email" class="form-control border-start-0 ps-0"
+                                        placeholder="user@hostel.com" required>
+                                </div>
+                            </div>
+                            <div class="mb-5">
+                                <label class="fw-bold text-muted small mb-2 text-uppercase">Password</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0"><i
+                                            class="fa fa-lock text-muted"></i></span>
+                                    <input type="password" id="password" class="form-control border-start-0 ps-0"
+                                        placeholder="••••••••" required>
+                                </div>
+                            </div>
+                            <button type="submit"
+                                class="btn btn-primary w-100 py-3 rounded-pill shadow-sm fw-bold">Login to Dashboard <i
+                                    class="fa fa-arrow-right ms-2"></i></button>
+                        </form>
+                        <p class="text-center text-muted mt-4 mb-0">Don't have an account? <span
+                                class="toggle-link fw-bold" onclick="showSignup()">Sign Up</span></p>
+                    </div>
+                </div>
+
+                <!-- ===== SIGN UP FORM ===== -->
+                <div id="signupBox" class="card login-card" style="display: none;">
+                    <div class="login-header">
+                        <i class="fa fa-user-plus mb-3" style="font-size: 3rem;"></i>
+                        <h4 class="fw-bold mb-0">Create Account</h4>
+                        <p class="text-white-50 mb-0 small mt-1">Register a new account</p>
+                    </div>
+                    <div class="card-body login-body">
+                        <form id="signupForm">
+                            <div class="mb-4">
+                                <label class="fw-bold text-muted small mb-2 text-uppercase">Username</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0"><i
+                                            class="fa fa-user text-muted"></i></span>
+                                    <input type="text" id="reg_username" class="form-control border-start-0 ps-0"
+                                        placeholder="Choose a unique username" required>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <label class="fw-bold text-muted small mb-2 text-uppercase">Email Address</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0"><i
+                                            class="fa fa-envelope text-muted"></i></span>
+                                    <input type="email" id="reg_email" class="form-control border-start-0 ps-0"
+                                        placeholder="user@hostel.com" required>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <label class="fw-bold text-muted small mb-2 text-uppercase">Password</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0"><i
+                                            class="fa fa-lock text-muted"></i></span>
+                                    <input type="password" id="reg_password" class="form-control border-start-0 ps-0"
+                                        placeholder="••••••••" required>
+                                </div>
+                            </div>
+                            <div class="mb-5">
+                                <label class="fw-bold text-muted small mb-2 text-uppercase">Confirm Password</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0"><i
+                                            class="fa fa-shield text-muted"></i></span>
+                                    <input type="password" id="reg_confirm" class="form-control border-start-0 ps-0"
+                                        placeholder="••••••••" required>
+                                </div>
+                            </div>
+                            <button type="submit"
+                                class="btn btn-success w-100 py-3 rounded-pill shadow-sm fw-bold">Create Account <i
+                                    class="fa fa-check ms-2"></i></button>
+                        </form>
+                        <p class="text-center text-muted mt-4 mb-0">Already have an account? <span
+                                class="toggle-link fw-bold" onclick="showLogin()">Login</span></p>
+                    </div>
+                </div>
+
+                <div class="text-center mt-4">
+                    <a href="publichome.html" class="text-muted text-decoration-none"><i class="fa fa-house me-1"></i>
+                        Back to Homepage</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/bootstrap.bundle.js"></script>
+    <script src="js/sweetalert.js"></script>
+    <script>
+        // Toggle between Login and Signup
+        function showSignup() {
+            document.getElementById('loginBox').style.display = 'none';
+            document.getElementById('signupBox').style.display = 'block';
+        }
+        function showLogin() {
+            document.getElementById('signupBox').style.display = 'none';
+            document.getElementById('loginBox').style.display = 'block';
+        }
+
+        // ===== SIGN UP LOGIC =====
+        document.getElementById("signupForm").addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            let username = document.getElementById("reg_username").value.trim();
+            let email = document.getElementById("reg_email").value.trim();
+            let password = document.getElementById("reg_password").value;
+            let confirm = document.getElementById("reg_confirm").value;
+
+            if (password !== confirm) {
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({ icon: 'error', title: 'Mismatch', text: 'Passwords do not match!' });
+                } else { alert("Passwords do not match!"); }
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:5000/api/auth/signup', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, email, password })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    if (typeof Swal !== 'undefined') {
+                        Swal.fire({ icon: 'success', title: 'Account Created!', text: data.message }).then(() => {
+                            showLogin();
+                        });
+                    } else {
+                        alert(data.message);
+                        showLogin();
+                    }
+                    document.getElementById("signupForm").reset();
+                } else {
+                    if (typeof Swal !== 'undefined') {
+                        Swal.fire({ icon: 'error', title: 'Error', text: data.message });
+                    } else { alert(data.message); }
+                }
+            } catch (err) {
+                console.error("Signup error:", err);
+                alert("Server error. Please try again later.");
+            }
+        });
+    </script>
+    <script src="js/login.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>
+if(localStorage.getItem("role") !== "admin"){
+    window.location.href = "../login.html";
+}
+</script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hostel Dashboard</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/bootstrap.css">
+    <link rel="stylesheet" href="../css/animate.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- JS -->
+    <script src="../js/sweetalert.js"></script>
+    <script src="../js/storage.js"></script>
+
+    <!-- Auth Script -->
+    <script>
+        if(localStorage.getItem("isLoggedIn") !== "true"){
+            window.location.href = "../login.html";
+        }
+    </script>
+</head>
+<body class="bg-light">
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-md bg-dark shadow-lg fixed-top navbar-dark">
+        <div class="container-fluid">
+
+            <img src="../img/logo.jpg" class="rounded-circle" width="50">
+
+            <a class="navbar-brand mx-3">Hostel Dashboard</a>
+
+            <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="menu">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="admin_manage_students.html">Students</a></li>
+                    <li class="nav-item"><a class="nav-link" href="admin_manage_rooms.html">Rooms</a></li>
+                    <li class="nav-item"><a class="nav-link" href="admin_manage_payments.html">Payments</a></li>
+                    <li class="nav-item"><a class="nav-link" href="admin_manage_complaints.html">Complaints</a></li>
+                    
+                    <li class="nav-item">
+                        <button class="btn btn-outline-light ms-3 me-2 align-self-center mt-1 border-0" onclick="toggleDarkMode()" title="Toggle Dark Mode">
+                            <i class="fa fa-moon"></i>
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="btn btn-sm btn-danger ms-2 px-3 align-self-center mt-1" style="border-radius:20px; font-weight: 500;" onclick="logout()">
+                            <i class="fa fa-sign-out"></i> Logout
+                        </button>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </nav>
+
+    <div class="container-fluid" style="margin-top:90px">
+
+        <div class="row">
+
+            <!-- Sidebar -->
+            <div class="col-md-2 bg-dark text-white vh-100 p-3">
+
+                <h4 class="text-center">MENU</h4>
+                <hr>
+
+                <ul class="nav flex-column">
+
+                    <li class="nav-item mb-3">
+                        <a href="#" class="nav-link text-white">
+                            <i class="fa fa-home"></i> Dashboard
+                        </a>
+                    </li>
+
+                    <li class="nav-item mb-3">
+                        <a href="admin_manage_students.html" class="nav-link text-white">
+                            <i class="fa fa-user"></i> Students
+                        </a>
+                    </li>
+                    <li class="nav-item mb-3">
+                        <a href="admin_add_student.html" class="nav-link text-white">
+                            <i class="fa fa-user-plus"></i> Add Student
+                        </a>
+                    </li>
+
+                    <li class="nav-item mb-3">
+                        <a href="admin_manage_rooms.html" class="nav-link text-white">
+                            <i class="fa fa-bed"></i> Rooms
+                        </a>
+                    </li>
+
+                    <li class="nav-item mb-3">
+                        <a href="admin_manage_payments.html" class="nav-link text-white">
+                            <i class="fa fa-money-bill"></i> Payments
+                        </a>
+                    </li>
+
+                    <li class="nav-item mb-3">
+                        <a href="admin_manage_complaints.html" class="nav-link text-white">
+                            <i class="fa fa-exclamation-circle"></i> Complaints
+                        </a>
+                    </li>
+
+                
+                    <li class="nav-item mb-3">
+                        <a href="admin_room_allocation.html" class="nav-link text-white">
+                            <i class="fa fa-key"></i> Room Allocation
+                        </a>
+                    </li>
+                    <li class="nav-item mb-3">
+                        <a href="admin_reports.html" class="nav-link text-white">
+                            <i class="fa fa-file-invoice"></i> Reports
+                        </a>
+                    </li>
+                    <li class="nav-item mb-3">
+                        <a href="admin_visitor_log.html" class="nav-link text-white">
+                            <i class="fa fa-address-book"></i> Visitor Log
+                        </a>
+                    </li>
+                    <li class="nav-item mb-3">
+                        <a href="admin_profile.html" class="nav-link text-white">
+                            <i class="fa fa-user-shield"></i> Admin Profile
+                        </a>
+                    </li>
+                </ul>
+
+
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-10 p-4">
+                <h2 class="mb-4">Admin Profile</h2>
+                <div class="card shadow border-0" style="border-radius: 16px;">
+                    <div class="card-body text-center p-5">
+                        <i class="fa fa-user-shield text-muted mb-3" style="font-size: 4rem;"></i>
+                        <h3 class="text-muted">Under Construction</h3>
+                        <p class="text-muted mb-0">The Admin Profile module is currently being developed.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JS -->
+    <script src="../js/bootstrap.bundle.js"></script>
+</body>
+</html>

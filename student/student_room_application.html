@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>
+if(localStorage.getItem("role") !== "student"){ window.location.href = "../login.html"; }
+</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Room Application</title>
+    <link rel="stylesheet" href="../css/bootstrap.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/animate.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="../js/sweetalert.js"></script>
+    <script src="../js/storage.js"></script>
+</head>
+<body class="bg-light">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark shadow-lg fixed-top">
+        <div class="container-fluid">
+            <img src="../img/logo.jpg" class="rounded-circle" width="45">
+            <a class="navbar-brand mx-3 fw-bold">Student Portal</a>
+            <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#menu"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="menu">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa fa-user-circle fs-4 me-2 text-white-50"></i>
+                            <span id="welcomeUser" class="text-white">Student</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2 animate__animated animate__fadeIn" aria-labelledby="profileDropdown" style="border-radius: 12px;">
+                            <li><a class="dropdown-item py-2" href="student_profile.html"><i class="fa fa-user me-2 text-primary"></i> My Profile</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item py-2 text-danger" href="#" onclick="logout()"><i class="fa fa-sign-out-alt me-2"></i> Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid" style="margin-top:80px">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-2 bg-dark text-white p-3" style="min-height:100vh">
+                <h5 class="text-center mt-2 mb-3">MENU</h5><hr>
+                <ul class="nav flex-column">
+                    <li class="nav-item mb-3"><a href="student_dashboard.html" class="nav-link text-white"><i class="fa fa-home me-2"></i> Dashboard</a></li>
+                    <li class="nav-item mb-3"><a href="student_profile.html" class="nav-link text-white"><i class="fa fa-user me-2"></i> Profile</a></li>
+                    <li class="nav-item mb-3"><a href="student_room.html" class="nav-link text-white"><i class="fa fa-bed me-2"></i> My Room</a></li>
+                    <li class="nav-item mb-3"><a href="student_room_details.html" class="nav-link text-white active" style="background:rgba(255,255,255,0.1); border-radius:8px;"><i class="fa fa-building me-2"></i> Room Details</a></li>
+                    <li class="nav-item mb-3"><a href="student_application_status.html" class="nav-link text-white"><i class="fa fa-file-signature me-2"></i> My Applications</a></li>
+                    <li class="nav-item mb-3"><a href="student_payments.html" class="nav-link text-white"><i class="fa fa-credit-card me-2"></i> Fees / Payments</a></li>
+                    <li class="nav-item mb-3"><a href="student_complaints.html" class="nav-link text-white"><i class="fa fa-exclamation-circle me-2"></i> Complaints</a></li>
+                    <li class="nav-item mb-3"><a href="student_notices.html" class="nav-link text-white"><i class="fa fa-bullhorn me-2"></i> Notices</a></li>
+                </ul>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-10 p-4">
+                <a href="student_room_details.html" class="btn btn-outline-secondary mb-4 rounded-pill px-4"><i class="fa fa-arrow-left me-2"></i> Back to Rooms</a>
+                <h2 class="mb-4"><i class="fa fa-file-contract me-2 text-primary"></i>Room Application Form</h2>
+
+                <div class="card shadow border-0" style="border-radius:16px;">
+                    <div class="card-header bg-dark text-white py-3 px-4" style="border-radius:16px 16px 0 0;">
+                        <h5 class="mb-0 fw-bold">Application Details</h5>
+                    </div>
+                    <div class="card-body p-4 p-md-5">
+
+                        <div class="bg-primary bg-opacity-10 p-4 rounded-4 mb-4 border border-primary border-opacity-25">
+                            <h5 class="fw-bold text-primary mb-3"><i class="fa fa-info-circle me-2"></i> Summary of Selection</h5>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <p class="text-muted small mb-1">Room ID</p>
+                                    <h6 class="fw-bold" id="appRoomId">Loading...</h6>
+                                </div>
+                                <div class="col-md-3">
+                                    <p class="text-muted small mb-1">Room Type</p>
+                                    <h6 class="fw-bold" id="appRoomType">Loading...</h6>
+                                </div>
+                                <div class="col-md-3">
+                                    <p class="text-muted small mb-1">Total Monthly Cost</p>
+                                    <h6 class="fw-bold text-success">₹<span id="appTotal">0</span></h6>
+                                </div>
+                                <div class="col-md-3">
+                                    <p class="text-muted small mb-1">Facilities Included</p>
+                                    <h6 class="fw-bold" id="appFacilities">None</h6>
+                                </div>
+                            </div>
+                        </div>
+
+                        <form id="applicationForm">
+                            <h5 class="fw-bold mb-3 border-bottom pb-2">Personal Information</h5>
+                            <div class="row g-4 mb-4">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold text-muted small text-uppercase">Full Name</label>
+                                    <input type="text" id="appName" class="form-control form-control-lg bg-light border-0" placeholder="e.g. John Doe" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold text-muted small text-uppercase">Course / Major</label>
+                                    <input type="text" id="appCourse" class="form-control form-control-lg bg-light border-0" placeholder="e.g. B.Tech Computer Science" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold text-muted small text-uppercase">Contact Number</label>
+                                    <input type="tel" id="appPhone" class="form-control form-control-lg bg-light border-0" placeholder="e.g. +91 9876543210" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold text-muted small text-uppercase">Parent / Guardian Name</label>
+                                    <input type="text" id="appGuardian" class="form-control form-control-lg bg-light border-0" required>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label fw-bold text-muted small text-uppercase">Permanent Address</label>
+                                    <textarea id="appAddress" class="form-control bg-light border-0" rows="2" required></textarea>
+                                </div>
+                            </div>
+
+                            <h5 class="fw-bold mb-3 border-bottom pb-2 mt-5">Document Uploads</h5>
+                            <div class="row g-4 mb-5">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold text-muted small text-uppercase">Government ID Proof (Aadhar/Passport)</label>
+                                    <input class="form-control form-control-lg" type="file" id="appIdProof" required>
+                                    <small class="text-muted mt-1 d-block">Max file size: 5MB (JPG/PNG/PDF)</small>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold text-muted small text-uppercase">Recent Passport Size Photo</label>
+                                    <input class="form-control form-control-lg" type="file" id="appPhoto" required>
+                                    <small class="text-muted mt-1 d-block">Max file size: 2MB (JPG/PNG)</small>
+                                </div>
+                            </div>
+
+                            <hr class="mb-4">
+
+                            <div class="form-check mb-4">
+                                <input class="form-check-input" type="checkbox" value="" id="termCheck" required>
+                                <label class="form-check-label text-muted" for="termCheck">
+                                    I agree to the Hostel Rules & Regulations and confirm that all information provided is accurate. I understand that my allocation is subject to admin approval and a ₹1000 down payment.
+                                </label>
+                            </div>
+
+                            <div class="text-end">
+                                <button type="submit" id="submitBtn" class="btn btn-primary px-5 py-3 rounded-pill fw-bold shadow-sm" style="font-size:1.1rem;"><i class="fa fa-paper-plane me-2"></i> Submit Application</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentUserId = localStorage.getItem("loggedUser") || "Student";
+        let roomIdParam, totalParam, facilitiesParam, roomObj;
+
+        window.onload = async function(){
+            await initData();
+            document.getElementById("welcomeUser").textContent = "Hi, " + currentUserId;
+            
+            // Auto fill known user details
+            let users = JSON.parse(localStorage.getItem("users")) || [];
+            let user = users.find(u => u.username === currentUserId);
+            if(user){
+                document.getElementById("appName").value = user.fullName || "";
+                document.getElementById("appPhone").value = user.phone || "";
+                document.getElementById("appCourse").value = user.course || "";
+                document.getElementById("appGuardian").value = user.guardian || "";
+                document.getElementById("appAddress").value = user.address || "";
+            }
+
+            // Read URL Params
+            const params = new URLSearchParams(window.location.search);
+            roomIdParam = params.get('roomId');
+            totalParam = params.get('total');
+            facilitiesParam = params.get('facilities');
+
+            if(!roomIdParam) {
+                Swal.fire({icon: 'error', title:'Error', text: 'No room selected. Redirecting to Room Details.'}).then(()=>{
+                    window.location.href = 'student_room_details.html';
+                });
+                return;
+            }
+
+            roomObj = rooms.find(r => r.id == roomIdParam);
+            if(roomObj){
+                document.getElementById("appRoomId").textContent = roomObj.number;
+                document.getElementById("appRoomType").textContent = roomObj.type;
+            }
+            document.getElementById("appTotal").textContent = totalParam || "0";
+            document.getElementById("appFacilities").textContent = facilitiesParam || "None";
+        }
+
+        // Helper: convert file to base64 (max 4MB, otherwise store name only)
+        function fileToBase64(file) {
+            return new Promise((resolve) => {
+                if (!file) { resolve(null); return; }
+                if (file.size > 4 * 1024 * 1024) {
+                    // File too large — store only the name
+                    resolve({ name: file.name, data: null, tooBig: true });
+                    return;
+                }
+                let reader = new FileReader();
+                reader.onload = e => resolve({ name: file.name, data: e.target.result });
+                reader.onerror = () => resolve({ name: file.name, data: null });
+                reader.readAsDataURL(file);
+            });
+        }
+
+        document.getElementById("applicationForm").addEventListener('submit', async function(e){
+            e.preventDefault();
+            
+            const btn = document.getElementById("submitBtn");
+            btn.innerHTML = `<i class="fa fa-spinner fa-spin me-2"></i> Submitting...`;
+            btn.disabled = true;
+
+            // Convert uploaded files to base64
+            const idProofFile = document.getElementById("appIdProof").files[0];
+            const photoFile = document.getElementById("appPhoto").files[0];
+            const [idProofData, photoData] = await Promise.all([
+                fileToBase64(idProofFile),
+                fileToBase64(photoFile)
+            ]);
+
+            const applicationData = {
+                student: currentUserId,
+                studentName: document.getElementById("appName").value,
+                course: document.getElementById("appCourse").value,
+                phone: document.getElementById("appPhone").value,
+                guardian: document.getElementById("appGuardian").value,
+                roomId: roomObj ? roomObj.id : roomIdParam,
+                roomNumber: roomObj ? roomObj.number : "",
+                roomType: roomObj ? roomObj.type : "",
+                totalPrice: totalParam,
+                facilities: facilitiesParam,
+                status: "Pending Review",
+                date: new Date().toLocaleDateString(),
+                idProof: idProofData,
+                photo: photoData
+            };
+
+            try {
+                const res = await fetch('http://localhost:5000/api/data/applications', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(applicationData)
+                });
+                const data = await res.json();
+
+                if(data.success){
+                    btn.innerHTML = `<i class="fa fa-check me-2"></i> Submitted ✔️`;
+                    btn.className = "btn btn-success btn-lg px-5 rounded-pill shadow-sm py-3 fw-bold";
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Application Submitted!',
+                        text: 'Your application has been sent to the Admin for review.',
+                        confirmButtonColor: '#00d2ff'
+                    }).then(() => {
+                        window.location.href = 'student_application_status.html';
+                    });
+                } else {
+                    throw new Error(data.message || 'Server returned failure');
+                }
+            } catch(err) {
+                console.error(err);
+                Swal.fire('Error', 'Failed to submit application: ' + err.message, 'error');
+                btn.innerHTML = `<i class="fa fa-paper-plane me-2"></i> Submit Application`;
+                btn.disabled = false;
+            }
+        });
+
+    </script>
+    <script src="../js/bootstrap.js"></script>
+</body>
+</html>
