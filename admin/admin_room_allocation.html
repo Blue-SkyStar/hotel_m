@@ -20,7 +20,7 @@ if(localStorage.getItem("role") !== "admin"){
     <!-- JS -->
     <script src="../js/sweetalert.js"></script>
     <script src="../js/storage.js"></script>
-    <script src="../js/bootstrap.js"></script>
+    <script src="../js/bootstrap.bundle.js"></script>
     <style>
         .status-badge {
             font-size: 0.85rem;
@@ -219,7 +219,7 @@ if(localStorage.getItem("role") !== "admin"){
 
         async function loadApplications() {
             try {
-                const res = await fetch('http://localhost:5000/api/data/applications');
+                const res = await fetch('http://localhost:3000/api/data/applications');
                 allApplications = await res.json();
                 renderTable();
             } catch(e) {
@@ -375,7 +375,7 @@ if(localStorage.getItem("role") !== "admin"){
             app.status = newStatus;
 
             try {
-                await fetch(`http://localhost:5000/api/data/applications/${id}`, {
+                await fetch(`http://localhost:3000/api/data/applications/${id}`, {
                     method: 'PUT',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify(app)

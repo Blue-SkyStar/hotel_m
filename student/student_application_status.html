@@ -416,7 +416,7 @@
 
         async function loadApplications() {
             try {
-                const res = await fetch('http://localhost:5000/api/data/applications');
+                const res = await fetch('http://localhost:3000/api/data/applications');
                 const allApps = await res.json();
 
                 // Filter by current student
@@ -592,7 +592,7 @@
 
             try {
                 // Step 1: Create Razorpay order on our backend
-                const orderRes = await fetch('http://localhost:5000/api/razorpay/create-order', {
+                const orderRes = await fetch('http://localhost:3000/api/razorpay/create-order', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ amount: 1000, receipt: 'rcpt_' + app.id })
@@ -647,7 +647,7 @@
                     handler: async function(response) {
                         // Step 3: Verify payment on backend
                         try {
-                            const verifyRes = await fetch('http://localhost:5000/api/razorpay/verify', {
+                            const verifyRes = await fetch('http://localhost:3000/api/razorpay/verify', {
                                 method: 'POST',
                                 headers: { 'Content-Type': 'application/json' },
                                 body: JSON.stringify({
@@ -697,14 +697,14 @@
             try {
                 // 1. Update application status → Allocated
                 app.status = "Allocated";
-                await fetch(`http://localhost:5000/api/data/applications/${app.id}`, {
+                await fetch(`http://localhost:3000/api/data/applications/${app.id}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(app)
                 });
 
                 // 2. Record payment
-                await fetch(`http://localhost:5000/api/data/payments`, {
+                await fetch(`http://localhost:3000/api/data/payments`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -722,18 +722,18 @@
                 });
 
                 // 3. Update student record
-                const studentListRes = await fetch('http://localhost:5000/api/data/students');
+                const studentListRes = await fetch('http://localhost:3000/api/data/students');
                 const studentsList = await studentListRes.json();
                 let myStudentRec = studentsList.find(s => s.name === currentUserId || s.email === app.studentName);
                 if (myStudentRec) {
                     myStudentRec.room = app.roomNumber;
-                    await fetch(`http://localhost:5000/api/data/students/${myStudentRec.id}`, {
+                    await fetch(`http://localhost:3000/api/data/students/${myStudentRec.id}`, {
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(myStudentRec)
                     });
                 } else {
-                    await fetch(`http://localhost:5000/api/data/students`, {
+                    await fetch(`http://localhost:3000/api/data/students`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
@@ -755,7 +755,7 @@
                 if (roomObj) {
                     roomObj.occupied = (roomObj.occupied || 0) + 1;
                     if (roomObj.occupied >= roomObj.capacity) roomObj.status = 'Occupied';
-                    await fetch(`http://localhost:5000/api/data/rooms/${roomObj.id}`, {
+                    await fetch(`http://localhost:3000/api/data/rooms/${roomObj.id}`, {
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(roomObj)
@@ -777,7 +777,7 @@
     </script>
     <!-- Razorpay Official Checkout SDK -->
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-    <script src="../js/bootstrap.js"></script>
+    <script src="../js/bootstrap.bundle.js"></script>
 </body>
 
 </html>
