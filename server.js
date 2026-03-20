@@ -170,7 +170,11 @@ app.delete('/api/data/:key/:id', async (req, res) => {
     res.status(404).json({ success: false, message: 'Item not found' });
 });
 
-app.listen(PORT, () => {
-    console.log(`\n🚀 HostelSphere Server running at http://localhost:${PORT}`);
-    console.log(`   Payment mode: ${RAZORPAY_LIVE ? '✅ LIVE Razorpay' : '🧪 DEMO (add keys in .env to go live)'}\n`);
-});
+if (require.main === module) {
+    app.listen(PORT, () => {
+        console.log(`\n🚀 HostelSphere Server running at http://localhost:${PORT}`);
+        console.log(`   Payment mode: ${RAZORPAY_LIVE ? '✅ LIVE Razorpay' : '🧪 DEMO (add keys in .env to go live)'}\n`);
+    });
+}
+
+module.exports = app;
