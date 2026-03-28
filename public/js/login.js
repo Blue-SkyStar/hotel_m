@@ -19,6 +19,7 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
         const data = await response.json();
 
         if (data.success) {
+            localStorage.setItem("isLoggedIn", "true");
             localStorage.setItem("role", data.user.role);
             localStorage.setItem("loggedUser", data.user.username);
             

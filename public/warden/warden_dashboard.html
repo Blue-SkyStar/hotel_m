@@ -4,12 +4,13 @@
 <head>
     <script>
         if (localStorage.getItem('role') !== 'warden') {
-            window.location.href = 'login.html';
+            window.location.href = '../login.html';
         }
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hostel Dashboard</title>
+    <link rel="icon" href="../img/logo/logo.png">
 
     <!-- CSS -->
     <link rel="stylesheet" href="../css/index.css">
@@ -35,7 +36,7 @@
     <nav class="navbar navbar-expand-md bg-dark shadow-lg fixed-top navbar-dark">
         <div class="container-fluid">
 
-            <img src="../img/logo.jpg" class="rounded-circle" width="50">
+            <img src="../img/logo/logo.png" class="rounded-circle" width="50">
 
             <a class="navbar-brand mx-3">Hostel Dashboard</a>
 
@@ -45,10 +46,9 @@
 
             <div class="collapse navbar-collapse" id="menu">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="admin_manage_students.html">Students</a></li>
-                    <li class="nav-item"><a class="nav-link" href="admin_manage_rooms.html">Rooms</a></li>
-                    <li class="nav-item"><a class="nav-link" href="admin_manage_payments.html">Payments</a></li>
-                    <li class="nav-item"><a class="nav-link" href="admin_manage_complaints.html">Complaints</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../admin/admin_manage_students.html">Students</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../admin/admin_manage_rooms.html">Rooms</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../admin/admin_manage_complaints.html">Complaints</a></li>
 
                     <li class="nav-item">
                         <button class="btn btn-outline-light ms-3 me-2 align-self-center mt-1 border-0"
@@ -87,56 +87,40 @@
                     </li>
 
                     <li class="nav-item mb-3">
-                        <a href="admin_manage_students.html" class="nav-link text-white">
+                        <a href="../admin/admin_manage_students.html" class="nav-link text-white">
                             <i class="fa fa-user"></i> Students
                         </a>
                     </li>
                     <li class="nav-item mb-3">
-                        <a href="admin_add_student.html" class="nav-link text-white">
+                        <a href="../admin/admin_add_student.html" class="nav-link text-white">
                             <i class="fa fa-user-plus"></i> Add Student
                         </a>
                     </li>
 
                     <li class="nav-item mb-3">
-                        <a href="admin_manage_rooms.html" class="nav-link text-white">
+                        <a href="../admin/admin_manage_rooms.html" class="nav-link text-white">
                             <i class="fa fa-bed"></i> Rooms
                         </a>
                     </li>
 
                     <li class="nav-item mb-3">
-                        <a href="admin_manage_payments.html" class="nav-link text-white">
-                            <i class="fa fa-money-bill"></i> Payments
-                        </a>
-                    </li>
-
-                    <li class="nav-item mb-3">
-                        <a href="admin_manage_complaints.html" class="nav-link text-white">
+                        <a href="../admin/admin_manage_complaints.html" class="nav-link text-white">
                             <i class="fa fa-exclamation-circle"></i> Complaints
                         </a>
                     </li>
 
 
                     <li class="nav-item mb-3">
-                        <a href="admin_room_allocation.html" class="nav-link text-white">
+                        <a href="../admin/admin_room_allocation.html" class="nav-link text-white">
                             <i class="fa fa-key"></i> Room Allocation
                         </a>
                     </li>
                     <li class="nav-item mb-3">
-                        <a href="admin_reports.html" class="nav-link text-white">
-                            <i class="fa fa-file-invoice"></i> Reports
-                        </a>
-                    </li>
-                    <li class="nav-item mb-3">
-                        <a href="admin_visitor_log.html" class="nav-link text-white">
+                        <a href="../admin/admin_visitor_log.html" class="nav-link text-white">
                             <i class="fa fa-address-book"></i> Visitor Log
                         </a>
                     </li>
-                    <li class="nav-item mb-3">
-                        <a href="admin_profile.html" class="nav-link text-white">
-                            <i class="fa fa-user-shield"></i> Admin Profile
-                        </a>
-                    </li>
-                </ul>
+                    </ul>
 
 
             </div>

@@ -187,6 +187,16 @@ function updateDashboardStats() {
     }
 }
 
+// Refresh dashboard helper
+function refreshDashboard() {
+    // Re-fetch all data and update dashboard UI
+    return initData().then(() => {
+        if (typeof updateDashboardStats === 'function') {
+            updateDashboardStats();
+        }
+    }).catch(err => console.error('Error refreshing dashboard:', err));
+}
+
 // Dark Mode Logic
 function toggleDarkMode() {
     document.body.classList.toggle("dark-mode");

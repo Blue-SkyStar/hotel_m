@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hostel Login</title>
+    <link rel="icon" href="img/logo/logo.png">
     <!-- CSS -->
     <link rel="stylesheet" href="css/bootstrap.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -66,7 +67,7 @@
                 <!-- ===== LOGIN FORM ===== -->
                 <div id="loginBox" class="card login-card">
                     <div class="login-header">
-                        <i class="fa fa-building-user mb-3" style="font-size: 3rem;"></i>
+                        <img src="img/logo/logo.png" class="rounded-circle shadow-sm mb-3 object-fit-cover" width="80" height="80" alt="Logo">
                         <h4 class="fw-bold mb-0">System Access</h4>
                         <p class="text-white-50 mb-0 small mt-1">Please login to your account</p>
                     </div>
@@ -114,7 +115,7 @@
                 <!-- ===== SIGN UP FORM ===== -->
                 <div id="signupBox" class="card login-card" style="display: none;">
                     <div class="login-header">
-                        <i class="fa fa-user-plus mb-3" style="font-size: 3rem;"></i>
+                        <img src="img/logo/logo.png" class="rounded-circle shadow-sm mb-3 object-fit-cover" width="80" height="80" alt="Logo">
                         <h4 class="fw-bold mb-0">Create Account</h4>
                         <p class="text-white-50 mb-0 small mt-1">Register a new account</p>
                     </div>
@@ -204,7 +205,8 @@
             }
 
             try {
-                const response = await fetch('http://localhost:3000/api/auth/signup', {
+                const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:3000' : '';
+                const response = await fetch(`${API_BASE}/api/auth/signup`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username, email, password })

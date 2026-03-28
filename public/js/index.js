@@ -37,7 +37,8 @@ function renderCharts() {
             },
             options: {
                 responsive: true,
-                maintainAspectRatio: false,
+                maintainAspectRatio: true,
+                aspectRatio: 1,
                 cutout: '65%',
                 plugins: {
                     legend: { position: 'bottom', labels: { padding: 14, font: { size: 12 } } },
@@ -82,7 +83,8 @@ function renderCharts() {
             },
             options: {
                 responsive: true,
-                maintainAspectRatio: false,
+                maintainAspectRatio: true,
+                aspectRatio: 1.5,
                 plugins: { legend: { display: false } },
                 scales: {
                     y: { beginAtZero: true, ticks: { stepSize: Math.ceil(Math.max(cash, upi, card) / 5) || 1 } }
@@ -124,7 +126,8 @@ function renderCharts() {
             },
             options: {
                 responsive: true,
-                maintainAspectRatio: false,
+                maintainAspectRatio: true,
+                aspectRatio: 1.5,
                 plugins: { legend: { display: false } },
                 scales: {
                     y: { beginAtZero: true, ticks: { stepSize: 1, precision: 0 } }

@@ -8,6 +8,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Applications</title>
+    <link rel="icon" href="../img/logo/logo.png">
     <link rel="stylesheet" href="../css/bootstrap.css">
     <link rel="stylesheet" href="../css/index.css">
     <link rel="stylesheet" href="../css/animate.css">
@@ -169,7 +170,7 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-md navbar-dark bg-dark shadow-lg fixed-top">
         <div class="container-fluid">
-            <img src="../img/logo.jpg" class="rounded-circle" width="45">
+            <img src="../img/logo/logo.png" class="rounded-circle" width="45">
             <a class="navbar-brand mx-3 fw-bold">Student Portal</a>
             <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#menu"><span
                     class="navbar-toggler-icon"></span></button>
@@ -416,7 +417,7 @@
 
         async function loadApplications() {
             try {
-                const res = await fetch('http://localhost:3000/api/data/applications');
+                const res = await fetch(`${API_URL}/data/applications`);
                 const allApps = await res.json();
 
                 // Filter by current student
@@ -592,7 +593,7 @@
 
             try {
                 // Step 1: Create Razorpay order on our backend
-                const orderRes = await fetch('http://localhost:3000/api/razorpay/create-order', {
+                const orderRes = await fetch(`${API_URL}/razorpay/create-order`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ amount: 1000, receipt: 'rcpt_' + app.id })
@@ -647,7 +648,7 @@
                     handler: async function(response) {
                         // Step 3: Verify payment on backend
                         try {
-                            const verifyRes = await fetch('http://localhost:3000/api/razorpay/verify', {
+                            const verifyRes = await fetch(`${API_URL}/razorpay/verify`, {
                                 method: 'POST',
                                 headers: { 'Content-Type': 'application/json' },
                                 body: JSON.stringify({
@@ -697,14 +698,14 @@
             try {
                 // 1. Update application status → Allocated
                 app.status = "Allocated";
-                await fetch(`http://localhost:3000/api/data/applications/${app.id}`, {
+                await fetch(`${API_URL}/data/applications/${app.id}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(app)
                 });
 
                 // 2. Record payment
-                await fetch(`http://localhost:3000/api/data/payments`, {
+                await fetch(`${API_URL}/data/payments`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -722,18 +723,18 @@
                 });
 
                 // 3. Update student record
-                const studentListRes = await fetch('http://localhost:3000/api/data/students');
+                const studentListRes = await fetch(`${API_URL}/data/students`);
                 const studentsList = await studentListRes.json();
                 let myStudentRec = studentsList.find(s => s.name === currentUserId || s.email === app.studentName);
                 if (myStudentRec) {
                     myStudentRec.room = app.roomNumber;
-                    await fetch(`http://localhost:3000/api/data/students/${myStudentRec.id}`, {
+                    await fetch(`${API_URL}/data/students/${myStudentRec.id}`, {
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(myStudentRec)
                     });
                 } else {
-                    await fetch(`http://localhost:3000/api/data/students`, {
+                    await fetch(`${API_URL}/data/students`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
@@ -755,7 +756,7 @@
                 if (roomObj) {
                     roomObj.occupied = (roomObj.occupied || 0) + 1;
                     if (roomObj.occupied >= roomObj.capacity) roomObj.status = 'Occupied';
-                    await fetch(`http://localhost:3000/api/data/rooms/${roomObj.id}`, {
+                    await fetch(`${API_URL}/data/rooms/${roomObj.id}`, {
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(roomObj)
