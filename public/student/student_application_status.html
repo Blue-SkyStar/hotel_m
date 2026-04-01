@@ -253,7 +253,8 @@
             <div class="modal-content" style="border-radius:20px;overflow:hidden;">
 
                 <!-- Header -->
-                <div class="modal-header border-0 text-white" style="background:linear-gradient(135deg,#1a6b3c,#198754);">
+                <div class="modal-header border-0 text-white"
+                    style="background:linear-gradient(135deg,#1a6b3c,#198754);">
                     <div>
                         <h5 class="modal-title fw-bold mb-0"><i class="fa fa-lock me-2"></i>Secure Payment Gateway</h5>
                         <small style="opacity:0.8;">₹1,000 Down Payment · SSL Encrypted</small>
@@ -286,7 +287,8 @@
                                 <span class="fw-bold text-success">₹1,000</span>
                             </div>
                             <div class="mt-4 p-2 rounded-3" style="background:#eafbf0;border:1px solid #b2dfcc;">
-                                <p class="mb-0 small text-success"><i class="fa fa-shield-halved me-1"></i>Your payment is 100% secure & encrypted.</p>
+                                <p class="mb-0 small text-success"><i class="fa fa-shield-halved me-1"></i>Your payment
+                                    is 100% secure & encrypted.</p>
                             </div>
                         </div>
 
@@ -296,16 +298,20 @@
 
                             <!-- Method Tabs -->
                             <div class="d-flex gap-2 flex-wrap mb-4" id="payMethodBtns">
-                                <button class="pay-method-btn active" onclick="selectMethod('upi',this)" style="border:2px solid #0d6efd;background:#e8f0fe;color:#0d6efd;border-radius:12px;padding:8px 14px;font-size:0.85rem;font-weight:600;cursor:pointer;transition:all 0.2s;">
+                                <button class="pay-method-btn active" onclick="selectMethod('upi',this)"
+                                    style="border:2px solid #0d6efd;background:#e8f0fe;color:#0d6efd;border-radius:12px;padding:8px 14px;font-size:0.85rem;font-weight:600;cursor:pointer;transition:all 0.2s;">
                                     <i class="fa fa-mobile-screen me-1"></i>UPI / GPay
                                 </button>
-                                <button class="pay-method-btn" onclick="selectMethod('razorpay',this)" style="border:2px solid #dee2e6;background:#fff;color:#555;border-radius:12px;padding:8px 14px;font-size:0.85rem;font-weight:600;cursor:pointer;transition:all 0.2s;">
+                                <button class="pay-method-btn" onclick="selectMethod('razorpay',this)"
+                                    style="border:2px solid #dee2e6;background:#fff;color:#555;border-radius:12px;padding:8px 14px;font-size:0.85rem;font-weight:600;cursor:pointer;transition:all 0.2s;">
                                     <i class="fa fa-bolt me-1"></i>Razorpay
                                 </button>
-                                <button class="pay-method-btn" onclick="selectMethod('card',this)" style="border:2px solid #dee2e6;background:#fff;color:#555;border-radius:12px;padding:8px 14px;font-size:0.85rem;font-weight:600;cursor:pointer;transition:all 0.2s;">
+                                <button class="pay-method-btn" onclick="selectMethod('card',this)"
+                                    style="border:2px solid #dee2e6;background:#fff;color:#555;border-radius:12px;padding:8px 14px;font-size:0.85rem;font-weight:600;cursor:pointer;transition:all 0.2s;">
                                     <i class="fa fa-credit-card me-1"></i>Card
                                 </button>
-                                <button class="pay-method-btn" onclick="selectMethod('netbanking',this)" style="border:2px solid #dee2e6;background:#fff;color:#555;border-radius:12px;padding:8px 14px;font-size:0.85rem;font-weight:600;cursor:pointer;transition:all 0.2s;">
+                                <button class="pay-method-btn" onclick="selectMethod('netbanking',this)"
+                                    style="border:2px solid #dee2e6;background:#fff;color:#555;border-radius:12px;padding:8px 14px;font-size:0.85rem;font-weight:600;cursor:pointer;transition:all 0.2s;">
                                     <i class="fa fa-building-columns me-1"></i>Net Banking
                                 </button>
                             </div>
@@ -314,24 +320,29 @@
                             <div id="panel_upi">
                                 <p class="text-muted small mb-3">Pay using any UPI app</p>
                                 <div class="d-flex gap-3 mb-4 flex-wrap">
-                                    <div class="upi-app-card" onclick="selectUpiApp('gpay',this)" style="border:2px solid #0d6efd;background:#e8f0fe;border-radius:12px;padding:12px 18px;text-align:center;cursor:pointer;min-width:80px;transition:all 0.2s;">
+                                    <div class="upi-app-card" onclick="selectUpiApp('gpay',this)"
+                                        style="border:2px solid #0d6efd;background:#e8f0fe;border-radius:12px;padding:12px 18px;text-align:center;cursor:pointer;min-width:80px;transition:all 0.2s;">
                                         <div style="font-size:1.6rem;">🅶</div>
                                         <small class="fw-bold" style="color:#0d6efd;">GPay</small>
                                     </div>
-                                    <div class="upi-app-card" onclick="selectUpiApp('phonepe',this)" style="border:2px solid #dee2e6;background:#fff;border-radius:12px;padding:12px 18px;text-align:center;cursor:pointer;min-width:80px;transition:all 0.2s;">
+                                    <div class="upi-app-card" onclick="selectUpiApp('phonepe',this)"
+                                        style="border:2px solid #dee2e6;background:#fff;border-radius:12px;padding:12px 18px;text-align:center;cursor:pointer;min-width:80px;transition:all 0.2s;">
                                         <div style="font-size:1.6rem;">📱</div>
                                         <small class="fw-bold" style="color:#5f259f;">PhonePe</small>
                                     </div>
-                                    <div class="upi-app-card" onclick="selectUpiApp('paytm',this)" style="border:2px solid #dee2e6;background:#fff;border-radius:12px;padding:12px 18px;text-align:center;cursor:pointer;min-width:80px;transition:all 0.2s;">
+                                    <div class="upi-app-card" onclick="selectUpiApp('paytm',this)"
+                                        style="border:2px solid #dee2e6;background:#fff;border-radius:12px;padding:12px 18px;text-align:center;cursor:pointer;min-width:80px;transition:all 0.2s;">
                                         <div style="font-size:1.6rem;">💙</div>
                                         <small class="fw-bold" style="color:#00baf2;">Paytm</small>
                                     </div>
-                                    <div class="upi-app-card" onclick="selectUpiApp('other',this)" style="border:2px solid #dee2e6;background:#fff;border-radius:12px;padding:12px 18px;text-align:center;cursor:pointer;min-width:80px;transition:all 0.2s;">
+                                    <div class="upi-app-card" onclick="selectUpiApp('other',this)"
+                                        style="border:2px solid #dee2e6;background:#fff;border-radius:12px;padding:12px 18px;text-align:center;cursor:pointer;min-width:80px;transition:all 0.2s;">
                                         <div style="font-size:1.6rem;">🔗</div>
                                         <small class="fw-bold" style="color:#555;">Other</small>
                                     </div>
                                 </div>
-                                <input type="text" id="upiId" class="form-control rounded-3 mb-1" placeholder="Enter UPI ID (e.g. name@gpay)" style="font-size:0.9rem;">
+                                <input type="text" id="upiId" class="form-control rounded-3 mb-1"
+                                    placeholder="Enter UPI ID (e.g. name@gpay)" style="font-size:0.9rem;">
                                 <small class="text-muted">We'll send a payment request to your UPI app</small>
                             </div>
 
@@ -343,30 +354,44 @@
                                         <span style="font-size:2rem;">⚡</span>
                                         <div>
                                             <p class="fw-bold mb-0" style="color:#2d6a4f;">Razorpay Checkout</p>
-                                            <small class="text-muted">You'll be redirected to Razorpay's secure page to complete payment. Supports UPI, Cards, Wallets.</small>
+                                            <small class="text-muted">You'll be redirected to Razorpay's secure page to
+                                                complete payment. Supports UPI, Cards, Wallets.</small>
                                         </div>
                                     </div>
                                 </div>
-                                <input type="email" id="rzpEmail" class="form-control rounded-3 mb-2" placeholder="Email for receipt" style="font-size:0.9rem;">
-                                <input type="text" id="rzpPhone" class="form-control rounded-3" placeholder="Mobile number" style="font-size:0.9rem;">
+                                <input type="email" id="rzpEmail" class="form-control rounded-3 mb-2"
+                                    placeholder="Email for receipt" style="font-size:0.9rem;">
+                                <input type="text" id="rzpPhone" class="form-control rounded-3"
+                                    placeholder="Mobile number" style="font-size:0.9rem;">
                             </div>
 
                             <!-- Card Panel -->
                             <div id="panel_card" style="display:none;">
                                 <p class="text-muted small mb-2">Visa, Mastercard, Rupay accepted</p>
                                 <div class="d-flex gap-2 mb-3">
-                                    <span class="badge" style="background:#1a1f71;color:#fff;font-size:0.75rem;padding:6px 10px;border-radius:8px;">VISA</span>
-                                    <span class="badge" style="background:#eb001b;color:#fff;font-size:0.75rem;padding:6px 10px;border-radius:8px;">Mastercard</span>
-                                    <span class="badge" style="background:#00897b;color:#fff;font-size:0.75rem;padding:6px 10px;border-radius:8px;">RuPay</span>
-                                    <span class="badge" style="background:#003087;color:#fff;font-size:0.75rem;padding:6px 10px;border-radius:8px;">AmEx</span>
+                                    <span class="badge"
+                                        style="background:#1a1f71;color:#fff;font-size:0.75rem;padding:6px 10px;border-radius:8px;">VISA</span>
+                                    <span class="badge"
+                                        style="background:#eb001b;color:#fff;font-size:0.75rem;padding:6px 10px;border-radius:8px;">Mastercard</span>
+                                    <span class="badge"
+                                        style="background:#00897b;color:#fff;font-size:0.75rem;padding:6px 10px;border-radius:8px;">RuPay</span>
+                                    <span class="badge"
+                                        style="background:#003087;color:#fff;font-size:0.75rem;padding:6px 10px;border-radius:8px;">AmEx</span>
                                 </div>
                                 <div class="mb-2">
-                                    <input type="text" id="cardNumber" class="form-control rounded-3" placeholder="Card Number (1234 5678 9012 3456)" maxlength="19" style="font-size:0.9rem;letter-spacing:1px;" oninput="formatCard(this)">
+                                    <input type="text" id="cardNumber" class="form-control rounded-3"
+                                        placeholder="Card Number (1234 5678 9012 3456)" maxlength="19"
+                                        style="font-size:0.9rem;letter-spacing:1px;" oninput="formatCard(this)">
                                 </div>
-                                <input type="text" id="cardName" class="form-control rounded-3 mb-2" placeholder="Name on Card" style="font-size:0.9rem;">
+                                <input type="text" id="cardName" class="form-control rounded-3 mb-2"
+                                    placeholder="Name on Card" style="font-size:0.9rem;">
                                 <div class="row g-2">
-                                    <div class="col-6"><input type="text" id="cardExpiry" class="form-control rounded-3" placeholder="MM / YY" maxlength="7" style="font-size:0.9rem;" oninput="formatExpiry(this)"></div>
-                                    <div class="col-6"><input type="text" id="cardCVV" class="form-control rounded-3" placeholder="CVV" maxlength="3" style="font-size:0.9rem;" type="password"></div>
+                                    <div class="col-6"><input type="text" id="cardExpiry" class="form-control rounded-3"
+                                            placeholder="MM / YY" maxlength="7" style="font-size:0.9rem;"
+                                            oninput="formatExpiry(this)"></div>
+                                    <div class="col-6"><input type="text" id="cardCVV" class="form-control rounded-3"
+                                            placeholder="CVV" maxlength="3" style="font-size:0.9rem;" type="password">
+                                    </div>
                                 </div>
                             </div>
 
@@ -374,16 +399,50 @@
                             <div id="panel_netbanking" style="display:none;">
                                 <p class="text-muted small mb-3">Select your bank</p>
                                 <div class="row g-2 mb-3" id="bankGrid">
-                                    <div class="col-4"><div class="bank-tile" onclick="selectBank(this,'SBI')" style="border:2px solid #dee2e6;border-radius:10px;padding:10px;text-align:center;cursor:pointer;background:#fff;transition:all 0.2s;"><div style="font-size:1.3rem;">🏛️</div><small class="fw-bold">SBI</small></div></div>
-                                    <div class="col-4"><div class="bank-tile" onclick="selectBank(this,'HDFC')" style="border:2px solid #dee2e6;border-radius:10px;padding:10px;text-align:center;cursor:pointer;background:#fff;transition:all 0.2s;"><div style="font-size:1.3rem;">🏦</div><small class="fw-bold">HDFC</small></div></div>
-                                    <div class="col-4"><div class="bank-tile" onclick="selectBank(this,'ICICI')" style="border:2px solid #dee2e6;border-radius:10px;padding:10px;text-align:center;cursor:pointer;background:#fff;transition:all 0.2s;"><div style="font-size:1.3rem;">🏧</div><small class="fw-bold">ICICI</small></div></div>
-                                    <div class="col-4"><div class="bank-tile" onclick="selectBank(this,'Axis')" style="border:2px solid #dee2e6;border-radius:10px;padding:10px;text-align:center;cursor:pointer;background:#fff;transition:all 0.2s;"><div style="font-size:1.3rem;">💳</div><small class="fw-bold">Axis</small></div></div>
-                                    <div class="col-4"><div class="bank-tile" onclick="selectBank(this,'Kotak')" style="border:2px solid #dee2e6;border-radius:10px;padding:10px;text-align:center;cursor:pointer;background:#fff;transition:all 0.2s;"><div style="font-size:1.3rem;">🔑</div><small class="fw-bold">Kotak</small></div></div>
-                                    <div class="col-4"><div class="bank-tile" onclick="selectBank(this,'PNB')" style="border:2px solid #dee2e6;border-radius:10px;padding:10px;text-align:center;cursor:pointer;background:#fff;transition:all 0.2s;"><div style="font-size:1.3rem;">🏢</div><small class="fw-bold">PNB</small></div></div>
+                                    <div class="col-4">
+                                        <div class="bank-tile" onclick="selectBank(this,'SBI')"
+                                            style="border:2px solid #dee2e6;border-radius:10px;padding:10px;text-align:center;cursor:pointer;background:#fff;transition:all 0.2s;">
+                                            <div style="font-size:1.3rem;">🏛️</div><small class="fw-bold">SBI</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="bank-tile" onclick="selectBank(this,'HDFC')"
+                                            style="border:2px solid #dee2e6;border-radius:10px;padding:10px;text-align:center;cursor:pointer;background:#fff;transition:all 0.2s;">
+                                            <div style="font-size:1.3rem;">🏦</div><small class="fw-bold">HDFC</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="bank-tile" onclick="selectBank(this,'ICICI')"
+                                            style="border:2px solid #dee2e6;border-radius:10px;padding:10px;text-align:center;cursor:pointer;background:#fff;transition:all 0.2s;">
+                                            <div style="font-size:1.3rem;">🏧</div><small class="fw-bold">ICICI</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="bank-tile" onclick="selectBank(this,'Axis')"
+                                            style="border:2px solid #dee2e6;border-radius:10px;padding:10px;text-align:center;cursor:pointer;background:#fff;transition:all 0.2s;">
+                                            <div style="font-size:1.3rem;">💳</div><small class="fw-bold">Axis</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="bank-tile" onclick="selectBank(this,'Kotak')"
+                                            style="border:2px solid #dee2e6;border-radius:10px;padding:10px;text-align:center;cursor:pointer;background:#fff;transition:all 0.2s;">
+                                            <div style="font-size:1.3rem;">🔑</div><small class="fw-bold">Kotak</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="bank-tile" onclick="selectBank(this,'PNB')"
+                                            style="border:2px solid #dee2e6;border-radius:10px;padding:10px;text-align:center;cursor:pointer;background:#fff;transition:all 0.2s;">
+                                            <div style="font-size:1.3rem;">🏢</div><small class="fw-bold">PNB</small>
+                                        </div>
+                                    </div>
                                 </div>
                                 <select class="form-select rounded-3" id="bankSelect" style="font-size:0.9rem;">
                                     <option value="">-- or select other bank --</option>
-                                    <option>Bank of Baroda</option><option>Canara Bank</option><option>Union Bank</option><option>Yes Bank</option><option>Federal Bank</option>
+                                    <option>Bank of Baroda</option>
+                                    <option>Canara Bank</option>
+                                    <option>Union Bank</option>
+                                    <option>Yes Bank</option>
+                                    <option>Federal Bank</option>
                                 </select>
                             </div>
 
@@ -395,8 +454,10 @@
                 <div class="modal-footer border-0 px-4 pb-4 pt-2">
                     <input type="hidden" id="payAppId">
                     <input type="hidden" id="selectedMethod" value="UPI">
-                    <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
-                    <button id="checkoutBtn" class="btn btn-success btn-lg rounded-pill px-5 fw-bold shadow-sm" onclick="processPayment()">
+                    <button type="button" class="btn btn-outline-secondary rounded-pill px-4"
+                        data-bs-dismiss="modal">Cancel</button>
+                    <button id="checkoutBtn" class="btn btn-success btn-lg rounded-pill px-5 fw-bold shadow-sm"
+                        onclick="processPayment()">
                         <i class="fa fa-lock me-2"></i>Pay ₹1,000 Securely
                     </button>
                 </div>
@@ -546,7 +607,7 @@
             btn.style.background = '#e8f0fe';
             btn.style.color = '#0d6efd';
             // Show correct panel
-            ['upi','razorpay','card','netbanking'].forEach(p => {
+            ['upi', 'razorpay', 'card', 'netbanking'].forEach(p => {
                 document.getElementById('panel_' + p).style.display = p === method ? '' : 'none';
             });
         }
@@ -572,13 +633,13 @@
         }
 
         function formatCard(el) {
-            let v = el.value.replace(/\D/g,'').substring(0,16);
-            el.value = v.replace(/(\d{4})/g,'$1 ').trim();
+            let v = el.value.replace(/\D/g, '').substring(0, 16);
+            el.value = v.replace(/(\d{4})/g, '$1 ').trim();
         }
 
         function formatExpiry(el) {
-            let v = el.value.replace(/\D/g,'').substring(0,4);
-            if (v.length >= 2) v = v.substring(0,2) + ' / ' + v.substring(2);
+            let v = el.value.replace(/\D/g, '').substring(0, 4);
+            if (v.length >= 2) v = v.substring(0, 2) + ' / ' + v.substring(2);
             el.value = v;
         }
 
@@ -645,7 +706,7 @@
                         wallet: true,
                         emi: false
                     },
-                    handler: async function(response) {
+                    handler: async function (response) {
                         // Step 3: Verify payment on backend
                         try {
                             const verifyRes = await fetch(`${API_URL}/razorpay/verify`, {
@@ -663,12 +724,12 @@
                             } else {
                                 Swal.fire('Error', 'Payment verification failed. Contact support.', 'error');
                             }
-                        } catch(e) {
+                        } catch (e) {
                             Swal.fire('Error', 'Could not verify payment. Please contact support.', 'error');
                         }
                     },
                     modal: {
-                        ondismiss: function() {
+                        ondismiss: function () {
                             Swal.fire({
                                 icon: 'warning',
                                 title: 'Payment Cancelled',
@@ -680,7 +741,7 @@
                 };
 
                 const rzp = new Razorpay(options);
-                rzp.on('payment.failed', function(response) {
+                rzp.on('payment.failed', function (response) {
                     Swal.fire('Payment Failed', response.error.description || 'Something went wrong.', 'error');
                 });
                 rzp.open();
@@ -689,7 +750,7 @@
                 console.error('Payment error:', e);
                 Swal.fire('Error', 'Could not initiate payment. Please try again.', 'error');
                 let btn = document.getElementById('checkoutBtn');
-                if(btn){ btn.innerHTML = `<i class="fa fa-lock me-2"></i>Pay ₹1,000 Securely`; btn.disabled = false; }
+                if (btn) { btn.innerHTML = `<i class="fa fa-lock me-2"></i>Pay ₹1,000 Securely`; btn.disabled = false; }
             }
         }
 
@@ -770,7 +831,7 @@
                     confirmButtonColor: '#198754'
                 }).then(() => window.location.reload());
 
-            } catch(e) {
+            } catch (e) {
                 console.error('Record payment error:', e);
                 Swal.fire('Error', 'Payment was received but recording failed. Please contact admin with Payment ID: ' + paymentId, 'error');
             }

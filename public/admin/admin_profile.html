@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<script>
-if(localStorage.getItem("role") !== "admin"){
-    window.location.href = "../login.html";
-}
-</script>
+    <script>
+        if (localStorage.getItem("role") !== "admin") {
+            window.location.href = "../login.html";
+        }
+    </script>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hostel Dashboard</title>
+    <title>Admin Profile | Hostel Management</title>
     <link rel="icon" href="../img/logo/logo.png">
 
     <!-- CSS -->
@@ -24,20 +25,56 @@ if(localStorage.getItem("role") !== "admin"){
 
     <!-- Auth Script -->
     <script>
-        if(localStorage.getItem("isLoggedIn") !== "true"){
+        if (localStorage.getItem("isLoggedIn") !== "true") {
             window.location.href = "../login.html";
         }
     </script>
+
+    <style>
+        .profile-avatar {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: white;
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+        }
+
+        .info-row {
+            border-bottom: 1px solid #f0f0f0;
+            padding: 12px 0;
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: #9ca3af;
+        }
+
+        .info-value {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #1f2937;
+        }
+    </style>
 </head>
-<body class="bg-light">
+
+<body>
 
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-md bg-dark shadow-lg fixed-top navbar-dark">
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark shadow-lg fixed-top">
         <div class="container-fluid">
-
-            <img src="../img/logo/logo.png" class="rounded-circle" width="50">
-
-            <a class="navbar-brand mx-3">Hostel Dashboard</a>
+            <img src="../img/logo/logo.png" width="45" class="rounded-circle border shadow-sm" alt="Logo">
+            <a class="navbar-brand mx-3">Hostel Management</a>
 
             <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#menu">
                 <span class="navbar-toggler-icon"></span>
@@ -45,45 +82,36 @@ if(localStorage.getItem("role") !== "admin"){
 
             <div class="collapse navbar-collapse" id="menu">
                 <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="admin_home.html">Dashboard</a></li>
                     <li class="nav-item"><a class="nav-link" href="admin_manage_students.html">Students</a></li>
                     <li class="nav-item"><a class="nav-link" href="admin_manage_rooms.html">Rooms</a></li>
                     <li class="nav-item"><a class="nav-link" href="admin_manage_payments.html">Payments</a></li>
                     <li class="nav-item"><a class="nav-link" href="admin_manage_complaints.html">Complaints</a></li>
-                    
                     <li class="nav-item">
-                        <button class="btn btn-outline-light ms-3 me-2 align-self-center mt-1 border-0" onclick="toggleDarkMode()" title="Toggle Dark Mode">
-                            <i class="fa fa-moon"></i>
-                        </button>
-                    </li>
-                    <li class="nav-item">
-                        <button class="btn btn-sm btn-danger ms-2 px-3 align-self-center mt-1" style="border-radius:20px; font-weight: 500;" onclick="logout()">
-                            <i class="fa fa-sign-out"></i> Logout
+                        <button class="btn btn-sm btn-danger ms-2 px-3 align-self-center mt-1"
+                            style="border-radius:20px; font-weight:500;" onclick="logout()">
+                            <i class="fa fa-sign-out me-1"></i> Logout
                         </button>
                     </li>
                 </ul>
             </div>
-
         </div>
     </nav>
 
     <div class="container-fluid" style="margin-top:90px">
-
         <div class="row">
 
             <!-- Sidebar -->
             <div class="col-md-2 bg-dark text-white vh-100 p-3">
-
                 <h4 class="text-center">MENU</h4>
                 <hr>
 
                 <ul class="nav flex-column">
-
                     <li class="nav-item mb-3">
-                        <a href="#" class="nav-link text-white">
+                        <a href="admin_home.html" class="nav-link text-white">
                             <i class="fa fa-home"></i> Dashboard
                         </a>
                     </li>
-
                     <li class="nav-item mb-3">
                         <a href="admin_manage_students.html" class="nav-link text-white">
                             <i class="fa fa-user"></i> Students
@@ -94,26 +122,21 @@ if(localStorage.getItem("role") !== "admin"){
                             <i class="fa fa-user-plus"></i> Add Student
                         </a>
                     </li>
-
                     <li class="nav-item mb-3">
                         <a href="admin_manage_rooms.html" class="nav-link text-white">
                             <i class="fa fa-bed"></i> Rooms
                         </a>
                     </li>
-
                     <li class="nav-item mb-3">
                         <a href="admin_manage_payments.html" class="nav-link text-white">
                             <i class="fa fa-money-bill"></i> Payments
                         </a>
                     </li>
-
                     <li class="nav-item mb-3">
                         <a href="admin_manage_complaints.html" class="nav-link text-white">
                             <i class="fa fa-exclamation-circle"></i> Complaints
                         </a>
                     </li>
-
-                
                     <li class="nav-item mb-3">
                         <a href="admin_room_allocation.html" class="nav-link text-white">
                             <i class="fa fa-key"></i> Room Allocation
@@ -130,30 +153,253 @@ if(localStorage.getItem("role") !== "admin"){
                         </a>
                     </li>
                     <li class="nav-item mb-3">
-                        <a href="admin_profile.html" class="nav-link text-white">
+                        <a href="admin_profile.html" class="nav-link active text-white"
+                            style="background-color:rgba(255,255,255,0.1); border-radius:8px;">
                             <i class="fa fa-user-shield"></i> Admin Profile
                         </a>
                     </li>
                 </ul>
-
-
             </div>
 
             <!-- Main Content -->
             <div class="col-md-10 p-4">
                 <h2 class="mb-4">Admin Profile</h2>
-                <div class="card shadow border-0" style="border-radius: 16px;">
-                    <div class="card-body text-center p-5">
-                        <i class="fa fa-user-shield text-muted mb-3" style="font-size: 4rem;"></i>
-                        <h3 class="text-muted">Under Construction</h3>
-                        <p class="text-muted mb-0">The Admin Profile module is currently being developed.</p>
+
+                <div class="row g-4">
+
+                    <!-- Profile Card -->
+                    <div class="col-md-4">
+                        <div class="card shadow border-0 text-center p-4 animate__animated animate__fadeInLeft"
+                            style="border-radius:20px;">
+                            <div class="d-flex justify-content-center mb-3">
+                                <div class="profile-avatar" id="avatar_icon">
+                                    <i class="fa fa-user-shield"></i>
+                                </div>
+                            </div>
+                            <h4 class="fw-bold mb-1" id="profile_name">—</h4>
+                            <p class="text-muted mb-3" id="profile_email">—</p>
+                            <span class="badge px-4 py-2 fs-6"
+                                style="background:linear-gradient(135deg,#667eea,#764ba2); border-radius:20px;"
+                                id="profile_role">Admin</span>
+
+                            <hr class="my-4">
+
+                            <div class="text-start">
+                                <div class="info-row">
+                                    <div class="info-label">Username</div>
+                                    <div class="info-value" id="profile_username">—</div>
+                                </div>
+                                <div class="info-row">
+                                    <div class="info-label">Role</div>
+                                    <div class="info-value" id="profile_role_text">Administrator</div>
+                                </div>
+                                <div class="info-row">
+                                    <div class="info-label">Last Login</div>
+                                    <div class="info-value" id="profile_lastlogin">—</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Change Password Card -->
+                    <div class="col-md-8">
+                        <div class="card shadow border-0 p-4 animate__animated animate__fadeInRight"
+                            style="border-radius:20px;">
+                            <h5 class="fw-bold mb-4"><i class="fa fa-lock me-2 text-primary"></i>Change Password</h5>
+
+                            <form id="changePasswordForm">
+                                <div class="mb-3">
+                                    <label class="form-label text-muted fw-bold small text-uppercase">Current
+                                        Password</label>
+                                    <div class="input-group">
+                                        <input type="password" id="currentPassword"
+                                            class="form-control form-control-lg bg-light border-0"
+                                            placeholder="Enter current password" required>
+                                        <button type="button" class="btn btn-outline-secondary"
+                                            onclick="togglePass('currentPassword')">
+                                            <i class="fa fa-eye"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label text-muted fw-bold small text-uppercase">New
+                                        Password</label>
+                                    <div class="input-group">
+                                        <input type="password" id="newPassword"
+                                            class="form-control form-control-lg bg-light border-0"
+                                            placeholder="Enter new password (min 6 chars)" required minlength="6">
+                                        <button type="button" class="btn btn-outline-secondary"
+                                            onclick="togglePass('newPassword')">
+                                            <i class="fa fa-eye"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label class="form-label text-muted fw-bold small text-uppercase">Confirm New
+                                        Password</label>
+                                    <div class="input-group">
+                                        <input type="password" id="confirmPassword"
+                                            class="form-control form-control-lg bg-light border-0"
+                                            placeholder="Repeat new password" required minlength="6">
+                                        <button type="button" class="btn btn-outline-secondary"
+                                            onclick="togglePass('confirmPassword')">
+                                            <i class="fa fa-eye"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="text-end">
+                                    <button type="reset" class="btn btn-light px-4 py-2 me-2">Reset</button>
+                                    <button type="submit" class="btn btn-primary px-5 py-2"
+                                        style="background:linear-gradient(135deg,#667eea,#764ba2); border:none; font-weight:600;">
+                                        <i class="fa fa-save me-2"></i>Update Password
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- System Info Card -->
+                        <div class="card shadow border-0 p-4 mt-4 animate__animated animate__fadeInRight"
+                            style="border-radius:20px; animation-delay:0.1s;">
+                            <h5 class="fw-bold mb-4"><i class="fa fa-circle-info me-2 text-info"></i>System Overview
+                            </h5>
+                            <div class="row g-3">
+                                <div class="col-6">
+                                    <div class="bg-light rounded-3 p-3 text-center">
+                                        <div class="fs-4 fw-bold text-primary" id="sys_students">0</div>
+                                        <div class="small text-muted">Students</div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="bg-light rounded-3 p-3 text-center">
+                                        <div class="fs-4 fw-bold text-success" id="sys_rooms">0</div>
+                                        <div class="small text-muted">Rooms</div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="bg-light rounded-3 p-3 text-center">
+                                        <div class="fs-4 fw-bold text-danger" id="sys_revenue">₹0</div>
+                                        <div class="small text-muted">Total Revenue</div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="bg-light rounded-3 p-3 text-center">
+                                        <div class="fs-4 fw-bold text-warning" id="sys_complaints">0</div>
+                                        <div class="small text-muted">Open Complaints</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- JS -->
+    <script>
+        let adminUser = null;
+
+        function togglePass(id) {
+            let el = document.getElementById(id);
+            el.type = el.type === 'password' ? 'text' : 'password';
+        }
+
+        function loadProfile() {
+            let loggedUser = localStorage.getItem("loggedUser");
+            let users = [];
+
+            fetch(`${API_URL}/data/users`).then(r => r.json()).then(data => {
+                users = data;
+                // Find the admin user
+                adminUser = users.find(u => u.username === loggedUser && u.role === 'admin');
+                if (!adminUser) {
+                    adminUser = users.find(u => u.role === 'admin');
+                }
+
+                if (adminUser) {
+                    let initial = (adminUser.username || 'A').charAt(0).toUpperCase();
+                    document.getElementById("avatar_icon").innerHTML = `<span style="font-size:3rem;">${initial}</span>`;
+                    document.getElementById("profile_name").textContent = adminUser.username || 'Admin';
+                    document.getElementById("profile_email").textContent = adminUser.email || 'admin@hostel.com';
+                    document.getElementById("profile_username").textContent = adminUser.username;
+                    document.getElementById("profile_role").textContent = 'Administrator';
+                    document.getElementById("profile_role_text").textContent = 'Administrator';
+                    document.getElementById("profile_lastlogin").textContent = new Date().toLocaleDateString();
+                }
+            }).catch(err => {
+                console.error("Could not load users:", err);
+                document.getElementById("profile_name").textContent = loggedUser || 'Admin';
+            });
+        }
+
+        document.getElementById("changePasswordForm").addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            let current = document.getElementById("currentPassword").value;
+            let newPass = document.getElementById("newPassword").value;
+            let confirm = document.getElementById("confirmPassword").value;
+
+            if (!adminUser) {
+                Swal.fire('Error', 'Could not find admin user data. Please refresh and try again.', 'error');
+                return;
+            }
+
+            if (adminUser.password !== current) {
+                Swal.fire('Incorrect Password', 'The current password you entered is wrong.', 'warning');
+                return;
+            }
+
+            if (newPass !== confirm) {
+                Swal.fire('Mismatch', 'New password and confirm password do not match.', 'warning');
+                return;
+            }
+
+            if (newPass.length < 6) {
+                Swal.fire('Too Short', 'New password must be at least 6 characters.', 'warning');
+                return;
+            }
+
+            try {
+                let updated = { ...adminUser, password: newPass };
+                await fetch(`${API_URL}/data/users/${adminUser.id || adminUser.username}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(updated)
+                });
+
+                adminUser.password = newPass;
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Password Updated!',
+                    text: 'Your password has been changed successfully.',
+                    confirmButtonColor: '#667eea'
+                });
+
+                document.getElementById("changePasswordForm").reset();
+            } catch (err) {
+                console.error("Error updating password:", err);
+                Swal.fire('Error', 'Could not update password. Please try again.', 'error');
+            }
+        });
+
+        window.onload = async function () {
+            await initData();
+
+            // System overview
+            let totalRevenue = payments.reduce((s, p) => s + (Number(p.amount) || 0), 0);
+            let openComplaints = complaints.filter(c => c.status === "Pending").length;
+            document.getElementById("sys_students").textContent = students.length;
+            document.getElementById("sys_rooms").textContent = rooms.length;
+            document.getElementById("sys_revenue").textContent = "₹" + totalRevenue.toLocaleString();
+            document.getElementById("sys_complaints").textContent = openComplaints;
+
+            loadProfile();
+        }
+    </script>
     <script src="../js/bootstrap.bundle.js"></script>
 </body>
+
 </html>

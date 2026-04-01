@@ -1,21 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<script>
-if(localStorage.getItem("role") !== "admin"){
-    window.location.href = "../login.html";
-}
-</script>
 
+<head>
+    <script>
+        if (localStorage.getItem("role") !== "admin") {
+            window.location.href = "../login.html";
+        }
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hostel Dashboard</title>
+    <title>Visitor Log | Hostel Management</title>
     <link rel="icon" href="../img/logo/logo.png">
 
     <!-- CSS -->
     <link rel="stylesheet" href="../css/index.css">
     <link rel="stylesheet" href="../css/bootstrap.css">
     <link rel="stylesheet" href="../css/animate.css">
+    <link rel="stylesheet" href="../css/students.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <!-- JS -->
@@ -24,20 +25,19 @@ if(localStorage.getItem("role") !== "admin"){
 
     <!-- Auth Script -->
     <script>
-        if(localStorage.getItem("isLoggedIn") !== "true"){
+        if (localStorage.getItem("isLoggedIn") !== "true") {
             window.location.href = "../login.html";
         }
     </script>
 </head>
-<body class="bg-light">
+
+<body>
 
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-md bg-dark shadow-lg fixed-top navbar-dark">
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark shadow-lg fixed-top">
         <div class="container-fluid">
-
-            <img src="../img/logo/logo.png" class="rounded-circle" width="50">
-
-            <a class="navbar-brand mx-3">Hostel Dashboard</a>
+            <img src="../img/logo/logo.png" width="45" class="rounded-circle border shadow-sm" alt="Logo">
+            <a class="navbar-brand mx-3">Hostel Management</a>
 
             <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#menu">
                 <span class="navbar-toggler-icon"></span>
@@ -45,45 +45,37 @@ if(localStorage.getItem("role") !== "admin"){
 
             <div class="collapse navbar-collapse" id="menu">
                 <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="admin_home.html">Dashboard</a></li>
                     <li class="nav-item"><a class="nav-link" href="admin_manage_students.html">Students</a></li>
                     <li class="nav-item"><a class="nav-link" href="admin_manage_rooms.html">Rooms</a></li>
                     <li class="nav-item"><a class="nav-link" href="admin_manage_payments.html">Payments</a></li>
                     <li class="nav-item"><a class="nav-link" href="admin_manage_complaints.html">Complaints</a></li>
-                    
                     <li class="nav-item">
-                        <button class="btn btn-outline-light ms-3 me-2 align-self-center mt-1 border-0" onclick="toggleDarkMode()" title="Toggle Dark Mode">
-                            <i class="fa fa-moon"></i>
-                        </button>
-                    </li>
-                    <li class="nav-item">
-                        <button class="btn btn-sm btn-danger ms-2 px-3 align-self-center mt-1" style="border-radius:20px; font-weight: 500;" onclick="logout()">
-                            <i class="fa fa-sign-out"></i> Logout
+                        <button class="btn btn-sm btn-danger ms-2 px-3 align-self-center mt-1"
+                            style="border-radius:20px; font-weight:500;" onclick="logout()">
+                            <i class="fa fa-sign-out me-1"></i> Logout
                         </button>
                     </li>
                 </ul>
             </div>
-
         </div>
     </nav>
 
-    <div class="container-fluid" style="margin-top:90px">
 
+    <div class="container-fluid" style="margin-top:90px">
         <div class="row">
 
             <!-- Sidebar -->
             <div class="col-md-2 bg-dark text-white vh-100 p-3">
-
                 <h4 class="text-center">MENU</h4>
                 <hr>
 
                 <ul class="nav flex-column">
-
                     <li class="nav-item mb-3">
-                        <a href="#" class="nav-link text-white">
+                        <a href="admin_home.html" class="nav-link text-white">
                             <i class="fa fa-home"></i> Dashboard
                         </a>
                     </li>
-
                     <li class="nav-item mb-3">
                         <a href="admin_manage_students.html" class="nav-link text-white">
                             <i class="fa fa-user"></i> Students
@@ -94,26 +86,21 @@ if(localStorage.getItem("role") !== "admin"){
                             <i class="fa fa-user-plus"></i> Add Student
                         </a>
                     </li>
-
                     <li class="nav-item mb-3">
                         <a href="admin_manage_rooms.html" class="nav-link text-white">
                             <i class="fa fa-bed"></i> Rooms
                         </a>
                     </li>
-
                     <li class="nav-item mb-3">
                         <a href="admin_manage_payments.html" class="nav-link text-white">
                             <i class="fa fa-money-bill"></i> Payments
                         </a>
                     </li>
-
                     <li class="nav-item mb-3">
                         <a href="admin_manage_complaints.html" class="nav-link text-white">
                             <i class="fa fa-exclamation-circle"></i> Complaints
                         </a>
                     </li>
-
-                
                     <li class="nav-item mb-3">
                         <a href="admin_room_allocation.html" class="nav-link text-white">
                             <i class="fa fa-key"></i> Room Allocation
@@ -125,7 +112,8 @@ if(localStorage.getItem("role") !== "admin"){
                         </a>
                     </li>
                     <li class="nav-item mb-3">
-                        <a href="admin_visitor_log.html" class="nav-link text-white">
+                        <a href="admin_visitor_log.html" class="nav-link active text-white"
+                            style="background-color: rgba(255,255,255,0.1); border-radius:8px;">
                             <i class="fa fa-address-book"></i> Visitor Log
                         </a>
                     </li>
@@ -135,25 +123,276 @@ if(localStorage.getItem("role") !== "admin"){
                         </a>
                     </li>
                 </ul>
-
-
             </div>
 
             <!-- Main Content -->
             <div class="col-md-10 p-4">
                 <h2 class="mb-4">Visitor Log</h2>
-                <div class="card shadow border-0" style="border-radius: 16px;">
-                    <div class="card-body text-center p-5">
-                        <i class="fa fa-address-book text-muted mb-3" style="font-size: 4rem;"></i>
-                        <h3 class="text-muted">Under Construction</h3>
-                        <p class="text-muted mb-0">The Visitor Log module is currently being developed.</p>
+
+                <!-- Stats Row -->
+                <div class="row mb-4" id="visitorStats">
+                    <div class="col-md-4">
+                        <div class="card shadow border-0 text-white"
+                            style="background: linear-gradient(135deg,#667eea,#764ba2); border-radius:14px;">
+                            <div class="card-body d-flex align-items-center gap-3">
+                                <i class="fa fa-person-walking-arrow-right fa-2x opacity-75"></i>
+                                <div>
+                                    <div class="fs-3 fw-bold" id="stat_total_visitors">0</div>
+                                    <div class="small opacity-75">Total Today</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card shadow border-0 text-white"
+                            style="background: linear-gradient(135deg,#11998e,#38ef7d); border-radius:14px;">
+                            <div class="card-body d-flex align-items-center gap-3">
+                                <i class="fa fa-door-open fa-2x opacity-75"></i>
+                                <div>
+                                    <div class="fs-3 fw-bold" id="stat_inside">0</div>
+                                    <div class="small opacity-75">Currently Inside</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card shadow border-0 text-white"
+                            style="background: linear-gradient(135deg,#f093fb,#f5576c); border-radius:14px;">
+                            <div class="card-body d-flex align-items-center gap-3">
+                                <i class="fa fa-door-closed fa-2x opacity-75"></i>
+                                <div>
+                                    <div class="fs-3 fw-bold" id="stat_exited">0</div>
+                                    <div class="small opacity-75">Exited</div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
+
+                <!-- Add Visitor Form -->
+                <div class="card shadow animate__animated animate__fadeInUp border-0 mb-5" style="border-radius:16px;">
+                    <div class="card-header bg-dark text-white py-3 px-4" style="border-radius:16px 16px 0 0;">
+                        <h5 class="mb-0 fw-bold"><i class="fa fa-plus-circle me-2"></i> Log New Visitor</h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <form id="visitorForm">
+                            <div class="row g-4">
+                                <div class="col-md-6 border-start border-3 border-primary ps-3">
+                                    <label class="form-label text-muted fw-bold small text-uppercase">Visitor
+                                        Name</label>
+                                    <input type="text" id="v_name"
+                                        class="form-control form-control-lg bg-light border-0"
+                                        placeholder="Enter Visitor Name" required>
+                                </div>
+
+                                <div class="col-md-6 border-start border-3 border-primary ps-3">
+                                    <label class="form-label text-muted fw-bold small text-uppercase">Visiting
+                                        Student</label>
+                                    <input type="text" id="v_student"
+                                        class="form-control form-control-lg bg-light border-0"
+                                        placeholder="Student Name / Room No." required>
+                                </div>
+
+                                <div class="col-md-6 border-start border-3 border-primary ps-3">
+                                    <label class="form-label text-muted fw-bold small text-uppercase">Purpose of
+                                        Visit</label>
+                                    <select id="v_purpose" class="form-select form-select-lg bg-light border-0">
+                                        <option>Personal Visit</option>
+                                        <option>Parcel / Package</option>
+                                        <option>Official Work</option>
+                                        <option>Medical Emergency</option>
+                                        <option>Other</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-6 border-start border-3 border-primary ps-3">
+                                    <label class="form-label text-muted fw-bold small text-uppercase">Visitor
+                                        Phone</label>
+                                    <input type="text" id="v_phone"
+                                        class="form-control form-control-lg bg-light border-0"
+                                        placeholder="Contact Number (optional)">
+                                </div>
+
+                                <div class="col-md-6 border-start border-3 border-primary ps-3">
+                                    <label class="form-label text-muted fw-bold small text-uppercase">Check-In
+                                        Time</label>
+                                    <input type="time" id="v_intime"
+                                        class="form-control form-control-lg bg-light border-0">
+                                </div>
+                            </div>
+
+                            <hr class="my-4 text-muted">
+
+                            <div class="text-end">
+                                <button type="reset" class="btn btn-light px-4 py-2 me-2">Clear</button>
+                                <button type="submit" id="visitorSubmitBtn" class="btn btn-primary px-5 py-2"
+                                    style="background: linear-gradient(135deg,#667eea 0%,#764ba2 100%); border:none; font-weight:600;">
+                                    <i class="fa fa-save me-2"></i> Log Visitor
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Visitor Table -->
+                <div class="card shadow animate__animated animate__fadeInUp border-0"
+                    style="animation-delay:0.1s; border-radius:16px; overflow:hidden;">
+                    <div
+                        class="card-header bg-dark text-white py-3 px-4 d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0 fw-bold"><i class="fa fa-history me-2"></i> Visitor History</h5>
+                        <div class="input-group" style="width:260px;">
+                            <span class="input-group-text bg-white border-0"><i
+                                    class="fa fa-search text-muted"></i></span>
+                            <input type="text" id="searchVisitors"
+                                onkeyup="searchTable('searchVisitors','visitorsTable')"
+                                class="form-control border-0 ps-0" placeholder="Search visitors..."
+                                style="box-shadow:none;">
+                        </div>
+                    </div>
+
+                    <div class="card-body p-0">
+                        <table class="table table-hover mb-0" id="visitorsTable">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="ps-4 py-3">ID</th>
+                                    <th class="py-3">Visitor Name</th>
+                                    <th class="py-3">Visiting Student</th>
+                                    <th class="py-3">Purpose</th>
+                                    <th class="py-3">Phone</th>
+                                    <th class="py-3">Date</th>
+                                    <th class="py-3">In Time</th>
+                                    <th class="py-3">Out Time</th>
+                                    <th class="pe-4 py-3">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="visitorsTableBody">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
 
-    <!-- JS -->
+    <script>
+        function loadVisitors() {
+            let tbody = document.getElementById("visitorsTableBody");
+            tbody.innerHTML = "";
+
+            let today = new Date().toLocaleDateString();
+            let todayVisitors = visitors.filter(v => v.date === today);
+            let stillInside = visitors.filter(v => !v.outTime || v.outTime === '');
+            let exited = visitors.filter(v => v.outTime && v.outTime !== '');
+
+            document.getElementById("stat_total_visitors").textContent = todayVisitors.length;
+            document.getElementById("stat_inside").textContent = stillInside.length;
+            document.getElementById("stat_exited").textContent = exited.length;
+
+            if (visitors.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="9" class="text-center text-muted py-4">No visitors logged yet.</td></tr>`;
+                return;
+            }
+
+            let sorted = [...visitors].reverse();
+            sorted.forEach(v => {
+                let statusBadge = v.outTime
+                    ? `<span class="badge bg-secondary">Exited</span>`
+                    : `<span class="badge bg-success">Inside</span>`;
+
+                let actionBtn = v.outTime
+                    ? `<span class="text-muted small">Checked Out</span>`
+                    : `<button class="btn btn-sm btn-outline-danger" onclick="checkOutVisitor(${v.id})">
+                        <i class="fa fa-sign-out me-1"></i>Check Out
+                       </button>`;
+
+                tbody.innerHTML += `
+                <tr>
+                    <td class="ps-4">${v.id || '-'}</td>
+                    <td class="fw-medium">${v.visitorName}</td>
+                    <td>${v.visitingStudent}</td>
+                    <td><span class="badge bg-primary bg-opacity-10 text-primary border border-primary">${v.purpose}</span></td>
+                    <td>${v.phone || '-'}</td>
+                    <td>${v.date}</td>
+                    <td>${v.inTime}</td>
+                    <td>${v.outTime || statusBadge}</td>
+                    <td class="pe-4">${actionBtn}</td>
+                </tr>`;
+            });
+        }
+
+        async function checkOutVisitor(id) {
+            let visitor = visitors.find(v => v.id == id);
+            if (!visitor) return;
+
+            let outTime = new Date().toLocaleTimeString();
+            let updated = { ...visitor, outTime, status: 'Out' };
+
+            try {
+                await fetch(`${API_URL}/data/visitors/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(updated)
+                });
+                visitor.outTime = outTime;
+                visitor.status = 'Out';
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Checked Out!',
+                    text: `${visitor.visitorName} has been checked out at ${outTime}.`,
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+
+                loadVisitors();
+            } catch (err) {
+                console.error("Error checking out visitor:", err);
+                Swal.fire('Error', 'Could not check out visitor. Please try again.', 'error');
+            }
+        }
+
+        document.getElementById("visitorForm").addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            let name = document.getElementById("v_name").value.trim();
+            let student = document.getElementById("v_student").value.trim();
+            let purpose = document.getElementById("v_purpose").value;
+            let phone = document.getElementById("v_phone").value.trim();
+            let inTime = document.getElementById("v_intime").value || new Date().toLocaleTimeString();
+
+            let btn = document.getElementById("visitorSubmitBtn");
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa fa-spinner fa-spin me-2"></i> Saving...';
+
+            await addVisitor(name, student, purpose, phone, inTime);
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Visitor Logged!',
+                text: `${name} has been checked in successfully.`,
+                confirmButtonColor: '#764ba2'
+            });
+
+            document.getElementById("visitorForm").reset();
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fa fa-save me-2"></i> Log Visitor';
+            loadVisitors();
+        });
+
+        // Set default check-in time to now
+        window.onload = async function () {
+            let now = new Date();
+            let hh = String(now.getHours()).padStart(2, '0');
+            let mm = String(now.getMinutes()).padStart(2, '0');
+            document.getElementById("v_intime").value = `${hh}:${mm}`;
+
+            await initData();
+            loadVisitors();
+        }
+    </script>
     <script src="../js/bootstrap.bundle.js"></script>
 </body>
+
 </html>

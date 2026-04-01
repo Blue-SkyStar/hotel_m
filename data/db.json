@@ -962,10 +962,33 @@
       "status": "Paid",
       "type": "Down Payment",
       "id": 1774653890151
+    },
+    {
+      "student": "ayan",
+      "room": "101",
+      "amount": "2000",
+      "method": "Cash",
+      "receipt": "REC123",
+      "date": "2026-04-01",
+      "status": "Paid",
+      "id": 1775031488407
     }
   ],
   "complaints": [],
   "notices": [],
+  "visitors": [
+    {
+      "visitorName": "Test Visitor",
+      "visitingStudent": "ayan",
+      "purpose": "Personal Visit",
+      "phone": "",
+      "inTime": "13:44",
+      "outTime": "",
+      "date": "4/1/2026",
+      "status": "In",
+      "id": 1775031331201
+    }
+  ],
   "facilities_info": [
     {
       "id": 1,

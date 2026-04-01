@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<script>
-if(localStorage.getItem("role") !== "admin"){
-    window.location.href = "../login.html";
-}
-</script>
+    <script>
+        if (localStorage.getItem("role") !== "admin") {
+            window.location.href = "../login.html";
+        }
+    </script>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hostel Dashboard</title>
+    <title>Reports | Hostel Management</title>
     <link rel="icon" href="../img/logo/logo.png">
 
     <!-- CSS -->
@@ -24,20 +25,59 @@ if(localStorage.getItem("role") !== "admin"){
 
     <!-- Auth Script -->
     <script>
-        if(localStorage.getItem("isLoggedIn") !== "true"){
+        if (localStorage.getItem("isLoggedIn") !== "true") {
             window.location.href = "../login.html";
         }
     </script>
+
+    <style>
+        @media print {
+
+            nav,
+            .col-md-2,
+            .btn,
+            .no-print {
+                display: none !important;
+            }
+
+            .col-md-10 {
+                width: 100% !important;
+            }
+
+            .print-section {
+                display: block !important;
+            }
+        }
+
+        .report-card {
+            border-radius: 14px;
+            border: none;
+            transition: transform 0.2s;
+        }
+
+        .report-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12) !important;
+        }
+
+        .stat-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
 </head>
-<body class="bg-light">
+
+<body>
 
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-md bg-dark shadow-lg fixed-top navbar-dark">
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark shadow-lg fixed-top">
         <div class="container-fluid">
-
-            <img src="../img/logo/logo.png" class="rounded-circle" width="50">
-
-            <a class="navbar-brand mx-3">Hostel Dashboard</a>
+            <img src="../img/logo/logo.png" width="45" class="rounded-circle border shadow-sm" alt="Logo">
+            <a class="navbar-brand mx-3">Hostel Management</a>
 
             <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#menu">
                 <span class="navbar-toggler-icon"></span>
@@ -45,45 +85,36 @@ if(localStorage.getItem("role") !== "admin"){
 
             <div class="collapse navbar-collapse" id="menu">
                 <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="admin_home.html">Dashboard</a></li>
                     <li class="nav-item"><a class="nav-link" href="admin_manage_students.html">Students</a></li>
                     <li class="nav-item"><a class="nav-link" href="admin_manage_rooms.html">Rooms</a></li>
                     <li class="nav-item"><a class="nav-link" href="admin_manage_payments.html">Payments</a></li>
                     <li class="nav-item"><a class="nav-link" href="admin_manage_complaints.html">Complaints</a></li>
-                    
                     <li class="nav-item">
-                        <button class="btn btn-outline-light ms-3 me-2 align-self-center mt-1 border-0" onclick="toggleDarkMode()" title="Toggle Dark Mode">
-                            <i class="fa fa-moon"></i>
-                        </button>
-                    </li>
-                    <li class="nav-item">
-                        <button class="btn btn-sm btn-danger ms-2 px-3 align-self-center mt-1" style="border-radius:20px; font-weight: 500;" onclick="logout()">
-                            <i class="fa fa-sign-out"></i> Logout
+                        <button class="btn btn-sm btn-danger ms-2 px-3 align-self-center mt-1"
+                            style="border-radius:20px; font-weight:500;" onclick="logout()">
+                            <i class="fa fa-sign-out me-1"></i> Logout
                         </button>
                     </li>
                 </ul>
             </div>
-
         </div>
     </nav>
 
     <div class="container-fluid" style="margin-top:90px">
-
         <div class="row">
 
             <!-- Sidebar -->
-            <div class="col-md-2 bg-dark text-white vh-100 p-3">
-
+            <div class="col-md-2 bg-dark text-white vh-100 p-3 no-print">
                 <h4 class="text-center">MENU</h4>
                 <hr>
 
                 <ul class="nav flex-column">
-
                     <li class="nav-item mb-3">
-                        <a href="#" class="nav-link text-white">
+                        <a href="admin_home.html" class="nav-link text-white">
                             <i class="fa fa-home"></i> Dashboard
                         </a>
                     </li>
-
                     <li class="nav-item mb-3">
                         <a href="admin_manage_students.html" class="nav-link text-white">
                             <i class="fa fa-user"></i> Students
@@ -94,33 +125,29 @@ if(localStorage.getItem("role") !== "admin"){
                             <i class="fa fa-user-plus"></i> Add Student
                         </a>
                     </li>
-
                     <li class="nav-item mb-3">
                         <a href="admin_manage_rooms.html" class="nav-link text-white">
                             <i class="fa fa-bed"></i> Rooms
                         </a>
                     </li>
-
                     <li class="nav-item mb-3">
                         <a href="admin_manage_payments.html" class="nav-link text-white">
                             <i class="fa fa-money-bill"></i> Payments
                         </a>
                     </li>
-
                     <li class="nav-item mb-3">
                         <a href="admin_manage_complaints.html" class="nav-link text-white">
                             <i class="fa fa-exclamation-circle"></i> Complaints
                         </a>
                     </li>
-
-                
                     <li class="nav-item mb-3">
                         <a href="admin_room_allocation.html" class="nav-link text-white">
                             <i class="fa fa-key"></i> Room Allocation
                         </a>
                     </li>
                     <li class="nav-item mb-3">
-                        <a href="admin_reports.html" class="nav-link text-white">
+                        <a href="admin_reports.html" class="nav-link active text-white"
+                            style="background-color:rgba(255,255,255,0.1); border-radius:8px;">
                             <i class="fa fa-file-invoice"></i> Reports
                         </a>
                     </li>
@@ -135,25 +162,351 @@ if(localStorage.getItem("role") !== "admin"){
                         </a>
                     </li>
                 </ul>
-
-
             </div>
 
             <!-- Main Content -->
             <div class="col-md-10 p-4">
-                <h2 class="mb-4">Reports</h2>
-                <div class="card shadow border-0" style="border-radius: 16px;">
-                    <div class="card-body text-center p-5">
-                        <i class="fa fa-file-invoice text-muted mb-3" style="font-size: 4rem;"></i>
-                        <h3 class="text-muted">Under Construction</h3>
-                        <p class="text-muted mb-0">The Reports module is currently being developed.</p>
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2>Reports</h2>
+                    <span class="text-muted small">Generated: <span id="reportDate"></span></span>
+                </div>
+
+                <!-- Summary Stats -->
+                <div class="row g-3 mb-4">
+                    <div class="col-md-3">
+                        <div class="card report-card shadow p-3">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="stat-icon bg-primary bg-opacity-10">
+                                    <i class="fa fa-users fa-lg text-primary"></i>
+                                </div>
+                                <div>
+                                    <div class="small text-muted">Total Students</div>
+                                    <div class="fs-4 fw-bold" id="r_students">0</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card report-card shadow p-3">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="stat-icon bg-success bg-opacity-10">
+                                    <i class="fa fa-bed fa-lg text-success"></i>
+                                </div>
+                                <div>
+                                    <div class="small text-muted">Total Rooms</div>
+                                    <div class="fs-4 fw-bold" id="r_rooms">0</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card report-card shadow p-3">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="stat-icon bg-danger bg-opacity-10">
+                                    <i class="fa fa-rupee-sign fa-lg text-danger"></i>
+                                </div>
+                                <div>
+                                    <div class="small text-muted">Total Revenue</div>
+                                    <div class="fs-4 fw-bold" id="r_revenue">₹0</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card report-card shadow p-3">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="stat-icon bg-warning bg-opacity-10">
+                                    <i class="fa fa-triangle-exclamation fa-lg text-warning"></i>
+                                </div>
+                                <div>
+                                    <div class="small text-muted">Open Complaints</div>
+                                    <div class="fs-4 fw-bold" id="r_complaints">0</div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
+
+                <!-- Revenue Breakdown -->
+                <div class="row g-3 mb-4">
+                    <div class="col-md-4">
+                        <div class="card report-card shadow p-3">
+                            <div class="card-title fw-bold text-muted small text-uppercase mb-3">
+                                <i class="fa fa-chart-pie me-2"></i>Revenue by Method
+                            </div>
+                            <table class="table table-sm mb-0">
+                                <tbody id="r_byMethod"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card report-card shadow p-3">
+                            <div class="card-title fw-bold text-muted small text-uppercase mb-3">
+                                <i class="fa fa-door-open me-2"></i>Room Occupancy
+                            </div>
+                            <div id="r_occupancy" class="small"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card report-card shadow p-3">
+                            <div class="card-title fw-bold text-muted small text-uppercase mb-3">
+                                <i class="fa fa-person-walking me-2"></i>Visitor Summary
+                            </div>
+                            <div id="r_visitors" class="small"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Print Buttons -->
+                <div class="row g-3 mb-4 no-print">
+                    <div class="col-12">
+                        <div class="card shadow border-0"
+                            style="border-radius:14px; background: linear-gradient(135deg,#1e3c72,#2a5298);">
+                            <div class="card-body p-4">
+                                <h5 class="text-white fw-bold mb-3"><i class="fa fa-print me-2"></i>Print Reports</h5>
+                                <div class="row g-3">
+                                    <div class="col-md-3">
+                                        <button class="btn btn-light w-100 fw-semibold" onclick="printStudentReport()">
+                                            <i class="fa fa-users me-2 text-primary"></i>Student List
+                                        </button>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <button class="btn btn-light w-100 fw-semibold" onclick="printPaymentReport()">
+                                            <i class="fa fa-money-bill me-2 text-success"></i>Payment History
+                                        </button>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <button class="btn btn-light w-100 fw-semibold"
+                                            onclick="printComplaintsReport()">
+                                            <i class="fa fa-triangle-exclamation me-2 text-warning"></i>Complaints
+                                        </button>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <button class="btn btn-light w-100 fw-semibold" onclick="printVisitorReport()">
+                                            <i class="fa fa-address-book me-2 text-info"></i>Visitor Log
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Data Tables (shown below for print targets) -->
+
+                <!-- Students Table -->
+                <div class="card shadow border-0 mb-4" style="border-radius:16px; overflow:hidden;"
+                    id="section_students">
+                    <div
+                        class="card-header bg-dark text-white py-3 px-4 d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0 fw-bold"><i class="fa fa-users me-2"></i>Student List</h6>
+                    </div>
+                    <div class="card-body p-0">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="ps-4">ID</th>
+                                    <th>Name</th>
+                                    <th>Course</th>
+                                    <th>Room</th>
+                                    <th>Phone</th>
+                                    <th class="pe-4">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="r_studentTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Payments Table -->
+                <div class="card shadow border-0 mb-4" style="border-radius:16px; overflow:hidden;"
+                    id="section_payments">
+                    <div class="card-header bg-dark text-white py-3 px-4">
+                        <h6 class="mb-0 fw-bold"><i class="fa fa-money-bill me-2"></i>Payment History</h6>
+                    </div>
+                    <div class="card-body p-0">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="ps-4">ID</th>
+                                    <th>Student</th>
+                                    <th>Room</th>
+                                    <th>Amount</th>
+                                    <th>Method</th>
+                                    <th>Date</th>
+                                    <th class="pe-4">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="r_paymentTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
 
-    <!-- JS -->
+    <script>
+        function renderReports() {
+            document.getElementById("reportDate").textContent = new Date().toLocaleString();
+
+            // Summary Stats
+            let totalRevenue = payments.reduce((s, p) => s + (Number(p.amount) || 0), 0);
+            let openComplaints = complaints.filter(c => c.status === "Pending").length;
+            document.getElementById("r_students").textContent = students.length;
+            document.getElementById("r_rooms").textContent = rooms.length;
+            document.getElementById("r_revenue").textContent = "₹" + totalRevenue.toLocaleString();
+            document.getElementById("r_complaints").textContent = openComplaints;
+
+            // Revenue by Method
+            let methods = {};
+            payments.forEach(p => {
+                let m = p.method || "Unknown";
+                methods[m] = (methods[m] || 0) + (Number(p.amount) || 0);
+            });
+            let methodHtml = '';
+            if (Object.keys(methods).length === 0) {
+                methodHtml = '<tr><td class="text-muted">No payments yet.</td></tr>';
+            } else {
+                Object.entries(methods).forEach(([m, amt]) => {
+                    methodHtml += `<tr>
+                        <td><span class="badge bg-primary bg-opacity-10 text-primary border border-primary">${m}</span></td>
+                        <td class="text-end fw-bold">₹${amt.toLocaleString()}</td>
+                    </tr>`;
+                });
+                methodHtml += `<tr class="table-light"><td class="fw-bold">Total</td><td class="text-end fw-bold text-danger">₹${totalRevenue.toLocaleString()}</td></tr>`;
+            }
+            document.getElementById("r_byMethod").innerHTML = methodHtml;
+
+            // Room Occupancy
+            let occupied = rooms.filter(r => r.occupied >= r.capacity).length;
+            let available = rooms.length - occupied;
+            let pct = rooms.length ? Math.round((occupied / rooms.length) * 100) : 0;
+            document.getElementById("r_occupancy").innerHTML = `
+                <div class="mb-2">Total Rooms: <strong>${rooms.length}</strong></div>
+                <div class="mb-2 text-danger">Occupied: <strong>${occupied}</strong></div>
+                <div class="mb-3 text-success">Available: <strong>${available}</strong></div>
+                <div class="progress" style="height:10px;">
+                    <div class="progress-bar bg-danger" style="width:${pct}%"></div>
+                </div>
+                <div class="mt-1 text-muted small">${pct}% occupancy rate</div>`;
+
+            // Visitor Summary
+            let today = new Date().toLocaleDateString();
+            let todayV = visitors.filter(v => v.date === today).length;
+            let insideV = visitors.filter(v => !v.outTime || v.outTime === '').length;
+            document.getElementById("r_visitors").innerHTML = `
+                <div class="mb-2">Total Visitors (All): <strong>${visitors.length}</strong></div>
+                <div class="mb-2">Today's Visitors: <strong>${todayV}</strong></div>
+                <div class="mb-2 text-success">Currently Inside: <strong>${insideV}</strong></div>
+                <div class="text-secondary">Exited: <strong>${visitors.length - insideV}</strong></div>`;
+
+            // Student Table
+            let sHtml = students.length ? students.map(s => `
+                <tr>
+                    <td class="ps-4">${s.id}</td>
+                    <td class="fw-medium">${s.name}</td>
+                    <td>${s.course}</td>
+                    <td>${s.room}</td>
+                    <td>${s.phone || '-'}</td>
+                    <td class="pe-4"><span class="badge ${s.status === 'Active' ? 'bg-success' : 'bg-warning'}">${s.status || 'Active'}</span></td>
+                </tr>`).join('') : '<tr><td colspan="6" class="text-center text-muted py-3">No students found.</td></tr>';
+            document.getElementById("r_studentTable").innerHTML = sHtml;
+
+            // Payment Table
+            let pHtml = payments.length ? payments.map(p => `
+                <tr>
+                    <td class="ps-4">${p.id}</td>
+                    <td>${p.student}</td>
+                    <td>${p.room}</td>
+                    <td class="fw-bold">₹${Number(p.amount).toLocaleString()}</td>
+                    <td>${p.method}</td>
+                    <td>${p.date}</td>
+                    <td class="pe-4"><span class="badge bg-success">${p.status}</span></td>
+                </tr>`).join('') : '<tr><td colspan="7" class="text-center text-muted py-3">No payments yet.</td></tr>';
+            document.getElementById("r_paymentTable").innerHTML = pHtml;
+        }
+
+        function printStudentReport() {
+            let win = window.open('', 'PRINT', 'width=900,height=600');
+            win.document.write(`<html><head><title>Student Report</title>
+                <link rel="stylesheet" href="${location.origin}/css/bootstrap.css">
+                </head><body class="p-4">
+                <h3>HostelSphere - Student Report</h3>
+                <p class="text-muted">Generated: ${new Date().toLocaleString()}</p>
+                <table class="table table-bordered">
+                    <thead class="table-dark"><tr><th>ID</th><th>Name</th><th>Course</th><th>Room</th><th>Phone</th><th>Status</th></tr></thead>
+                    <tbody>${document.getElementById('r_studentTable').innerHTML}</tbody>
+                </table></body></html>`);
+            win.document.close();
+            win.focus();
+            win.print();
+            win.close();
+        }
+
+        function printPaymentReport() {
+            let win = window.open('', 'PRINT', 'width=900,height=600');
+            win.document.write(`<html><head><title>Payment Report</title>
+                <link rel="stylesheet" href="${location.origin}/css/bootstrap.css">
+                </head><body class="p-4">
+                <h3>HostelSphere - Payment Report</h3>
+                <p class="text-muted">Generated: ${new Date().toLocaleString()}</p>
+                <table class="table table-bordered">
+                    <thead class="table-dark"><tr><th>ID</th><th>Student</th><th>Room</th><th>Amount</th><th>Method</th><th>Date</th><th>Status</th></tr></thead>
+                    <tbody>${document.getElementById('r_paymentTable').innerHTML}</tbody>
+                </table></body></html>`);
+            win.document.close();
+            win.focus();
+            win.print();
+            win.close();
+        }
+
+        function printComplaintsReport() {
+            let rows = complaints.length ? complaints.map(c => `
+                <tr><td>${c.id}</td><td>${c.student}</td><td>${c.room}</td><td>${c.type}</td><td>${c.description}</td><td>${c.date}</td><td>${c.status}</td></tr>`).join('')
+                : '<tr><td colspan="7" class="text-center">No complaints.</td></tr>';
+            let win = window.open('', 'PRINT', 'width=900,height=600');
+            win.document.write(`<html><head><title>Complaints Report</title>
+                <link rel="stylesheet" href="${location.origin}/css/bootstrap.css">
+                </head><body class="p-4">
+                <h3>HostelSphere - Complaints Report</h3>
+                <p class="text-muted">Generated: ${new Date().toLocaleString()}</p>
+                <table class="table table-bordered">
+                    <thead class="table-dark"><tr><th>ID</th><th>Student</th><th>Room</th><th>Type</th><th>Description</th><th>Date</th><th>Status</th></tr></thead>
+                    <tbody>${rows}</tbody>
+                </table></body></html>`);
+            win.document.close();
+            win.focus();
+            win.print();
+            win.close();
+        }
+
+        function printVisitorReport() {
+            let rows = visitors.length ? visitors.map(v => `
+                <tr><td>${v.id}</td><td>${v.visitorName}</td><td>${v.visitingStudent}</td><td>${v.purpose}</td><td>${v.date}</td><td>${v.inTime}</td><td>${v.outTime || 'Still Inside'}</td></tr>`).join('')
+                : '<tr><td colspan="7" class="text-center">No visitors.</td></tr>';
+            let win = window.open('', 'PRINT', 'width=900,height=600');
+            win.document.write(`<html><head><title>Visitor Log Report</title>
+                <link rel="stylesheet" href="${location.origin}/css/bootstrap.css">
+                </head><body class="p-4">
+                <h3>HostelSphere - Visitor Log Report</h3>
+                <p class="text-muted">Generated: ${new Date().toLocaleString()}</p>
+                <table class="table table-bordered">
+                    <thead class="table-dark"><tr><th>ID</th><th>Visitor</th><th>Student</th><th>Purpose</th><th>Date</th><th>In Time</th><th>Out Time</th></tr></thead>
+                    <tbody>${rows}</tbody>
+                </table></body></html>`);
+            win.document.close();
+            win.focus();
+            win.print();
+            win.close();
+        }
+
+        window.onload = async function () {
+            await initData();
+            renderReports();
+        }
+    </script>
     <script src="../js/bootstrap.bundle.js"></script>
 </body>
+
 </html>

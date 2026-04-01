@@ -1,11 +1,12 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
-<script>
-if(localStorage.getItem("role") !== "admin"){
-    window.location.href = "../login.html";
-}
-</script>
+    <script>
+        if (localStorage.getItem("role") !== "admin") {
+            window.location.href = "../login.html";
+        }
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hostel Dashboard</title>
@@ -23,6 +24,7 @@ if(localStorage.getItem("role") !== "admin"){
 
 
 </head>
+
 <body class="bg-light">
 
     <!-- Navbar -->
@@ -43,14 +45,16 @@ if(localStorage.getItem("role") !== "admin"){
                     <li class="nav-item"><a class="nav-link" href="admin_manage_rooms.html">Rooms</a></li>
                     <li class="nav-item"><a class="nav-link" href="admin_manage_payments.html">Payments</a></li>
                     <li class="nav-item"><a class="nav-link" href="admin_manage_complaints.html">Complaints</a></li>
-                    
+
                     <li class="nav-item">
-                        <button class="btn btn-outline-light ms-3 me-2 align-self-center mt-1 border-0" onclick="toggleDarkMode()" title="Toggle Dark Mode">
+                        <button class="btn btn-outline-light ms-3 me-2 align-self-center mt-1 border-0"
+                            onclick="toggleDarkMode()" title="Toggle Dark Mode">
                             <i class="fa fa-moon"></i>
                         </button>
                     </li>
                     <li class="nav-item">
-                        <button class="btn btn-sm btn-danger ms-2 px-3 align-self-center mt-1" style="border-radius:20px; font-weight: 500;" onclick="logout()">
+                        <button class="btn btn-sm btn-danger ms-2 px-3 align-self-center mt-1"
+                            style="border-radius:20px; font-weight: 500;" onclick="logout()">
                             <i class="fa fa-sign-out"></i> Logout
                         </button>
                     </li>
@@ -107,7 +111,7 @@ if(localStorage.getItem("role") !== "admin"){
                         </a>
                     </li>
 
-                
+
                     <li class="nav-item mb-3">
                         <a href="admin_room_allocation.html" class="nav-link text-white">
                             <i class="fa fa-key"></i> Room Allocation
@@ -174,7 +178,7 @@ if(localStorage.getItem("role") !== "admin"){
                     <div class="col-md-3">
                         <div class="card text-white bg-danger shadow">
                             <div class="card-body text-center">
-                                <h3>₹<span id="dash_fees">0</span></h3>
+                                <h3>â‚¹<span id="dash_fees">0</span></h3>
                                 <p>Total Fees</p>
                             </div>
                         </div>
@@ -182,7 +186,7 @@ if(localStorage.getItem("role") !== "admin"){
 
                 </div>
 
-                
+
                 <!-- Charts Row -->
                 <div class="row mt-5 mb-4">
                     <div class="col-md-4">
@@ -198,7 +202,8 @@ if(localStorage.getItem("role") !== "admin"){
                     <div class="col-md-4">
                         <div class="card shadow border-0 h-100" style="border-radius: 16px;">
                             <div class="card-header bg-white border-0 pt-4 pb-0">
-                                <h6 class="fw-bold text-muted"><i class="fa fa-chart-line me-2"></i>Payments Collected</h6>
+                                <h6 class="fw-bold text-muted"><i class="fa fa-chart-line me-2"></i>Payments Collected
+                                </h6>
                             </div>
                             <div class="card-body">
                                 <canvas id="paymentChart" height="200"></canvas>
@@ -208,7 +213,8 @@ if(localStorage.getItem("role") !== "admin"){
                     <div class="col-md-4">
                         <div class="card shadow border-0 h-100" style="border-radius: 16px;">
                             <div class="card-header bg-white border-0 pt-4 pb-0">
-                                <h6 class="fw-bold text-muted"><i class="fa fa-chart-bar me-2"></i>Complaint Categories</h6>
+                                <h6 class="fw-bold text-muted"><i class="fa fa-chart-bar me-2"></i>Complaint Categories
+                                </h6>
                             </div>
                             <div class="card-body">
                                 <canvas id="complaintChart" height="200"></canvas>
@@ -258,14 +264,14 @@ if(localStorage.getItem("role") !== "admin"){
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="../js/index.js"></script>
     <script>
-        window.onload = async function() {
+        window.onload = async function () {
             await initData();
             document.getElementById("dash_students").textContent = students.length;
             document.getElementById("dash_rooms").textContent = rooms.length;
             document.getElementById("dash_complaints").textContent = complaints.length;
-            
-            let totalFees = payments.reduce((sum, payment) => sum + Number(payment.amount), 0);
-            document.getElementById("dash_fees").textContent = totalFees;
+
+            let totalFees = payments.reduce((sum, payment) => sum + (Number(payment.amount) || 0), 0);
+            document.getElementById("dash_fees").textContent = totalFees.toLocaleString();
 
             let table = document.getElementById("recentStudentsTable");
             table.innerHTML = "";
@@ -290,4 +296,5 @@ if(localStorage.getItem("role") !== "admin"){
     </script>
     <script src="../js/bootstrap.bundle.js"></script>
 </body>
+
 </html>

@@ -1,13 +1,14 @@
 // API Base URL
 const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-  ? 'http://localhost:3000/api'
-  : '/api';
+    ? 'http://localhost:3000/api'
+    : '/api';
 
 // Global variables (will be populated from server)
 let students = [];
 let rooms = [];
 let payments = [];
 let complaints = [];
+let visitors = [];
 
 // Initialize data from server
 function initData() {
@@ -15,15 +16,17 @@ function initData() {
         fetch(`${API_URL}/data/students`).then(res => res.json()),
         fetch(`${API_URL}/data/rooms`).then(res => res.json()),
         fetch(`${API_URL}/data/payments`).then(res => res.json()),
-        fetch(`${API_URL}/data/complaints`).then(res => res.json())
-    ]).then(([sRes, rRes, pRes, cRes]) => {
+        fetch(`${API_URL}/data/complaints`).then(res => res.json()),
+        fetch(`${API_URL}/data/visitors`).then(res => res.json()).catch(() => [])
+    ]).then(([sRes, rRes, pRes, cRes, vRes]) => {
         students = sRes;
         rooms = rRes;
         payments = pRes;
         complaints = cRes;
-        
+        visitors = vRes || [];
+
         if (typeof updateDashboardStats === 'function') updateDashboardStats();
-        return { students, rooms, payments, complaints };
+        return { students, rooms, payments, complaints, visitors };
     }).catch(err => {
         console.error("Error loading data from server:", err);
     });
@@ -118,6 +121,32 @@ async function addComplaint(studentName, roomNumber, type, description) {
     }
 }
 
+async function addVisitor(visitorName, visitingStudent, purpose, phone, inTime) {
+    let visitor = {
+        visitorName,
+        visitingStudent,
+        purpose,
+        phone: phone || '',
+        inTime: inTime || new Date().toLocaleTimeString(),
+        outTime: '',
+        date: new Date().toLocaleDateString(),
+        status: 'In'
+    };
+
+    try {
+        const res = await fetch(`${API_URL}/data/visitors`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(visitor)
+        });
+        const data = await res.json();
+        visitors.push(data.item);
+        return data.item;
+    } catch (err) {
+        console.error("Error adding visitor:", err);
+    }
+}
+
 async function deleteData(key, id) {
     try {
         const res = await fetch(`${API_URL}/data/${key}/${id}`, {
@@ -175,15 +204,22 @@ function updateDashboardStats() {
 
     if (totalStudentsEl) totalStudentsEl.innerText = students.length;
     if (totalRoomsEl) totalRoomsEl.innerText = rooms.length;
-    
+
     if (complaintsEl) {
         let pendingComplaints = complaints.filter(c => c.status === "Pending").length;
         complaintsEl.innerText = pendingComplaints;
     }
-    
+
     if (totalFeesEl) {
-        let total = payments.reduce((sum, p) => sum + Number(p.amount), 0);
-        totalFeesEl.innerText = "₹" + total.toLocaleString();
+        let total = payments.reduce((sum, p) => sum + (Number(p.amount) || 0), 0);
+        // If the element is the dashboard card, just put the number (₹ is inline in html)
+        // If it shows a ₹ prefix already in the element id pattern, strip it
+        let el = totalFeesEl;
+        if (el.id === 'dash_fees') {
+            el.innerText = total.toLocaleString();
+        } else {
+            el.innerText = '₹' + total.toLocaleString();
+        }
     }
 }
 
@@ -204,7 +240,7 @@ function toggleDarkMode() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    if(localStorage.getItem("darkMode") === "true") {
+    if (localStorage.getItem("darkMode") === "true") {
         document.body.classList.add("dark-mode");
     }
 });
@@ -215,7 +251,7 @@ function searchTable(inputId, tableId) {
     let rows = document.querySelectorAll(`#${tableId} tbody tr`);
 
     rows.forEach(row => {
-        if(row.innerText.toLowerCase().includes("no ") && row.children.length === 1) return;
+        if (row.innerText.toLowerCase().includes("no ") && row.children.length === 1) return;
         row.style.display = row.innerText.toLowerCase().includes(input) ? "" : "none";
     });
 }
@@ -228,7 +264,7 @@ function printReport() {
 function logout() {
     localStorage.removeItem("role");
     localStorage.removeItem("loggedUser");
-    
+
     let path = window.location.pathname;
     const loginPath = (path.includes('/admin/') || path.includes('/student/') || path.includes('/warden/')) ? "../login.html" : "login.html";
     window.location.href = loginPath;
