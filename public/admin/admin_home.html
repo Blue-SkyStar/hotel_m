@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -178,7 +178,7 @@
                     <div class="col-md-3">
                         <div class="card text-white bg-danger shadow">
                             <div class="card-body text-center">
-                                <h3>â‚¹<span id="dash_fees">0</span></h3>
+                                <h3>&#8377;<span id="dash_fees">0</span></h3>
                                 <p>Total Fees</p>
                             </div>
                         </div>
@@ -266,12 +266,29 @@
     <script>
         window.onload = async function () {
             await initData();
-            document.getElementById("dash_students").textContent = students.length;
+
+            // Count students from applications: Allocated + Awaiting Payment + Pending Review
+            let allocatedCount = 0;
+            let pendingCount = 0;
+            let awaitingCount = 0;
+            let rejectedCount = 0;
+            try {
+                const res = await fetch(`${API_URL}/data/applications`);
+                const apps = await res.json();
+                allocatedCount = apps.filter(a => a.status === 'Allocated').length;
+                pendingCount = apps.filter(a => a.status === 'Pending Review').length;
+                awaitingCount = apps.filter(a => a.status === 'Approved - Awaiting Payment').length;
+                rejectedCount = apps.filter(a => a.status === 'Rejected').length;
+            } catch(e) { console.warn('Could not load applications:', e); }
+
+            // Total students = all non-rejected applications (anyone engaged with the system)
+            let totalStudents = allocatedCount + pendingCount + awaitingCount;
+            document.getElementById("dash_students").textContent = totalStudents;
             document.getElementById("dash_rooms").textContent = rooms.length;
             document.getElementById("dash_complaints").textContent = complaints.length;
 
             let totalFees = payments.reduce((sum, payment) => sum + (Number(payment.amount) || 0), 0);
-            document.getElementById("dash_fees").textContent = totalFees.toLocaleString();
+            document.getElementById("dash_fees").textContent = totalFees.toLocaleString('en-IN');
 
             let table = document.getElementById("recentStudentsTable");
             table.innerHTML = "";
