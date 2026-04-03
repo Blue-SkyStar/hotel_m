@@ -142,6 +142,7 @@ app.post('/api/razorpay/verify', async (req, res) => {
 // ─── AUTH API ─────────────────────────────────────────────────────────────────
 app.post('/api/auth/login', async (req, res) => {
     const { email, password, role } = req.body;
+    if (!pool) return res.status(500).json({ success: false, message: 'Database not configured. Please set SUPABASE_URL in Vercel environment variables.' });
     try {
         const { rows } = await pool.query('SELECT * FROM users WHERE email = $1 AND role = $2', [email, role]);
         if (rows.length > 0) {
