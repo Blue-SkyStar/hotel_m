@@ -8,46 +8,8 @@
     <link rel="icon" href="img/logo/logo.png">
     <!-- CSS -->
     <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/home.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <style>
-        html {
-            scroll-behavior: smooth;
-        }
-
-        .hero-section {
-            background: linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65)), url('https://images.unsplash.com/photo-1555854877-bab0e564b8d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') no-repeat center center;
-            background-size: cover;
-            color: white;
-            text-align: center;
-        }
-
-        .facility-icon {
-            font-size: 2.5rem;
-            color: #0d6efd;
-            margin-bottom: 1rem;
-            transition: transform 0.3s ease;
-        }
-
-        .card:hover .facility-icon {
-            transform: scale(1.1);
-        }
-
-        .section-padding {
-            padding: 80px 0;
-        }
-
-        .bg-light-gray {
-            background-color: #f8f9fa;
-        }
-
-        .hover-shadow {
-            transition: box-shadow 0.3s ease;
-        }
-
-        .hover-shadow:hover {
-            box-shadow: 0 1rem 3rem rgba(0, 0, 0, .175) !important;
-        }
-    </style>
 </head>
 
 <body data-bs-spy="scroll" data-bs-target="#publicNavbar" data-bs-offset="70" tabindex="0">
@@ -56,7 +18,8 @@
     <nav id="publicNavbar" class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow-sm transition">
         <div class="container">
             <a class="navbar-brand fw-bold d-flex align-items-center" href="#">
-                <img src="img/logo/logo.png" class="rounded-circle me-2 object-fit-cover" width="40" height="40" alt="Logo">
+                <img src="img/logo/logo.png" class="rounded-circle me-2 object-fit-cover" width="40" height="40"
+                    alt="Logo">
                 <span>HostelSphere</span>
             </a>
             <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse"
@@ -84,12 +47,14 @@
         <div class="container py-5">
             <div class="row justify-content-center">
                 <div class="col-lg-10">
-                    <h1 class="display-4 fw-bolder mb-4 text-white">HostelSphere<br><span style="font-size:55%;">Intelligent Hostel Management System</span></h1>
+                    <h1 class="display-4 fw-bolder mb-4 text-white">HostelSphere<br><span
+                            style="font-size:55%;">Intelligent Hostel Management System</span></h1>
                     <p class="lead mb-5 fs-5 text-white-50 mx-auto" style="max-width: 700px;">Manage hostel
                         accommodation, payments, and complaints digitally with ease, transparency, and top-tier
                         efficiency.</p>
                     <div class="d-flex flex-column flex-sm-row justify-content-center gap-3">
-                        <a href="apply.html" class="btn btn-primary btn-lg px-5 py-3 rounded-pill fw-bold shadow-lg">Apply
+                        <a href="apply.html"
+                            class="btn btn-primary btn-lg px-5 py-3 rounded-pill fw-bold shadow-lg">Apply
                             for Room</a>
                         <a href="login.html"
                             class="btn btn-light btn-lg px-5 py-3 rounded-pill fw-bold shadow-lg text-dark">Student
@@ -224,84 +189,65 @@
 
     <!-- Room Types Section -->
     <section id="rooms" class="section-padding">
-        <div class="container text-center">
-            <h6 class="text-primary fw-bold text-uppercase tracking-wide mb-2">Accommodation</h6>
-            <h2 class="fw-bold mb-5 display-6">Available Room Types</h2>
-            <div class="row g-4 justify-content-center">
+    <div class="container text-center">
+        <h6 class="text-primary fw-bold text-uppercase mb-2">Accommodation</h6>
+        <h2 class="fw-bold mb-5">Available Room Types</h2>
 
-                <!-- Single Room -->
-                <div class="col-lg-4 col-md-6">
-                    <div class="card border-0 shadow-sm hover-shadow rounded-4 overflow-hidden h-100">
-                        <div class="bg-primary text-white p-4">
-                            <h3 class="fw-bold mb-1">Single Room</h3>
-                            <p class="mb-0 text-white-50 fs-6">Ultimate Privacy</p>
-                        </div>
-                        <div class="card-body p-4 p-xl-5 text-start d-flex flex-column">
-                            <h2 class="fw-bold text-dark mb-4 text-center">$300<span
-                                    class="fs-6 text-muted fw-normal">/mo</span></h2>
-                            <ul class="list-unstyled mb-4 lh-lg text-muted flex-grow-1">
-                                <li><i class="fa fa-check-circle text-success me-2"></i> Private AC Room</li>
-                                <li><i class="fa fa-check-circle text-success me-2"></i> Attached Washroom</li>
-                                <li><i class="fa fa-check-circle text-success me-2"></i> Personal Study Table</li>
-                                <li><i class="fa fa-check-circle text-success me-2"></i> Independent Wardrobe</li>
-                                <li><i class="fa fa-check-circle text-success me-2"></i> Mini Fridge included</li>
-                            </ul>
-                            <a href="#" class="btn btn-outline-primary w-100 rounded-pill py-2 fw-medium">Apply Now</a>
-                        </div>
-                    </div>
-                </div>
+        <div class="row g-4 justify-content-center">
 
-                <!-- Double Sharing -->
-                <div class="col-lg-4 col-md-6">
-                    <div class="card border-0 shadow-lg rounded-4 overflow-hidden h-100 position-relative"
-                        style="transform: scale(1.03); z-index:2;">
-                        <div class="position-absolute top-0 end-0 bg-warning text-dark px-4 py-1 fw-bold rounded-start mt-3 shadow-sm"
-                            style="font-size: 0.85rem;">POPULAR</div>
-                        <div class="bg-dark text-white p-4">
-                            <h3 class="fw-bold mb-1">Double Sharing</h3>
-                            <p class="mb-0 text-white-50 fs-6">Perfect Balance</p>
-                        </div>
-                        <div class="card-body p-4 p-xl-5 text-start d-flex flex-column">
-                            <h2 class="fw-bold text-dark mb-4 text-center">$200<span
-                                    class="fs-6 text-muted fw-normal">/mo</span></h2>
-                            <ul class="list-unstyled mb-4 lh-lg text-muted flex-grow-1">
-                                <li><i class="fa fa-check-circle text-success me-2"></i> Spacious AC Room</li>
-                                <li><i class="fa fa-check-circle text-success me-2"></i> Attached Washroom</li>
-                                <li><i class="fa fa-check-circle text-success me-2"></i> Separate Study Tables</li>
-                                <li><i class="fa fa-check-circle text-success me-2"></i> Shared Wardrobe Space</li>
-                                <li><i class="fa fa-check-circle text-success me-2"></i> Twin Beds</li>
-                            </ul>
-                            <a href="#" class="btn btn-primary shadow w-100 rounded-pill py-2 fw-bold">Apply Now</a>
-                        </div>
-                    </div>
-                </div>
+            <!-- Single -->
+    <div class="col-lg-4">
+        <div class="card shadow-sm rounded-4 h-100">
+            <div class="bg-primary text-white p-4">
+                <h3>Single Room</h3>
+                <p class="mb-0">Ultimate Privacy</p>
+            </div>
 
-                <!-- Triple Sharing -->
-                <div class="col-lg-4 col-md-6">
-                    <div class="card border-0 shadow-sm hover-shadow rounded-4 overflow-hidden h-100">
-                        <div class="bg-secondary text-white p-4">
-                            <h3 class="fw-bold mb-1">Triple Sharing</h3>
-                            <p class="mb-0 text-white-50 fs-6">Budget Friendly</p>
-                        </div>
-                        <div class="card-body p-4 p-xl-5 text-start d-flex flex-column">
-                            <h2 class="fw-bold text-dark mb-4 text-center">$120<span
-                                    class="fs-6 text-muted fw-normal">/mo</span></h2>
-                            <ul class="list-unstyled mb-4 lh-lg text-muted flex-grow-1">
-                                <li><i class="fa fa-check-circle text-success me-2"></i> Large Ventilated Room</li>
-                                <li><i class="fa fa-check-circle text-success me-2"></i> Common Washrooms</li>
-                                <li><i class="fa fa-check-circle text-success me-2"></i> Basic Furnishing</li>
-                                <li><i class="fa fa-check-circle text-success me-2"></i> Individual Lockers</li>
-                                <li class="text-muted opacity-50"><i class="fa fa-times-circle text-danger me-2"></i> No
-                                    Air Conditioning</li>
-                            </ul>
-                            <a href="#" class="btn btn-outline-secondary w-100 rounded-pill py-2 fw-medium">Apply
-                                Now</a>
-                        </div>
-                    </div>
-                </div>
-
+            <div class="p-4 text-center">
+                <h2>₹12,000 <small>/month</small></h2>
+                <p style="color:green;">
+                    ₹1,20,000 → ₹90,000/year (Save ₹30,000)
+                </p>
             </div>
         </div>
+    </div>
+
+    <!-- Double -->
+    <div class="col-lg-4">
+        <div class="card shadow rounded-4 h-100">
+            <div class="bg-dark text-white p-4">
+                <h3>Double Sharing</h3>
+                <p class="mb-0">Popular</p>
+            </div>
+
+            <div class="p-4 text-center">
+                <h2>₹8,000 <small>/month</small></h2>
+                <p style="color:green;">
+                    ₹96,000 → ₹72,000/year (Save ₹24,000)
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Triple -->
+    <div class="col-lg-4">
+        <div class="card shadow-sm rounded-4 h-100">
+            <div class="bg-secondary text-white p-4">
+                <h3>Triple Sharing</h3>
+                <p class="mb-0">Budget</p>
+            </div>
+
+            <div class="p-4 text-center">
+                <h2>₹5,000 <small>/month</small></h2>
+                <p style="color:green;">
+                    ₹60,000 → ₹45,000/year (Save ₹15,000)
+                </p>
+            </div>
+        </div>
+    </div>
+
+    </div>
+    </div>
     </section>
 
     <!-- Contact Section -->
@@ -314,7 +260,8 @@
             <div class="row g-5 align-items-center">
                 <div class="col-lg-5 ps-lg-4">
                     <h3 class="fw-bold mb-4">Contact Information</h3>
-                    <p class="text-white-50 mb-5 fs-5">Have any questions or concerns regarding admissions? Our team is
+                    <p class="text-white-50 mb-5 fs-5">Have any questions or concerns regarding admissions?
+                        Our team is
                         available 24/7 to help you securely allocate your room.</p>
 
                     <div class="d-flex mb-4">
@@ -324,7 +271,8 @@
                         </div>
                         <div>
                             <h5 class="fw-bold mb-1">Hostel Address</h5>
-                            <p class="mb-0 text-light opacity-75">123 University Road, Education City, CA 90210</p>
+                            <p class="mb-0 text-light opacity-75">123 University Road, Education City, CA
+                                90210</p>
                         </div>
                     </div>
 
@@ -346,7 +294,9 @@
                         </div>
                         <div>
                             <h5 class="fw-bold mb-1">Email Address</h5>
-                            <p class="mb-0 text-light opacity-75">info@hostelsphere.edu<br>admissions@hostelsphere.edu</p>
+                            <p class="mb-0 text-light opacity-75">
+                                info@hostelsphere.edu<br>admissions@hostelsphere.edu
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -374,60 +324,106 @@
                 <!-- Brand + Newsletter -->
                 <div class="col-lg-4 col-md-6">
                     <div class="d-flex align-items-center mb-3">
-                        <img src="img/logo/logo.png" class="rounded-circle me-2 object-fit-cover" width="40" height="40" alt="Logo">
+                        <img src="img/logo/logo.png" class="rounded-circle me-2 object-fit-cover" width="40" height="40"
+                            alt="Logo">
                         <div>
                             <h4 class="fw-bold text-white mb-0">HostelSphere</h4>
-                            <small style="color:#888; font-size:0.75rem; letter-spacing:1px;">INTELLIGENT HOSTEL MANAGEMENT</small>
+                            <small style="color:#888; font-size:0.75rem; letter-spacing:1px;">INTELLIGENT
+                                HOSTEL
+                                MANAGEMENT</small>
                         </div>
                     </div>
-                    <p style="color:#888; font-size:0.92rem; line-height:1.8; margin-bottom:24px;">Providing a safe, comfortable, and digitally intelligent living environment tailored for modern students.</p>
+                    <p style="color:#888; font-size:0.92rem; line-height:1.8; margin-bottom:24px;">Providing
+                        a safe,
+                        comfortable, and digitally intelligent living environment tailored for modern
+                        students.</p>
 
-                    <p style="font-size:0.78rem; letter-spacing:1.5px; color:#777; text-transform:uppercase; margin-bottom:10px;">Subscribe for Latest Updates</p>
+                    <p
+                        style="font-size:0.78rem; letter-spacing:1.5px; color:#777; text-transform:uppercase; margin-bottom:10px;">
+                        Subscribe for Latest Updates</p>
                     <div class="d-flex" style="border-bottom:1px solid #444; padding-bottom: 6px; gap:10px;">
-                        <input type="email" placeholder="Enter your email address" style="background:transparent; border:none; outline:none; color:#ccc; font-size:0.9rem; flex:1; padding:4px 0;">
-                        <button style="background:transparent; border:1px solid #666; color:#ccc; font-size:0.75rem; letter-spacing:1px; padding:6px 14px; cursor:pointer; transition:all 0.3s;" onmouseover="this.style.background='#fff';this.style.color='#000'" onmouseout="this.style.background='transparent';this.style.color='#ccc'">SUBSCRIBE</button>
+                        <input type="email" placeholder="Enter your email address"
+                            style="background:transparent; border:none; outline:none; color:#ccc; font-size:0.9rem; flex:1; padding:4px 0;">
+                        <button
+                            style="background:transparent; border:1px solid #666; color:#ccc; font-size:0.75rem; letter-spacing:1px; padding:6px 14px; cursor:pointer; transition:all 0.3s;"
+                            onmouseover="this.style.background='#fff';this.style.color='#000'"
+                            onmouseout="this.style.background='transparent';this.style.color='#ccc'">SUBSCRIBE</button>
                     </div>
                 </div>
 
                 <!-- Quick Links -->
                 <div class="col-lg-2 col-md-6 col-6">
-                    <p style="font-size:0.78rem; letter-spacing:1.5px; color:#777; text-transform:uppercase; margin-bottom:18px;">Quick Links</p>
+                    <p
+                        style="font-size:0.78rem; letter-spacing:1.5px; color:#777; text-transform:uppercase; margin-bottom:18px;">
+                        Quick Links</p>
                     <ul class="list-unstyled" style="font-size:0.9rem; line-height:2.4;">
-                        <li><a href="#hero" class="text-decoration-none" style="color:#aaa; transition:color 0.2s;" onmouseover="this.style.color='#4e9fff'" onmouseout="this.style.color='#aaa'">Home</a></li>
-                        <li><a href="#about" class="text-decoration-none" style="color:#aaa;" onmouseover="this.style.color='#4e9fff'" onmouseout="this.style.color='#aaa'">About Hostel</a></li>
-                        <li><a href="#facilities" class="text-decoration-none" style="color:#aaa;" onmouseover="this.style.color='#4e9fff'" onmouseout="this.style.color='#aaa'">Facilities</a></li>
-                        <li><a href="#rooms" class="text-decoration-none" style="color:#aaa;" onmouseover="this.style.color='#4e9fff'" onmouseout="this.style.color='#aaa'">Room Types</a></li>
-                        <li><a href="#contact" class="text-decoration-none" style="color:#aaa;" onmouseover="this.style.color='#4e9fff'" onmouseout="this.style.color='#aaa'">Contact Us</a></li>
-                        <li><a href="login.html" class="text-decoration-none" style="color:#aaa;" onmouseover="this.style.color='#4e9fff'" onmouseout="this.style.color='#aaa'">Student Login</a></li>
+                        <li><a href="#hero" class="text-decoration-none" style="color:#aaa; transition:color 0.2s;"
+                                onmouseover="this.style.color='#4e9fff'" onmouseout="this.style.color='#aaa'">Home</a>
+                        </li>
+                        <li><a href="#about" class="text-decoration-none" style="color:#aaa;"
+                                onmouseover="this.style.color='#4e9fff'" onmouseout="this.style.color='#aaa'">About
+                                Hostel</a></li>
+                        <li><a href="#facilities" class="text-decoration-none" style="color:#aaa;"
+                                onmouseover="this.style.color='#4e9fff'"
+                                onmouseout="this.style.color='#aaa'">Facilities</a></li>
+                        <li><a href="#rooms" class="text-decoration-none" style="color:#aaa;"
+                                onmouseover="this.style.color='#4e9fff'" onmouseout="this.style.color='#aaa'">Room
+                                Types</a></li>
+                        <li><a href="#contact" class="text-decoration-none" style="color:#aaa;"
+                                onmouseover="this.style.color='#4e9fff'" onmouseout="this.style.color='#aaa'">Contact
+                                Us</a></li>
+                        <li><a href="login.html" class="text-decoration-none" style="color:#aaa;"
+                                onmouseover="this.style.color='#4e9fff'" onmouseout="this.style.color='#aaa'">Student
+                                Login</a></li>
                     </ul>
                 </div>
 
                 <!-- Student Portal -->
                 <div class="col-lg-2 col-md-6 col-6">
-                    <p style="font-size:0.78rem; letter-spacing:1.5px; color:#777; text-transform:uppercase; margin-bottom:18px;">Student Portal</p>
+                    <p
+                        style="font-size:0.78rem; letter-spacing:1.5px; color:#777; text-transform:uppercase; margin-bottom:18px;">
+                        Student Portal</p>
                     <ul class="list-unstyled" style="font-size:0.9rem; line-height:2.4;">
-                        <li><a href="apply.html" class="text-decoration-none" style="color:#aaa;" onmouseover="this.style.color='#4e9fff'" onmouseout="this.style.color='#aaa'">Apply for Room</a></li>
-                        <li><a href="login.html" class="text-decoration-none" style="color:#aaa;" onmouseover="this.style.color='#4e9fff'" onmouseout="this.style.color='#aaa'">Track Application</a></li>
-                        <li><a href="login.html" class="text-decoration-none" style="color:#aaa;" onmouseover="this.style.color='#4e9fff'" onmouseout="this.style.color='#aaa'">Pay Fees Online</a></li>
-                        <li><a href="login.html" class="text-decoration-none" style="color:#aaa;" onmouseover="this.style.color='#4e9fff'" onmouseout="this.style.color='#aaa'">Submit Complaint</a></li>
-                        <li><a href="login.html" class="text-decoration-none" style="color:#aaa;" onmouseover="this.style.color='#4e9fff'" onmouseout="this.style.color='#aaa'">View Notices</a></li>
+                        <li><a href="apply.html" class="text-decoration-none" style="color:#aaa;"
+                                onmouseover="this.style.color='#4e9fff'" onmouseout="this.style.color='#aaa'">Apply for
+                                Room</a></li>
+                        <li><a href="login.html" class="text-decoration-none" style="color:#aaa;"
+                                onmouseover="this.style.color='#4e9fff'" onmouseout="this.style.color='#aaa'">Track
+                                Application</a></li>
+                        <li><a href="login.html" class="text-decoration-none" style="color:#aaa;"
+                                onmouseover="this.style.color='#4e9fff'" onmouseout="this.style.color='#aaa'">Pay Fees
+                                Online</a></li>
+                        <li><a href="login.html" class="text-decoration-none" style="color:#aaa;"
+                                onmouseover="this.style.color='#4e9fff'" onmouseout="this.style.color='#aaa'">Submit
+                                Complaint</a></li>
+                        <li><a href="login.html" class="text-decoration-none" style="color:#aaa;"
+                                onmouseover="this.style.color='#4e9fff'" onmouseout="this.style.color='#aaa'">View
+                                Notices</a></li>
                     </ul>
                 </div>
 
                 <!-- Contact Info -->
                 <div class="col-lg-4 col-md-6">
-                    <p style="font-size:0.78rem; letter-spacing:1.5px; color:#777; text-transform:uppercase; margin-bottom:18px;">Contact Information</p>
+                    <p
+                        style="font-size:0.78rem; letter-spacing:1.5px; color:#777; text-transform:uppercase; margin-bottom:18px;">
+                        Contact Information</p>
                     <div class="mb-3 d-flex align-items-start gap-3">
                         <i class="fa fa-location-dot text-primary mt-1"></i>
                         <div>
-                            <p style="color:#888; font-size:0.78rem; margin:0; letter-spacing:1px;">FOR ADMISSIONS OFFICE</p>
-                            <p style="color:#ccc; font-size:0.9rem; margin:0;">123 University Road, Education City, CA 90210</p>
+                            <p style="color:#888; font-size:0.78rem; margin:0; letter-spacing:1px;">FOR
+                                ADMISSIONS
+                                OFFICE</p>
+                            <p style="color:#ccc; font-size:0.9rem; margin:0;">123 University Road,
+                                Education City, CA
+                                90210</p>
                         </div>
                     </div>
                     <div class="mb-3 d-flex align-items-start gap-3">
                         <i class="fa fa-phone text-primary mt-1"></i>
                         <div>
-                            <p style="color:#888; font-size:0.78rem; margin:0; letter-spacing:1px;">FOR BOOKINGS CONTACT</p>
+                            <p style="color:#888; font-size:0.78rem; margin:0; letter-spacing:1px;">FOR
+                                BOOKINGS CONTACT
+                            </p>
                             <p style="color:#4e9fff; font-size:0.95rem; margin:0;">+1 (555) 123-4567</p>
                             <p style="color:#ccc; font-size:0.85rem; margin:0;">+1 (555) 987-6543</p>
                         </div>
@@ -435,20 +431,34 @@
                     <div class="mb-3 d-flex align-items-start gap-3">
                         <i class="fa fa-envelope text-primary mt-1"></i>
                         <div>
-                            <p style="color:#888; font-size:0.78rem; margin:0; letter-spacing:1px;">STUDENT SUPPORT</p>
+                            <p style="color:#888; font-size:0.78rem; margin:0; letter-spacing:1px;">STUDENT
+                                SUPPORT</p>
                             <p style="color:#ccc; font-size:0.9rem; margin:0;">info@hostelsphere.edu</p>
-                            <p style="color:#ccc; font-size:0.9rem; margin:0;">admissions@hostelsphere.edu</p>
+                            <p style="color:#ccc; font-size:0.9rem; margin:0;">admissions@hostelsphere.edu
+                            </p>
                         </div>
                     </div>
 
                     <!-- Social Media -->
-                    <p style="font-size:0.78rem; letter-spacing:1.5px; color:#777; text-transform:uppercase; margin-top:20px; margin-bottom:12px;">Connect With Us</p>
+                    <p
+                        style="font-size:0.78rem; letter-spacing:1.5px; color:#777; text-transform:uppercase; margin-top:20px; margin-bottom:12px;">
+                        Connect With Us</p>
                     <div class="d-flex gap-3">
-                        <a href="#" style="color:#888; font-size:1.3rem; transition:color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#888'"><i class="fa-brands fa-facebook"></i></a>
-                        <a href="#" style="color:#888; font-size:1.3rem; transition:color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#888'"><i class="fa-brands fa-x-twitter"></i></a>
-                        <a href="#" style="color:#888; font-size:1.3rem; transition:color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#888'"><i class="fa-brands fa-instagram"></i></a>
-                        <a href="#" style="color:#888; font-size:1.3rem; transition:color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#888'"><i class="fa-brands fa-linkedin"></i></a>
-                        <a href="#" style="color:#888; font-size:1.3rem; transition:color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#888'"><i class="fa-brands fa-youtube"></i></a>
+                        <a href="#" style="color:#888; font-size:1.3rem; transition:color 0.2s;"
+                            onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#888'"><i
+                                class="fa-brands fa-facebook"></i></a>
+                        <a href="#" style="color:#888; font-size:1.3rem; transition:color 0.2s;"
+                            onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#888'"><i
+                                class="fa-brands fa-x-twitter"></i></a>
+                        <a href="#" style="color:#888; font-size:1.3rem; transition:color 0.2s;"
+                            onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#888'"><i
+                                class="fa-brands fa-instagram"></i></a>
+                        <a href="#" style="color:#888; font-size:1.3rem; transition:color 0.2s;"
+                            onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#888'"><i
+                                class="fa-brands fa-linkedin"></i></a>
+                        <a href="#" style="color:#888; font-size:1.3rem; transition:color 0.2s;"
+                            onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#888'"><i
+                                class="fa-brands fa-youtube"></i></a>
                     </div>
                 </div>
 
@@ -461,17 +471,28 @@
         <!-- Bottom Legal Bar -->
         <div class="container" style="padding:20px 15px;">
             <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
-                <p style="margin:0; font-size:0.82rem; color:#555;">&copy; 2026 HostelSphere. Intelligent Hostel Management System. All Rights Reserved.</p>
+                <p style="margin:0; font-size:0.82rem; color:#555;">&copy; 2026 HostelSphere. Intelligent
+                    Hostel
+                    Management System. All Rights Reserved.</p>
                 <div class="d-flex flex-wrap gap-3">
-                    <a href="#" style="color:#666; font-size:0.82rem; text-decoration:none;" onmouseover="this.style.color='#ccc'" onmouseout="this.style.color='#666'">Privacy Policy</a>
+                    <a href="#" style="color:#666; font-size:0.82rem; text-decoration:none;"
+                        onmouseover="this.style.color='#ccc'" onmouseout="this.style.color='#666'">Privacy
+                        Policy</a>
                     <span style="color:#444;">|</span>
-                    <a href="#" style="color:#666; font-size:0.82rem; text-decoration:none;" onmouseover="this.style.color='#ccc'" onmouseout="this.style.color='#666'">Terms of Service</a>
+                    <a href="#" style="color:#666; font-size:0.82rem; text-decoration:none;"
+                        onmouseover="this.style.color='#ccc'" onmouseout="this.style.color='#666'">Terms of
+                        Service</a>
                     <span style="color:#444;">|</span>
-                    <a href="#" style="color:#666; font-size:0.82rem; text-decoration:none;" onmouseover="this.style.color='#ccc'" onmouseout="this.style.color='#666'">Accessibility</a>
+                    <a href="#" style="color:#666; font-size:0.82rem; text-decoration:none;"
+                        onmouseover="this.style.color='#ccc'" onmouseout="this.style.color='#666'">Accessibility</a>
                     <span style="color:#444;">|</span>
-                    <a href="#" style="color:#666; font-size:0.82rem; text-decoration:none;" onmouseover="this.style.color='#ccc'" onmouseout="this.style.color='#666'">Warden Portal</a>
+                    <a href="#" style="color:#666; font-size:0.82rem; text-decoration:none;"
+                        onmouseover="this.style.color='#ccc'" onmouseout="this.style.color='#666'">Warden
+                        Portal</a>
                     <span style="color:#444;">|</span>
-                    <a href="login.html" style="color:#666; font-size:0.82rem; text-decoration:none;" onmouseover="this.style.color='#ccc'" onmouseout="this.style.color='#666'">Admin Login</a>
+                    <a href="login.html" style="color:#666; font-size:0.82rem; text-decoration:none;"
+                        onmouseover="this.style.color='#ccc'" onmouseout="this.style.color='#666'">Admin
+                        Login</a>
                 </div>
             </div>
         </div>
