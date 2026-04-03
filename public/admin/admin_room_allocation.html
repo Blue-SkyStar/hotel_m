@@ -65,7 +65,7 @@ if(localStorage.getItem("role") !== "admin"){
                         <ul class="nav nav-tabs card-header-tabs" id="appTabs">
                             <li class="nav-item"><a class="nav-link active fw-bold text-dark" href="#" onclick="event.preventDefault(); filterApps('Pending Review', this)">Pending Review</a></li>
                             <li class="nav-item"><a class="nav-link text-muted" href="#" onclick="event.preventDefault(); filterApps('Approved - Awaiting Payment', this)">Awaiting Payment</a></li>
-                            <li class="nav-item"><a class="nav-link text-muted" href="#" onclick="event.preventDefault(); filterApps('Allocated', this)">Allocated</a></li>
+                            <li class="nav-item"><a class="nav-link text-muted" href="#" onclick="event.preventDefault(); filterApps('Allocated', this)"><i class="fa fa-circle-check text-success me-1"></i> Allocated</a></li>
                             <li class="nav-item"><a class="nav-link text-muted" href="#" onclick="event.preventDefault(); filterApps('Rejected', this)">Rejected</a></li>
                         </ul>
                     </div>

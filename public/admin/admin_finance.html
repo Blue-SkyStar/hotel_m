@@ -21,68 +21,131 @@ if(localStorage.getItem("role") !== "admin"){
     <script src="../js/sweetalert.js"></script>
     <script src="../js/storage.js"></script>
 
-    <style>
-        /* ── Finance page-specific styles ─────────────────────────── */
+        /* ── Professional Finance Dashboard Styles ─────────────────── */
+        :root {
+            --slate-50: #f8fafc;
+            --slate-100: #f1f5f9;
+            --slate-200: #e2e8f0;
+            --slate-400: #94a3b8;
+            --slate-500: #64748b;
+            --slate-600: #475569;
+            --slate-800: #1e293b;
+            --slate-900: #0f172a;
+            --emerald-500: #10b981;
+            --rose-500: #f43f5e;
+            --blue-500: #3b82f6;
+            --amber-500: #f59e0b;
+        }
+
         .kpi-card {
-            border-radius: 18px;
-            padding: 24px 20px;
+            background: #ffffff;
+            border: 1px solid var(--slate-200);
+            border-radius: 16px;
+            padding: 24px;
             position: relative;
-            overflow: hidden;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
-        .kpi-card:hover { transform: translateY(-6px); box-shadow: 0 20px 40px rgba(0,0,0,0.12) !important; }
+        .kpi-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 20px -5px rgba(0,0,0,0.1);
+            border-color: var(--slate-300);
+        }
         .kpi-card .kpi-icon {
-            width: 52px; height: 52px;
-            border-radius: 14px;
+            width: 48px; height: 48px;
+            border-radius: 12px;
             display: flex; align-items: center; justify-content: center;
-            font-size: 1.4rem;
+            font-size: 1.25rem;
+            margin-bottom: 20px;
         }
-        .kpi-card .kpi-value { font-size: 2rem; font-weight: 800; line-height: 1.1; margin-top: 14px; }
-        .kpi-card .kpi-label { font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.6px; opacity: 0.7; margin-top: 4px; }
-        .kpi-card .kpi-trend { font-size: 0.78rem; margin-top: 8px; font-weight: 500; }
-        .kpi-card .kpi-bg-icon {
-            position: absolute; right: -12px; bottom: -12px;
-            font-size: 5rem; opacity: 0.08;
+        .kpi-card .kpi-value {
+            font-size: 1.85rem;
+            font-weight: 700;
+            color: var(--slate-900);
+            letter-spacing: -0.025em;
+            margin: 0;
+        }
+        .kpi-card .kpi-label {
+            font-size: 0.825rem;
+            font-weight: 600;
+            color: var(--slate-500);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 4px;
+        }
+        .kpi-card .kpi-trend {
+            font-size: 0.8rem;
+            margin-top: 12px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 4px;
         }
 
-        .kpi-revenue  { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: #fff; }
-        .kpi-income   { background: linear-gradient(135deg, #0f3460 0%, #1a508b 100%); color: #fff; }
-        .kpi-expense  { background: linear-gradient(135deg, #3d0c02 0%, #7b1818 100%); color: #fff; }
-        .kpi-profit   { background: linear-gradient(135deg, #054a29 0%, #0d7a45 100%); color: #fff; }
-        .kpi-pending  { background: linear-gradient(135deg, #4a2600 0%, #a05c00 100%); color: #fff; }
-
-        .kpi-icon.revenue-icon  { background: rgba(0,210,255,0.2); color: #00d2ff; }
-        .kpi-icon.income-icon   { background: rgba(100,200,255,0.2); color: #64c8ff; }
-        .kpi-icon.expense-icon  { background: rgba(255,80,80,0.2); color: #ff6b6b; }
-        .kpi-icon.profit-icon   { background: rgba(50,220,110,0.2); color: #32dc6e; }
-        .kpi-icon.pending-icon  { background: rgba(255,180,50,0.2); color: #ffb432; }
+        /* Icon Accents */
+        .icon-revenue { background: #eff6ff; color: var(--blue-500); }
+        .icon-income  { background: #ecfdf5; color: var(--emerald-500); }
+        .icon-expense { background: #fff1f2; color: var(--rose-500); }
+        .icon-profit  { background: #f0fdf4; color: var(--emerald-500); }
+        .icon-pending { background: #fffbeb; color: var(--amber-500); }
 
         .chart-card {
-            border: none;
-            border-radius: 18px;
-            background: #fff;
-            box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+            border: 1px solid var(--slate-200);
+            border-radius: 16px;
+            background: #ffffff;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            overflow: hidden;
         }
         .chart-header {
-            padding: 18px 22px 12px;
-            border-bottom: 1px solid #f0f2f8;
+            padding: 20px 24px;
+            background: #ffffff;
+            border-bottom: 1px solid var(--slate-100);
         }
-        .chart-header h6 { font-weight: 700; color: #1a1a2e; margin: 0; font-size: 0.9rem; }
-        .chart-header span { font-size: 0.75rem; color: #888; }
+        .chart-header h6 {
+            font-weight: 600;
+            color: var(--slate-800);
+            margin: 0;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .chart-header span {
+            font-size: 0.75rem;
+            color: var(--slate-400);
+            font-weight: 500;
+        }
 
         .defaulters-badge {
-            background: rgba(255,75,75,0.1);
-            color: #e53e3e;
-            border: 1px solid rgba(255,75,75,0.25);
-            border-radius: 20px;
-            padding: 3px 10px;
+            background: #fef2f2;
+            color: #b91c1c;
+            border: 1px solid #fee2e2;
+            border-radius: 6px;
+            padding: 4px 10px;
             font-size: 0.7rem;
-            font-weight: 700;
+            font-weight: 600;
         }
 
-        body.dark-mode .chart-card { background: #1e1e2f !important; }
-        body.dark-mode .chart-header { border-color: #2a2a40 !important; }
-        body.dark-mode .chart-header h6 { color: #e0e0e0 !important; }
+        /* Table Cleanups */
+        .table thead th {
+            background: var(--slate-50);
+            color: var(--slate-500);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.7rem;
+            letter-spacing: 0.05em;
+            border-top: none;
+        }
+
+        body.dark-mode .kpi-card, body.dark-mode .chart-card {
+            background: #1e293b !important;
+            border-color: #334155 !important;
+        }
+        body.dark-mode .kpi-value { color: #f1f5f9 !important; }
+        body.dark-mode .chart-header { background: transparent !important; border-color: #334155 !important; }
+        body.dark-mode .chart-header h6 { color: #f1f5f9 !important; }
+        body.dark-mode .table thead th { background: #1e293b !important; color: #94a3b8 !important; }
+
     </style>
 </head>
 
@@ -111,50 +174,45 @@ if(localStorage.getItem("role") !== "admin"){
                 </div>
 
                 <!-- ── KPI Cards ─────────────────────────────────────────── -->
-                <div class="row g-3 mb-4" id="kpiRow">
+                <div class="row g-4 mb-5" id="kpiRow">
                     <div class="col-md col-6">
-                        <div class="kpi-card kpi-revenue shadow-sm h-100">
-                            <div class="kpi-icon revenue-icon"><i class="fa fa-chart-line"></i></div>
+                        <div class="kpi-card shadow-sm h-100">
+                            <div class="kpi-icon icon-revenue"><i class="fa fa-chart-line"></i></div>
                             <div class="kpi-value">₹<span id="kpi_total_revenue">0</span></div>
                             <div class="kpi-label">Total Revenue</div>
-                            <div class="kpi-trend"><i class="fa fa-arrow-up me-1" style="color:#32dc6e"></i><span id="kpi_total_count">0</span> payments</div>
-                            <i class="fa fa-coins kpi-bg-icon"></i>
+                            <div class="kpi-trend text-muted"><i class="fa fa-circle-check text-success small me-1"></i><span id="kpi_total_count">0</span> payments</div>
                         </div>
                     </div>
                     <div class="col-md col-6">
-                        <div class="kpi-card kpi-income shadow-sm h-100">
-                            <div class="kpi-icon income-icon"><i class="fa fa-calendar-check"></i></div>
+                        <div class="kpi-card shadow-sm h-100">
+                            <div class="kpi-icon icon-income"><i class="fa fa-calendar-check"></i></div>
                             <div class="kpi-value">₹<span id="kpi_month_income">0</span></div>
                             <div class="kpi-label">This Month</div>
-                            <div class="kpi-trend text-info"><span id="kpi_month_name">—</span></div>
-                            <i class="fa fa-calendar kpi-bg-icon"></i>
+                            <div class="kpi-trend text-muted"><span id="kpi_month_name">—</span></div>
                         </div>
                     </div>
                     <div class="col-md col-6">
-                        <div class="kpi-card kpi-expense shadow-sm h-100">
-                            <div class="kpi-icon expense-icon"><i class="fa fa-receipt"></i></div>
+                        <div class="kpi-card shadow-sm h-100">
+                            <div class="kpi-icon icon-expense"><i class="fa fa-receipt"></i></div>
                             <div class="kpi-value">₹<span id="kpi_total_expense">0</span></div>
                             <div class="kpi-label">Total Expenses</div>
-                            <div class="kpi-trend" style="color:#ff6b6b"><span id="kpi_expense_count">0</span> entries</div>
-                            <i class="fa fa-file-invoice-dollar kpi-bg-icon"></i>
+                            <div class="kpi-trend text-muted"><span id="kpi_expense_count" class="text-danger fw-bold">0</span> entries</div>
                         </div>
                     </div>
                     <div class="col-md col-6">
-                        <div class="kpi-card kpi-profit shadow-sm h-100">
-                            <div class="kpi-icon profit-icon"><i class="fa fa-balance-scale"></i></div>
+                        <div class="kpi-card shadow-sm h-100">
+                            <div class="kpi-icon icon-profit"><i class="fa fa-balance-scale"></i></div>
                             <div class="kpi-value">₹<span id="kpi_net_profit">0</span></div>
                             <div class="kpi-label">Net Profit / Loss</div>
                             <div class="kpi-trend"><span id="kpi_profit_label">—</span></div>
-                            <i class="fa fa-chart-area kpi-bg-icon"></i>
                         </div>
                     </div>
                     <div class="col-md col-6">
-                        <div class="kpi-card kpi-pending shadow-sm h-100">
-                            <div class="kpi-icon pending-icon"><i class="fa fa-clock"></i></div>
+                        <div class="kpi-card shadow-sm h-100">
+                            <div class="kpi-icon icon-pending"><i class="fa fa-clock"></i></div>
                             <div class="kpi-value"><span id="kpi_pending_count">0</span></div>
                             <div class="kpi-label">Awaiting Payment</div>
-                            <div class="kpi-trend" style="color:#ffb432">Students approved, unpaid</div>
-                            <i class="fa fa-hourglass-half kpi-bg-icon"></i>
+                            <div class="kpi-trend text-muted small">Students approved, unpaid</div>
                         </div>
                     </div>
                 </div>
@@ -304,9 +362,13 @@ if(localStorage.getItem("role") !== "admin"){
 
             // ── Monthly Revenue Bar Chart ─────────────────────────────────
             const last6 = getLast6Months();
-            const revenueByMonth = data.revenueByMonth; // Already aggregated from API
+            const revenueByMonth = data.revenueByMonth;
 
             const barCtx = document.getElementById('revenueBarChart').getContext('2d');
+            const gradient = barCtx.createLinearGradient(0, 0, 0, 300);
+            gradient.addColorStop(0, '#3b82f6');
+            gradient.addColorStop(1, '#93c5fd');
+
             new Chart(barCtx, {
                 type: 'bar',
                 data: {
@@ -314,50 +376,52 @@ if(localStorage.getItem("role") !== "admin"){
                     datasets: [{
                         label: 'Revenue (₹)',
                         data: revenueByMonth,
-                        backgroundColor: 'rgba(0,210,255,0.7)',
-                        borderColor: '#00d2ff',
-                        borderWidth: 2,
-                        borderRadius: 8,
-                        borderSkipped: false,
+                        backgroundColor: gradient,
+                        borderRadius: 6,
+                        barThickness: 32,
                     }]
                 },
                 options: {
                     responsive: true, maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
+                    plugins: { 
+                        legend: { display: false },
+                        tooltip: { backgroundColor: '#1e293b', titleFont: { size: 14 }, padding: 12 }
+                    },
                     scales: {
-                        y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' },
-                             ticks: { callback: v => '₹' + (v/1000).toFixed(0) + 'k' } },
-                        x: { grid: { display: false } }
+                        y: { beginAtZero: true, grid: { color: '#f1f5f9', drawBorder: false },
+                             ticks: { color: '#64748b', font: { weight: 500 }, callback: v => '₹' + (v/1000).toFixed(0) + 'k' } },
+                        x: { grid: { display: false }, ticks: { color: '#64748b' } }
                     }
                 }
             });
 
             // ── Expense Doughnut ──────────────────────────────────────────
-            const expColors = ['#ff6b6b','#ffa94d','#ffd43b','#a9e34b','#00d2ff','#748ffc','#e599f7'];
+            const expColors = ['#0f172a','#334155','#64748b','#94a3b8','#cbd5e1','#e2e8f0','#f1f5f9'];
             const expCtx = document.getElementById('expenseDoughnut').getContext('2d');
             new Chart(expCtx, {
                 type: 'doughnut',
                 data: {
                     labels: Object.keys(data.expenseByCategory).length ? Object.keys(data.expenseByCategory) : ['No data'],
                     datasets: [{ data: Object.values(data.expenseByCategory).length ? Object.values(data.expenseByCategory) : [1],
-                        backgroundColor: expColors, borderWidth: 0 }]
+                        backgroundColor: ['#1e293b', '#3b82f6', '#10b981', '#f59e0b', '#f43f5e', '#8b5cf6', '#06b6d4'], 
+                        hoverOffset: 12, borderWidth: 4, borderColor: '#fff' }]
                 },
-                options: { responsive: true, maintainAspectRatio: false, cutout: '70%',
-                    plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } } } }
+                options: { responsive: true, maintainAspectRatio: false, cutout: '78%',
+                    plugins: { legend: { position: 'bottom', labels: { boxWidth: 8, padding: 15, font: { weight: 600, size: 11 } } } } }
             });
 
             // ── Payment Method Doughnut ──────────────────────────────────
-            const mColors = ['#00d2ff','#3a7bd5','#ffd43b','#a9e34b','#748ffc'];
             const methodCtx = document.getElementById('methodDoughnut').getContext('2d');
             new Chart(methodCtx, {
                 type: 'doughnut',
                 data: {
                     labels: Object.keys(data.paymentMethods).length ? Object.keys(data.paymentMethods) : ['No data'],
                     datasets: [{ data: Object.values(data.paymentMethods).length ? Object.values(data.paymentMethods) : [1],
-                        backgroundColor: mColors, borderWidth: 0 }]
+                        backgroundColor: ['#0f172a', '#3b82f6', '#94a3b8'], 
+                        hoverOffset: 12, borderWidth: 4, borderColor: '#fff' }]
                 },
-                options: { responsive: true, maintainAspectRatio: false, cutout: '70%',
-                    plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } } } }
+                options: { responsive: true, maintainAspectRatio: false, cutout: '78%',
+                    plugins: { legend: { position: 'bottom', labels: { boxWidth: 8, padding: 15, font: { weight: 600, size: 11 } } } } }
             });
 
             // ── Defaulters Table ─────────────────────────────────────────

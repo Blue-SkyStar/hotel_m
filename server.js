@@ -309,6 +309,12 @@ app.get('/api/data/:key', verifyToken, async (req, res) => {
             if (r.facilities && typeof r.facilities === 'string') {
                 try { r.facilities = JSON.parse(r.facilities); } catch (e) {}
             }
+            if (r.idProof && typeof r.idProof === 'string' && r.idProof.startsWith('{')) {
+                try { r.idProof = JSON.parse(r.idProof); } catch (e) {}
+            }
+            if (r.photo && typeof r.photo === 'string' && r.photo.startsWith('{')) {
+                try { r.photo = JSON.parse(r.photo); } catch (e) {}
+            }
             return r;
         });
         res.json(parsedRows);
@@ -331,6 +337,12 @@ app.post('/api/data/:key', verifyToken, async (req, res) => {
 
         if (item.facilities && Array.isArray(item.facilities)) {
              item.facilities = JSON.stringify(item.facilities);
+        }
+        if (item.idProof && typeof item.idProof === 'object') {
+             item.idProof = JSON.stringify(item.idProof);
+        }
+        if (item.photo && typeof item.photo === 'object') {
+             item.photo = JSON.stringify(item.photo);
         }
 
         // --- ROOM APPLICATION ENGINE (Capacity, Waitlist, Duplicates) ---
@@ -407,6 +419,12 @@ app.put('/api/data/:key/:id', verifyToken, async (req, res) => {
 
         if (updatedItem.facilities && Array.isArray(updatedItem.facilities)) {
              updatedItem.facilities = JSON.stringify(updatedItem.facilities);
+        }
+        if (updatedItem.idProof && typeof updatedItem.idProof === 'object') {
+             updatedItem.idProof = JSON.stringify(updatedItem.idProof);
+        }
+        if (updatedItem.photo && typeof updatedItem.photo === 'object') {
+             updatedItem.photo = JSON.stringify(updatedItem.photo);
         }
 
         // --- ROOM APPLICATION ENGINE (Capacity checks during Preference Swapping) ---

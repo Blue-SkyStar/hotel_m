@@ -764,6 +764,13 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(app)
                 });
+                
+                // Invalidate frontend cache
+                if (typeof invalidateCache === 'function') {
+                    invalidateCache('applications');
+                } else {
+                    sessionStorage.clear(); // Fallback
+                }
 
                 // 2. Record payment
                 await fetch(`${API_URL}/data/payments`, {
