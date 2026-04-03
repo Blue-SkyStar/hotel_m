@@ -234,7 +234,7 @@ app.get('/api/finance/summary', verifyToken, async (req, res) => {
         const [{ rows: payments }, { rows: expenses }, { rows: applications }] = await Promise.all([
             pool.query('SELECT amount, date, method FROM payments'),
             pool.query('SELECT amount, type FROM expenses'),
-            pool.query('SELECT student, name, room, "roomNumber", email, date, "appliedOn", status FROM applications WHERE status = $1', ['Approved - Awaiting Payment'])
+            pool.query('SELECT student, "studentName", "roomNumber", date, status FROM applications WHERE status = $1', ['Approved - Awaiting Payment'])
         ]);
 
         const now = new Date();
