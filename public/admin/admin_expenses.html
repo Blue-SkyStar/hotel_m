@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>
+if(localStorage.getItem("role") !== "admin"){
+    window.location.href = "../login.html";
+}
+</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Management — HostelSphere</title>
+    <link rel="icon" href="../img/logo/logo.png">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../css/bootstrap.css">
+    <link rel="stylesheet" href="../css/animate.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/students.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- JS -->
+    <script src="../js/sweetalert.js"></script>
+    <script src="../js/storage.js"></script>
+
+    <style>
+        /* ── Expenses page-specific styles ────────────────────────── */
+        .summary-card {
+            border-radius: 16px;
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            transition: transform 0.25s ease;
+        }
+        .summary-card:hover { transform: translateY(-4px); }
+        .summary-icon {
+            width: 52px; height: 52px; border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.4rem; flex-shrink: 0;
+        }
+        .summary-value { font-size: 1.6rem; font-weight: 800; line-height: 1.1; }
+        .summary-label { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.7; }
+
+        .type-badge {
+            padding: 4px 12px; border-radius: 20px;
+            font-size: 0.72rem; font-weight: 700;
+        }
+        .type-Electricity { background:#fff3cd; color:#856404; }
+        .type-Water       { background:#cff4fc; color:#055160; }
+        .type-Salary      { background:#d1e7dd; color:#0f5132; }
+        .type-Maintenance { background:#f8d7da; color:#842029; }
+        .type-Internet    { background:#cfe2ff; color:#084298; }
+        .type-Food        { background:#fce4ec; color:#880e4f; }
+        .type-Other       { background:#f0f0f0; color:#444; }
+
+        body.dark-mode .type-badge { opacity: 0.9; }
+    </style>
+</head>
+
+<body>
+    <div id="navbar-mount"></div>
+
+    <div class="container-fluid" style="margin-top:70px">
+        <div class="row">
+            <div id="sidebar-mount" class="col-md-2 p-0"></div>
+
+            <!-- Main Content -->
+            <div class="col-md-10 p-4">
+
+                <!-- Page Header -->
+                <div class="d-flex align-items-center justify-content-between mb-4">
+                    <div>
+                        <h2 class="mb-1">Expense Management</h2>
+                        <p class="text-muted small mb-0">Track all hostel operational expenses</p>
+                    </div>
+                    <a href="admin_finance.html" class="btn btn-sm btn-outline-primary px-3">
+                        <i class="fa fa-chart-line me-1"></i> Finance Dashboard
+                    </a>
+                </div>
+
+                <!-- ── Summary Cards ─────────────────────────────────────── -->
+                <div class="row g-3 mb-4">
+                    <div class="col-md-4">
+                        <div class="summary-card shadow-sm border-0" style="background:linear-gradient(135deg,#ff6b6b,#ee5a24)">
+                            <div class="summary-icon" style="background:rgba(255,255,255,0.2)">
+                                <i class="fa fa-receipt text-white"></i>
+                            </div>
+                            <div class="text-white">
+                                <div class="summary-value">₹<span id="sum_total">0</span></div>
+                                <div class="summary-label">Total Expenses</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="summary-card shadow-sm border-0" style="background:linear-gradient(135deg,#f6d365,#fda085)">
+                            <div class="summary-icon" style="background:rgba(255,255,255,0.2)">
+                                <i class="fa fa-calendar-alt text-white"></i>
+                            </div>
+                            <div class="text-white">
+                                <div class="summary-value">₹<span id="sum_month">0</span></div>
+                                <div class="summary-label">This Month</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="summary-card shadow-sm border-0" style="background:linear-gradient(135deg,#a18cd1,#fbc2eb)">
+                            <div class="summary-icon" style="background:rgba(255,255,255,0.2)">
+                                <i class="fa fa-list-ul text-white"></i>
+                            </div>
+                            <div class="text-white">
+                                <div class="summary-value"><span id="sum_count">0</span></div>
+                                <div class="summary-label">Total Entries</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── Add Expense Form ───────────────────────────────────── -->
+                <div class="card shadow animate__animated animate__fadeInUp border-0 mb-4" style="border-radius:16px;">
+                    <div class="card-header bg-dark text-white py-3 px-4" style="border-radius:16px 16px 0 0;">
+                        <h5 class="mb-0 fw-bold"><i class="fa fa-plus-circle me-2"></i> Add New Expense</h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <form id="expenseForm">
+                            <div class="row g-4">
+                                <div class="col-md-3 border-start border-3 border-danger ps-3">
+                                    <label class="form-label text-muted fw-bold small text-uppercase">Date</label>
+                                    <input type="date" id="e_date" class="form-control form-control-lg bg-light border-0" required>
+                                </div>
+                                <div class="col-md-3 border-start border-3 border-danger ps-3">
+                                    <label class="form-label text-muted fw-bold small text-uppercase">Expense Type</label>
+                                    <select id="e_type" class="form-select form-select-lg bg-light border-0">
+                                        <option>Electricity</option>
+                                        <option>Water</option>
+                                        <option>Salary</option>
+                                        <option>Maintenance</option>
+                                        <option>Internet</option>
+                                        <option>Food</option>
+                                        <option>Other</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3 border-start border-3 border-danger ps-3">
+                                    <label class="form-label text-muted fw-bold small text-uppercase">Amount (₹)</label>
+                                    <input type="number" id="e_amount" class="form-control form-control-lg bg-light border-0" placeholder="Enter Amount" min="1" required>
+                                </div>
+                                <div class="col-md-3 border-start border-3 border-danger ps-3">
+                                    <label class="form-label text-muted fw-bold small text-uppercase">Notes (optional)</label>
+                                    <input type="text" id="e_notes" class="form-control form-control-lg bg-light border-0" placeholder="e.g. Electrician visit">
+                                </div>
+                            </div>
+                            <hr class="my-4 text-muted">
+                            <div class="text-end">
+                                <button type="reset" class="btn btn-light px-4 py-2 me-2">Clear</button>
+                                <button type="submit" class="btn btn-danger px-5 py-2"
+                                    style="background:linear-gradient(135deg,#f85032,#e73827);border:none;font-weight:600;">
+                                    <i class="fa fa-save me-2"></i> Save Expense
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- ── Expense List Table ─────────────────────────────────── -->
+                <div class="card shadow animate__animated animate__fadeInUp border-0" style="border-radius:16px;overflow:hidden;animation-delay:0.1s">
+                    <div class="card-header bg-dark text-white py-3 px-4 d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0 fw-bold"><i class="fa fa-history me-2"></i> Expense History</h5>
+                        <div class="input-group" style="width:240px">
+                            <span class="input-group-text bg-white border-0"><i class="fa fa-search text-muted"></i></span>
+                            <input type="text" id="searchExpenses"
+                                   onkeyup="searchTable('searchExpenses','expensesTable')"
+                                   class="form-control border-0 ps-0"
+                                   placeholder="Search..." style="box-shadow:none">
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <table class="table table-hover mb-0" id="expensesTable">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="ps-4 py-3">#</th>
+                                    <th class="py-3">Date</th>
+                                    <th class="py-3">Type</th>
+                                    <th class="py-3">Amount</th>
+                                    <th class="py-3">Notes</th>
+                                    <th class="pe-4 py-3 text-center">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="expensesBody">
+                                <tr><td colspan="6" class="text-center text-muted py-4">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div><!-- /col-md-10 -->
+        </div><!-- /row -->
+    </div><!-- /container-fluid -->
+
+    <script src="../js/bootstrap.bundle.js"></script>
+
+    <script>
+    let allExpenses = [];
+    const API_EXPENSES = `${API_URL}/data/expenses`;
+
+    function fmt(n){ return Number(n||0).toLocaleString('en-IN'); }
+
+    async function loadExpenses() {
+        try {
+            const res = await fetch(API_EXPENSES);
+            allExpenses = res.ok ? await res.json() : [];
+        } catch(e) { allExpenses = []; }
+        renderExpenses();
+        updateSummary();
+    }
+
+    function updateSummary() {
+        const now = new Date();
+        const curM = now.getMonth(), curY = now.getFullYear();
+
+        const total = allExpenses.reduce((s,e) => s + Number(e.amount||0), 0);
+        const monthTotal = allExpenses.filter(e => {
+            const d = new Date(e.date);
+            return d.getMonth() === curM && d.getFullYear() === curY;
+        }).reduce((s,e) => s + Number(e.amount||0), 0);
+
+        document.getElementById('sum_total').textContent = fmt(total);
+        document.getElementById('sum_month').textContent = fmt(monthTotal);
+        document.getElementById('sum_count').textContent = allExpenses.length;
+    }
+
+    function renderExpenses() {
+        const tbody = document.getElementById('expensesBody');
+        if (allExpenses.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted py-5">
+                <i class="fa fa-inbox fa-2x d-block mb-2"></i>No expenses recorded yet.
+            </td></tr>`;
+            return;
+        }
+        const sorted = [...allExpenses].reverse();
+        tbody.innerHTML = sorted.map((e, i) => `
+        <tr>
+            <td class="ps-4 text-muted">${sorted.length - i}</td>
+            <td>${e.date || '—'}</td>
+            <td><span class="type-badge type-${e.type || 'Other'}">${e.type || 'Other'}</span></td>
+            <td class="fw-bold text-danger">₹${fmt(e.amount)}</td>
+            <td class="text-muted">${e.notes || '—'}</td>
+            <td class="pe-4 text-center">
+                <button class="btn btn-sm btn-outline-danger" onclick="deleteExpense('${e.id}')">
+                    <i class="fa fa-trash"></i>
+                </button>
+            </td>
+        </tr>`).join('');
+    }
+
+    async function deleteExpense(id) {
+        const result = await Swal.fire({
+            title: 'Delete this expense?',
+            text: 'This action cannot be undone.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Yes, delete it!'
+        });
+        if (!result.isConfirmed) return;
+
+        try {
+            const res = await fetch(`${API_URL}/data/expenses/${id}`, { method: 'DELETE' });
+            const data = await res.json();
+            if (data.success) {
+                allExpenses = allExpenses.filter(e => e.id != id);
+                renderExpenses();
+                updateSummary();
+                Swal.fire({ icon:'success', title:'Deleted!', text:'Expense removed.', timer:1500, showConfirmButton:false });
+            } else {
+                Swal.fire('Error', data.message || 'Could not delete.', 'error');
+            }
+        } catch(err) {
+            Swal.fire('Error', 'Network error.', 'error');
+        }
+    }
+
+    document.getElementById('expenseForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const date   = document.getElementById('e_date').value;
+        const type   = document.getElementById('e_type').value;
+        const amount = document.getElementById('e_amount').value;
+        const notes  = document.getElementById('e_notes').value;
+
+        if (!date || !type || !amount) return;
+
+        try {
+            const res = await fetch(API_EXPENSES, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ date, type, amount: Number(amount), notes })
+            });
+            const data = await res.json();
+            if (data.success) {
+                allExpenses.push(data.item);
+                renderExpenses();
+                updateSummary();
+                document.getElementById('expenseForm').reset();
+                document.getElementById('e_date').value = new Date().toISOString().split('T')[0];
+                Swal.fire({ icon:'success', title:'Expense Saved!', text:'The expense has been recorded.', timer:1800, showConfirmButton:false });
+            } else {
+                Swal.fire('Error', data.message || 'Could not save expense.', 'error');
+            }
+        } catch(err) {
+            Swal.fire('Error', 'Network error: ' + err.message, 'error');
+        }
+    });
+
+    window.onload = async function() {
+        // Set today as default date
+        document.getElementById('e_date').value = new Date().toISOString().split('T')[0];
+        await loadExpenses();
+    };
+    </script>
+
+    <!-- Shared Admin Layout -->
+    <script src="../js/admin_layout.js"></script>
+    <script>initAdminLayout('expenses');</script>
+</body>
+</html>

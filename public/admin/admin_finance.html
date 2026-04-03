@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>
+if(localStorage.getItem("role") !== "admin"){
+    window.location.href = "../login.html";
+}
+</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finance Dashboard — HostelSphere</title>
+    <link rel="icon" href="../img/logo/logo.png">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../css/bootstrap.css">
+    <link rel="stylesheet" href="../css/animate.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- JS -->
+    <script src="../js/sweetalert.js"></script>
+    <script src="../js/storage.js"></script>
+
+    <style>
+        /* ── Finance page-specific styles ─────────────────────────── */
+        .kpi-card {
+            border-radius: 18px;
+            padding: 24px 20px;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .kpi-card:hover { transform: translateY(-6px); box-shadow: 0 20px 40px rgba(0,0,0,0.12) !important; }
+        .kpi-card .kpi-icon {
+            width: 52px; height: 52px;
+            border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.4rem;
+        }
+        .kpi-card .kpi-value { font-size: 2rem; font-weight: 800; line-height: 1.1; margin-top: 14px; }
+        .kpi-card .kpi-label { font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.6px; opacity: 0.7; margin-top: 4px; }
+        .kpi-card .kpi-trend { font-size: 0.78rem; margin-top: 8px; font-weight: 500; }
+        .kpi-card .kpi-bg-icon {
+            position: absolute; right: -12px; bottom: -12px;
+            font-size: 5rem; opacity: 0.08;
+        }
+
+        .kpi-revenue  { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: #fff; }
+        .kpi-income   { background: linear-gradient(135deg, #0f3460 0%, #1a508b 100%); color: #fff; }
+        .kpi-expense  { background: linear-gradient(135deg, #3d0c02 0%, #7b1818 100%); color: #fff; }
+        .kpi-profit   { background: linear-gradient(135deg, #054a29 0%, #0d7a45 100%); color: #fff; }
+        .kpi-pending  { background: linear-gradient(135deg, #4a2600 0%, #a05c00 100%); color: #fff; }
+
+        .kpi-icon.revenue-icon  { background: rgba(0,210,255,0.2); color: #00d2ff; }
+        .kpi-icon.income-icon   { background: rgba(100,200,255,0.2); color: #64c8ff; }
+        .kpi-icon.expense-icon  { background: rgba(255,80,80,0.2); color: #ff6b6b; }
+        .kpi-icon.profit-icon   { background: rgba(50,220,110,0.2); color: #32dc6e; }
+        .kpi-icon.pending-icon  { background: rgba(255,180,50,0.2); color: #ffb432; }
+
+        .chart-card {
+            border: none;
+            border-radius: 18px;
+            background: #fff;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+        }
+        .chart-header {
+            padding: 18px 22px 12px;
+            border-bottom: 1px solid #f0f2f8;
+        }
+        .chart-header h6 { font-weight: 700; color: #1a1a2e; margin: 0; font-size: 0.9rem; }
+        .chart-header span { font-size: 0.75rem; color: #888; }
+
+        .defaulters-badge {
+            background: rgba(255,75,75,0.1);
+            color: #e53e3e;
+            border: 1px solid rgba(255,75,75,0.25);
+            border-radius: 20px;
+            padding: 3px 10px;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+
+        body.dark-mode .chart-card { background: #1e1e2f !important; }
+        body.dark-mode .chart-header { border-color: #2a2a40 !important; }
+        body.dark-mode .chart-header h6 { color: #e0e0e0 !important; }
+    </style>
+</head>
+
+<body>
+    <div id="navbar-mount"></div>
+
+    <div class="container-fluid" style="margin-top:70px">
+        <div class="row">
+            <div id="sidebar-mount" class="col-md-2 p-0"></div>
+
+            <!-- Main Content -->
+            <div class="col-md-10 p-4">
+                <div class="d-flex align-items-center justify-content-between mb-4">
+                    <div>
+                        <h2 class="mb-1">Finance Dashboard</h2>
+                        <p class="text-muted small mb-0">Real-time financial overview & analytics</p>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <a href="admin_expenses.html" class="btn btn-sm btn-outline-danger px-3">
+                            <i class="fa fa-receipt me-1"></i> Manage Expenses
+                        </a>
+                        <a href="admin_manage_payments.html" class="btn btn-sm btn-outline-primary px-3">
+                            <i class="fa fa-money-bill-wave me-1"></i> Payments
+                        </a>
+                    </div>
+                </div>
+
+                <!-- ── KPI Cards ─────────────────────────────────────────── -->
+                <div class="row g-3 mb-4" id="kpiRow">
+                    <div class="col-md col-6">
+                        <div class="kpi-card kpi-revenue shadow-sm h-100">
+                            <div class="kpi-icon revenue-icon"><i class="fa fa-chart-line"></i></div>
+                            <div class="kpi-value">₹<span id="kpi_total_revenue">0</span></div>
+                            <div class="kpi-label">Total Revenue</div>
+                            <div class="kpi-trend"><i class="fa fa-arrow-up me-1" style="color:#32dc6e"></i><span id="kpi_total_count">0</span> payments</div>
+                            <i class="fa fa-coins kpi-bg-icon"></i>
+                        </div>
+                    </div>
+                    <div class="col-md col-6">
+                        <div class="kpi-card kpi-income shadow-sm h-100">
+                            <div class="kpi-icon income-icon"><i class="fa fa-calendar-check"></i></div>
+                            <div class="kpi-value">₹<span id="kpi_month_income">0</span></div>
+                            <div class="kpi-label">This Month</div>
+                            <div class="kpi-trend text-info"><span id="kpi_month_name">—</span></div>
+                            <i class="fa fa-calendar kpi-bg-icon"></i>
+                        </div>
+                    </div>
+                    <div class="col-md col-6">
+                        <div class="kpi-card kpi-expense shadow-sm h-100">
+                            <div class="kpi-icon expense-icon"><i class="fa fa-receipt"></i></div>
+                            <div class="kpi-value">₹<span id="kpi_total_expense">0</span></div>
+                            <div class="kpi-label">Total Expenses</div>
+                            <div class="kpi-trend" style="color:#ff6b6b"><span id="kpi_expense_count">0</span> entries</div>
+                            <i class="fa fa-file-invoice-dollar kpi-bg-icon"></i>
+                        </div>
+                    </div>
+                    <div class="col-md col-6">
+                        <div class="kpi-card kpi-profit shadow-sm h-100">
+                            <div class="kpi-icon profit-icon"><i class="fa fa-balance-scale"></i></div>
+                            <div class="kpi-value">₹<span id="kpi_net_profit">0</span></div>
+                            <div class="kpi-label">Net Profit / Loss</div>
+                            <div class="kpi-trend"><span id="kpi_profit_label">—</span></div>
+                            <i class="fa fa-chart-area kpi-bg-icon"></i>
+                        </div>
+                    </div>
+                    <div class="col-md col-6">
+                        <div class="kpi-card kpi-pending shadow-sm h-100">
+                            <div class="kpi-icon pending-icon"><i class="fa fa-clock"></i></div>
+                            <div class="kpi-value"><span id="kpi_pending_count">0</span></div>
+                            <div class="kpi-label">Awaiting Payment</div>
+                            <div class="kpi-trend" style="color:#ffb432">Students approved, unpaid</div>
+                            <i class="fa fa-hourglass-half kpi-bg-icon"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── Charts Row ─────────────────────────────────────────── -->
+                <div class="row g-3 mb-4">
+                    <!-- Monthly Revenue Bar Chart -->
+                    <div class="col-md-6">
+                        <div class="chart-card h-100">
+                            <div class="chart-header d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6><i class="fa fa-chart-bar me-2 text-primary"></i>Monthly Revenue</h6>
+                                    <span>Last 6 months</span>
+                                </div>
+                            </div>
+                            <div class="p-3" style="height:260px">
+                                <canvas id="revenueBarChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Expense Breakdown Doughnut -->
+                    <div class="col-md-3">
+                        <div class="chart-card h-100">
+                            <div class="chart-header">
+                                <h6><i class="fa fa-chart-pie me-2 text-danger"></i>Expenses Breakdown</h6>
+                                <span>By category</span>
+                            </div>
+                            <div class="p-3 d-flex align-items-center justify-content-center" style="height:260px">
+                                <canvas id="expenseDoughnut"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payment Method Doughnut -->
+                    <div class="col-md-3">
+                        <div class="chart-card h-100">
+                            <div class="chart-header">
+                                <h6><i class="fa fa-credit-card me-2 text-success"></i>Payment Methods</h6>
+                                <span>Distribution</span>
+                            </div>
+                            <div class="p-3 d-flex align-items-center justify-content-center" style="height:260px">
+                                <canvas id="methodDoughnut"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── Defaulters / Awaiting Payment Table ─────────────────── -->
+                <div class="chart-card">
+                    <div class="chart-header d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6><i class="fa fa-exclamation-triangle me-2 text-warning"></i>Payment Defaulters</h6>
+                            <span>Students approved but pending payment</span>
+                        </div>
+                        <span class="defaulters-badge" id="defaultersCount">0 pending</span>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0" id="defaultersTable">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="ps-4 py-3">Student</th>
+                                    <th class="py-3">Room</th>
+                                    <th class="py-3">Email</th>
+                                    <th class="py-3">Applied On</th>
+                                    <th class="py-3">Status</th>
+                                    <th class="pe-4 py-3 text-center">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="defaultersBody">
+                                <tr><td colspan="6" class="text-center text-muted py-4">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div><!-- /col-md-10 -->
+        </div><!-- /row -->
+    </div><!-- /container-fluid -->
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../js/bootstrap.bundle.js"></script>
+
+    <script>
+    // ── Helpers ─────────────────────────────────────────────────────────
+    function fmt(n) { return Number(n || 0).toLocaleString('en-IN'); }
+
+    function getLast6Months() {
+        const months = [];
+        const now = new Date();
+        for (let i = 5; i >= 0; i--) {
+            const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+            months.push({ label: d.toLocaleString('default', { month: 'short' }) + ' ' + d.getFullYear().toString().slice(2), year: d.getFullYear(), month: d.getMonth() });
+        }
+        return months;
+    }
+
+    function getMonthKey(dateStr) {
+        if (!dateStr) return null;
+        const d = new Date(dateStr);
+        if (isNaN(d)) return null;
+        return { year: d.getFullYear(), month: d.getMonth() };
+    }
+
+    // ── Main Load ────────────────────────────────────────────────────────
+    window.onload = async function () {
+        // initAdminLayout('finance'); handles mounting. We just need to load data.
+        
+        try {
+            const res = await fetch(`${API_URL}/finance/summary`);
+            const data = await res.json();
+            
+            if (!data.success) {
+                console.error('Failed to load finance summary', data.message);
+                return;
+            }
+
+            const now = new Date();
+            const curMonth = now.getMonth();
+            const curYear = now.getFullYear();
+            const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+            // ── Update KPI Cards ─────────────────────────────────────────
+            document.getElementById('kpi_total_revenue').textContent = fmt(data.totalRevenue);
+            document.getElementById('kpi_total_count').textContent = data.paymentCount;
+            document.getElementById('kpi_month_income').textContent = fmt(data.monthIncome);
+            document.getElementById('kpi_month_name').textContent = monthNames[curMonth] + ' ' + curYear;
+            document.getElementById('kpi_total_expense').textContent = fmt(data.totalExpenses);
+            document.getElementById('kpi_expense_count').textContent = data.expenseCount;
+            document.getElementById('kpi_net_profit').textContent = fmt(Math.abs(data.netProfit));
+            document.getElementById('kpi_profit_label').innerHTML = data.netProfit >= 0
+                ? `<span style="color:#32dc6e"><i class="fa fa-arrow-up me-1"></i>Profit</span>`
+                : `<span style="color:#ff6b6b"><i class="fa fa-arrow-down me-1"></i>Loss</span>`;
+            document.getElementById('kpi_pending_count').textContent = data.pendingPayments.length;
+            document.getElementById('defaultersCount').textContent = data.pendingPayments.length + ' pending';
+
+            // ── Monthly Revenue Bar Chart ─────────────────────────────────
+            const last6 = getLast6Months();
+            const revenueByMonth = data.revenueByMonth; // Already aggregated from API
+
+            const barCtx = document.getElementById('revenueBarChart').getContext('2d');
+            new Chart(barCtx, {
+                type: 'bar',
+                data: {
+                    labels: last6.map(m => m.label),
+                    datasets: [{
+                        label: 'Revenue (₹)',
+                        data: revenueByMonth,
+                        backgroundColor: 'rgba(0,210,255,0.7)',
+                        borderColor: '#00d2ff',
+                        borderWidth: 2,
+                        borderRadius: 8,
+                        borderSkipped: false,
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' },
+                             ticks: { callback: v => '₹' + (v/1000).toFixed(0) + 'k' } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+
+            // ── Expense Doughnut ──────────────────────────────────────────
+            const expColors = ['#ff6b6b','#ffa94d','#ffd43b','#a9e34b','#00d2ff','#748ffc','#e599f7'];
+            const expCtx = document.getElementById('expenseDoughnut').getContext('2d');
+            new Chart(expCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(data.expenseByCategory).length ? Object.keys(data.expenseByCategory) : ['No data'],
+                    datasets: [{ data: Object.values(data.expenseByCategory).length ? Object.values(data.expenseByCategory) : [1],
+                        backgroundColor: expColors, borderWidth: 0 }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, cutout: '70%',
+                    plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } } } }
+            });
+
+            // ── Payment Method Doughnut ──────────────────────────────────
+            const mColors = ['#00d2ff','#3a7bd5','#ffd43b','#a9e34b','#748ffc'];
+            const methodCtx = document.getElementById('methodDoughnut').getContext('2d');
+            new Chart(methodCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(data.paymentMethods).length ? Object.keys(data.paymentMethods) : ['No data'],
+                    datasets: [{ data: Object.values(data.paymentMethods).length ? Object.values(data.paymentMethods) : [1],
+                        backgroundColor: mColors, borderWidth: 0 }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, cutout: '70%',
+                    plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } } } }
+            });
+
+            // ── Defaulters Table ─────────────────────────────────────────
+            const tbody = document.getElementById('defaultersBody');
+            if (data.pendingPayments.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted py-5">
+                    <i class="fa fa-check-circle text-success fa-2x d-block mb-2"></i>
+                    No pending payments — all students are up to date!
+                </td></tr>`;
+            } else {
+                tbody.innerHTML = data.pendingPayments.map(a => `
+                <tr>
+                    <td class="ps-4 fw-medium">${a.student || a.name || '—'}</td>
+                    <td>${a.roomNumber || a.room || '—'}</td>
+                    <td class="text-muted">${a.email || '—'}</td>
+                    <td>${a.date || a.appliedOn || '—'}</td>
+                    <td><span class="badge bg-warning bg-opacity-10 text-warning border border-warning">Awaiting Payment</span></td>
+                    <td class="pe-4 text-center">
+                        <a href="admin_manage_payments.html" class="btn btn-sm btn-outline-success">
+                            <i class="fa fa-plus me-1"></i>Record Payment
+                        </a>
+                    </td>
+                </tr>`).join('');
+            }
+        } catch (err) {
+            console.error(err);
+            Swal.fire('Error', 'Could not load finance data from server.', 'error');
+        }
+    };
+    </script>
+
+    <!-- Shared Admin Layout -->
+    <script src="../js/admin_layout.js"></script>
+    <script>initAdminLayout('finance');</script>
+</body>
+</html>

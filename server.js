@@ -229,10 +229,77 @@ app.get('/api/stream', (req, res) => {
     });
 });
 
+app.get('/api/finance/summary', verifyToken, async (req, res) => {
+    try {
+        const [{ rows: payments }, { rows: expenses }, { rows: applications }] = await Promise.all([
+            pool.query('SELECT amount, date, method FROM payments'),
+            pool.query('SELECT amount, type FROM expenses'),
+            pool.query('SELECT student, name, room, "roomNumber", email, date, "appliedOn", status FROM applications WHERE status = $1', ['Approved - Awaiting Payment'])
+        ]);
+
+        const now = new Date();
+        const curMonth = now.getMonth();
+        const curYear = now.getFullYear();
+
+        const totalRevenue = payments.reduce((s, p) => s + Number(p.amount || 0), 0);
+        const totalExpenses = expenses.reduce((s, e) => s + Number(e.amount || 0), 0);
+        const netProfit = totalRevenue - totalExpenses;
+
+        const monthIncome = payments.filter(p => {
+            if (!p.date) return false;
+            const d = new Date(p.date);
+            return !isNaN(d) && d.getFullYear() === curYear && d.getMonth() === curMonth;
+        }).reduce((s, p) => s + Number(p.amount || 0), 0);
+
+        // Revenue by month (last 6 months)
+        const revenueByMonth = [];
+        for (let i = 5; i >= 0; i--) {
+            const mDate = new Date(curYear, curMonth - i, 1);
+            const mYear = mDate.getFullYear();
+            const mMon = mDate.getMonth();
+            const mTotal = payments.filter(p => {
+                if (!p.date) return false;
+                const d = new Date(p.date);
+                return !isNaN(d) && d.getFullYear() === mYear && d.getMonth() === mMon;
+            }).reduce((s, p) => s + Number(p.amount || 0), 0);
+            revenueByMonth.push(mTotal);
+        }
+
+        const expenseByCategory = {};
+        expenses.forEach(e => {
+            const cat = e.type || 'Other';
+            expenseByCategory[cat] = (expenseByCategory[cat] || 0) + Number(e.amount || 0);
+        });
+
+        const paymentMethods = {};
+        payments.forEach(p => {
+            const m = p.method || 'Other';
+            paymentMethods[m] = (paymentMethods[m] || 0) + 1;
+        });
+
+        res.json({
+            success: true,
+            totalRevenue,
+            totalExpenses,
+            netProfit,
+            monthIncome,
+            revenueByMonth,
+            expenseByCategory,
+            paymentMethods,
+            pendingPayments: applications,
+            paymentCount: payments.length,
+            expenseCount: expenses.length
+        });
+    } catch (err) {
+        console.error('Finance API Error:', err);
+        res.status(500).json({ success: false, message: 'Server error fetching finance data' });
+    }
+});
+
 app.get('/api/data/:key', verifyToken, async (req, res) => {
     const { key } = req.params;
     try {
-        const allowedTables = ['users', 'students', 'rooms', 'applications', 'payments', 'visitors', 'complaints', 'notices', 'facilities_info'];
+        const allowedTables = ['users', 'students', 'rooms', 'applications', 'payments', 'visitors', 'complaints', 'notices', 'facilities_info', 'expenses'];
         if (!allowedTables.includes(key)) {
             return res.status(400).json({ success: false, message: 'Invalid table query' });
         }
@@ -255,7 +322,7 @@ app.post('/api/data/:key', verifyToken, async (req, res) => {
     const { key } = req.params;
     const item = req.body;
     try {
-        const allowedTables = ['users', 'students', 'rooms', 'applications', 'payments', 'visitors', 'complaints', 'notices', 'facilities_info'];
+        const allowedTables = ['users', 'students', 'rooms', 'applications', 'payments', 'visitors', 'complaints', 'notices', 'facilities_info', 'expenses'];
         if (!allowedTables.includes(key)) return res.status(400).json({ success: false, message: 'Invalid table' });
 
         if (!item.id && key !== 'users') {
@@ -335,7 +402,7 @@ app.put('/api/data/:key/:id', verifyToken, async (req, res) => {
     const { key, id } = req.params;
     const updatedItem = req.body;
     try {
-        const allowedTables = ['users', 'students', 'rooms', 'applications', 'payments', 'visitors', 'complaints', 'notices', 'facilities_info'];
+        const allowedTables = ['users', 'students', 'rooms', 'applications', 'payments', 'visitors', 'complaints', 'notices', 'facilities_info', 'expenses'];
         if (!allowedTables.includes(key)) return res.status(400).json({ success: false, message: 'Invalid table' });
 
         if (updatedItem.facilities && Array.isArray(updatedItem.facilities)) {
@@ -402,7 +469,7 @@ app.put('/api/data/:key/:id', verifyToken, async (req, res) => {
 app.delete('/api/data/:key/:id', verifyToken, async (req, res) => {
     const { key, id } = req.params;
     try {
-        const allowedTables = ['users', 'students', 'rooms', 'applications', 'payments', 'visitors', 'complaints', 'notices', 'facilities_info'];
+        const allowedTables = ['users', 'students', 'rooms', 'applications', 'payments', 'visitors', 'complaints', 'notices', 'facilities_info', 'expenses'];
         if (!allowedTables.includes(key)) return res.status(400).json({ success: false, message: 'Invalid table' });
 
         const { rowCount } = await pool.query(`DELETE FROM ${key} WHERE id = $1`, [id]);

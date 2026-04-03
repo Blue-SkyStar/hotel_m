@@ -8,6 +8,7 @@ if(localStorage.getItem("role") !== "admin"){
 }
 </script>
 
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rooms Management</title>
@@ -26,152 +27,122 @@ if(localStorage.getItem("role") !== "admin"){
 </head>
 
 <body>
+    <div id="navbar-mount"></div>
 
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-md navbar-dark bg-dark shadow-lg fixed-top">
-        <div class="container-fluid">
-            <img src="../img/logo/logo.png" width="45" class="rounded-circle border shadow-sm" alt="Logo">
-            <a class="navbar-brand mx-3">Hostel Management</a>
-
-            <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#menu">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="collapse navbar-collapse" id="menu">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="admin_home.html">Dashboard</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="admin_manage_students.html">Students</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="admin_manage_rooms.html">Rooms</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="admin_manage_payments.html">Payments</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="admin_manage_complaints.html">Complaints</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="../login.html">Login</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+    
 
 
-    <div class="container-fluid" style="margin-top:90px">
+    <div class="container-fluid" style="margin-top:70px">
         <div class="row">
 
             <!-- Sidebar -->
-            <div class="col-md-2 bg-dark text-white vh-100 p-3">
-                <h4 class="text-center">MENU</h4>
-                <hr>
-                
-                <ul class="nav flex-column">
-                    <li class="nav-item mb-3">
-                        <a href="admin_home.html" class="nav-link text-white">
-                            <i class="fa fa-home"></i> Dashboard
-                        </a>
-                    </li>
-                    <li class="nav-item mb-3">
-                        <a href="admin_manage_students.html" class="nav-link text-white">
-                            <i class="fa fa-user"></i> Students
-                        </a>
-                    </li>
-                    <li class="nav-item mb-3">
-                        <a href="admin_add_student.html" class="nav-link text-white">
-                            <i class="fa fa-user-plus"></i> Add Student
-                        </a>
-                    </li>
-                    <li class="nav-item mb-3">
-                        <a href="admin_manage_rooms.html" class="nav-link active text-white" style="background-color: rgba(255, 255, 255, 0.1); border-radius: 8px;">
-                            <i class="fa fa-bed"></i> Rooms
-                        </a>
-                    </li>
-                    <li class="nav-item mb-3">
-                        <a href="admin_manage_payments.html" class="nav-link text-white">
-                            <i class="fa fa-money-bill"></i> Payments
-                        </a>
-                    </li>
-                    <li class="nav-item mb-3">
-                        <a href="admin_manage_complaints.html" class="nav-link text-white">
-                            <i class="fa fa-exclamation-circle"></i> Complaints
-                        </a>
-                    </li>
-                
-                    <li class="nav-item mb-3">
-                        <a href="admin_room_allocation.html" class="nav-link text-white">
-                            <i class="fa fa-key"></i> Room Allocation
-                        </a>
-                    </li>
-                    <li class="nav-item mb-3">
-                        <a href="admin_reports.html" class="nav-link text-white">
-                            <i class="fa fa-file-invoice"></i> Reports
-                        </a>
-                    </li>
-                    <li class="nav-item mb-3">
-                        <a href="admin_visitor_log.html" class="nav-link text-white">
-                            <i class="fa fa-address-book"></i> Visitor Log
-                        </a>
-                    </li>
-                    <li class="nav-item mb-3">
-                        <a href="admin_profile.html" class="nav-link text-white">
-                            <i class="fa fa-user-shield"></i> Admin Profile
-                        </a>
-                    </li>
-                </ul>
+            
+            <div id="sidebar-mount" class="col-md-2 p-0"></div>
 
-            </div>
 
 
             <!-- Main Content -->
             <div class="col-md-10 p-4">
-                <h2 class="mb-4">Room Management</h2>
+                <!-- Page header -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2 class="mb-0">Room Management</h2>
+                    <button class="btn btn-primary px-4 py-2" data-bs-toggle="modal" data-bs-target="#addRoomModal"
+                        style="background:linear-gradient(135deg,#00d2ff,#3a7bd5);border:none;" id="addRoomBtn">
+                        <i class="fa fa-plus me-2"></i> Add Room
+                    </button>
+                </div>
 
-                <!-- Add Room Button -->
-                <div class="row mb-4 align-items-center">
-                    <div class="col-md-6">
-                        <div class="input-group">
-                            <span class="input-group-text bg-white border-end-0"><i class="fa fa-search text-muted"></i></span>
-                            <input type="text" id="searchRooms" onkeyup="searchTable('searchRooms', 'roomsTable')" class="form-control border-start-0 ps-0" placeholder="Search Rooms..." style="box-shadow: none;">
+                <!-- ── Tab Navigation ───────────────────────────────── -->
+                <ul class="nav nav-tabs mb-0" id="roomsTabs" role="tablist" style="border-bottom:none">
+                    <li class="nav-item">
+                        <button class="nav-link active fw-semibold" id="tab-rooms" data-bs-toggle="tab"
+                            data-bs-target="#pane-rooms" type="button"
+                            onclick="document.getElementById('addRoomBtn').style.display='inline-flex'">
+                            <i class="fa fa-bed me-2"></i>Rooms
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link fw-semibold" id="tab-alloc" data-bs-toggle="tab"
+                            data-bs-target="#pane-alloc" type="button"
+                            onclick="document.getElementById('addRoomBtn').style.display='none'; loadAllocations()">
+                            <i class="fa fa-key me-2"></i>Room Allocation
+                        </button>
+                    </li>
+                </ul>
+
+                <div class="tab-content">
+
+                <!-- ── Tab 1: Rooms ──────────────────────────────────── -->
+                <div class="tab-pane fade show active" id="pane-rooms">
+                    <!-- Search bar -->
+                    <div class="row mb-3 mt-3">
+                        <div class="col-md-5">
+                            <div class="input-group">
+                                <span class="input-group-text bg-white border-end-0"><i class="fa fa-search text-muted"></i></span>
+                                <input type="text" id="searchRooms" onkeyup="searchTable('searchRooms','roomsTable')"
+                                    class="form-control border-start-0 ps-0" placeholder="Search Rooms..." style="box-shadow:none">
+                            </div>
                         </div>
                     </div>
-                    <div class="col-md-6 text-end">
-                        <button class="btn btn-primary px-4 py-2" data-bs-toggle="modal" data-bs-target="#addRoomModal" style="background: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%); border: none;">
-                            <i class="fa fa-plus me-2"></i> Add Room
-                        </button>
-                    </div>
-                </div>
 
-                <!-- Rooms Table -->
-                <div class="card shadow animate__animated animate__fadeInUp border-0" style="border-radius: 16px; overflow: hidden;">
-                    <div class="card-header bg-dark text-white py-3 px-4">
-                        <h5 class="mb-0 fw-bold"><i class="fa fa-door-open me-2"></i> Room List</h5>
+                    <div class="card shadow animate__animated animate__fadeInUp border-0" style="border-radius:0 16px 16px 16px;overflow:hidden">
+                        <div class="card-header bg-dark text-white py-3 px-4">
+                            <h5 class="mb-0 fw-bold"><i class="fa fa-door-open me-2"></i> Room List</h5>
+                        </div>
+                        <div class="card-body p-0">
+                            <table class="table table-hover mb-0" id="roomsTable">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th class="ps-4 py-3">Room ID</th>
+                                        <th class="py-3">Room Number</th>
+                                        <th class="py-3">Room Type</th>
+                                        <th class="py-3">Capacity</th>
+                                        <th class="py-3">Occupied</th>
+                                        <th class="py-3">Status</th>
+                                        <th class="pe-4 py-3 text-center">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
                     </div>
-                    
-                    <div class="card-body p-0">
-                        <table class="table table-hover mb-0" id="roomsTable">
-                            <thead class="table-light">
-                                <tr>
-                                    <th class="ps-4 py-3">Room ID</th>
-                                    <th class="py-3">Room Number</th>
-                                    <th class="py-3">Room Type</th>
-                                    <th class="py-3">Capacity</th>
-                                    <th class="py-3">Occupied</th>
-                                    <th class="py-3">Status</th>
-                                    <th class="pe-4 py-3 text-center">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Dynamic LocalStorage Data Here -->
-                            </tbody>
-                        </table>
+                </div><!-- /tab-pane rooms -->
+
+                <!-- ── Tab 2: Room Allocation ────────────────────────── -->
+                <div class="tab-pane fade" id="pane-alloc">
+                    <div class="card shadow border-0 mt-3" style="border-radius:0 16px 16px 16px;">
+                        <div class="card-header bg-white border-bottom py-3 px-4">
+                            <ul class="nav nav-pills gap-2" id="allocSubTabs">
+                                <li class="nav-item"><button class="nav-link active px-3" onclick="filterAlloc('Pending Review',this)">Pending Review</button></li>
+                                <li class="nav-item"><button class="nav-link px-3" onclick="filterAlloc('Approved - Awaiting Payment',this)">Awaiting Payment</button></li>
+                                <li class="nav-item"><button class="nav-link px-3" onclick="filterAlloc('Allocated',this)">Allocated</button></li>
+                                <li class="nav-item"><button class="nav-link px-3" onclick="filterAlloc('Rejected',this)">Rejected</button></li>
+                            </ul>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle mb-0" id="allocTable">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th class="ps-4 py-3">App ID</th>
+                                            <th class="py-3">Date</th>
+                                            <th class="py-3">Student</th>
+                                            <th class="py-3">Room</th>
+                                            <th class="py-3">Status</th>
+                                            <th class="pe-4 py-3 text-center">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="allocBody">
+                                        <tr><td colspan="6" class="text-center text-muted py-4">Click "Room Allocation" tab to load.</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
-                </div>
+                </div><!-- /tab-pane alloc -->
+
+                </div><!-- /tab-content -->
 
             </div>
         </div>
@@ -301,7 +272,72 @@ if(localStorage.getItem("role") !== "admin"){
             await initData();
             loadRooms();
         }
+
+        // ── Room Allocation Tab ───────────────────────────────────────
+        let allAllocations = [];
+        let allocFilter = 'Pending Review';
+        let allocLoaded = false;
+
+        async function loadAllocations() {
+            if (allocLoaded) return;
+            const tbody = document.getElementById('allocBody');
+            tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4"><div class="spinner-border text-primary" role="status"></div></td></tr>';
+            try {
+                const res = await fetch(`${API_URL}/data/applications`);
+                allAllocations = res.ok ? await res.json() : [];
+                allocLoaded = true;
+                renderAllocTable();
+            } catch(e) {
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted py-4">Could not load applications.</td></tr>';
+            }
+        }
+
+        function filterAlloc(status, btn) {
+            allocFilter = status;
+            document.querySelectorAll('#allocSubTabs .nav-link').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderAllocTable();
+        }
+
+        function renderAllocTable() {
+            const tbody = document.getElementById('allocBody');
+            const filtered = allAllocations.filter(a => a.status === allocFilter);
+            if (filtered.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted py-5">No applications in this category.</td></tr>';
+                return;
+            }
+            const statusColors = {
+                'Pending Review': 'bg-warning bg-opacity-10 text-warning border border-warning',
+                'Approved - Awaiting Payment': 'bg-primary bg-opacity-10 text-primary border border-primary',
+                'Allocated': 'bg-success bg-opacity-10 text-success border border-success',
+                'Rejected': 'bg-danger bg-opacity-10 text-danger border border-danger',
+                'Waitlisted': 'bg-secondary bg-opacity-10 text-secondary border border-secondary'
+            };
+            tbody.innerHTML = filtered.sort((a,b)=>b.id-a.id).map(app => `
+            <tr>
+                <td class="ps-4 text-muted fw-bold">#${app.id || ''}</td>
+                <td>${app.date || '—'}</td>
+                <td>
+                    <div class="fw-medium">${app.studentName || app.student || '—'}</div>
+                    <div class="small text-muted">${app.phone || ''}</div>
+                </td>
+                <td>
+                    <div class="fw-medium">${app.roomNumber || '—'}</div>
+                    <div class="small text-muted">${app.roomType || ''}</div>
+                </td>
+                <td><span class="badge ${statusColors[app.status] || 'bg-secondary'} small">${app.status}</span></td>
+                <td class="pe-4 text-center">
+                    <a href="admin_room_allocation.html" class="btn btn-sm btn-outline-primary rounded-pill px-3">
+                        <i class="fa fa-external-link-alt me-1"></i>Review
+                    </a>
+                </td>
+            </tr>`).join('');
+        }
     </script>
     <script src="../js/bootstrap.bundle.js"></script>
+
+    <!-- Shared Admin Layout -->
+    <script src="../js/admin_layout.js"></script>
+    <script>initAdminLayout('rooms');</script>
 </body>
 </html>

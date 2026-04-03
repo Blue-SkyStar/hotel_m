@@ -8,6 +8,7 @@
         }
     </script>
 
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Profile | Hostel Management</title>
@@ -69,97 +70,18 @@
 </head>
 
 <body>
+    <div id="navbar-mount"></div>
 
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-md navbar-dark bg-dark shadow-lg fixed-top">
-        <div class="container-fluid">
-            <img src="../img/logo/logo.png" width="45" class="rounded-circle border shadow-sm" alt="Logo">
-            <a class="navbar-brand mx-3">Hostel Management</a>
+    
 
-            <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#menu">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="collapse navbar-collapse" id="menu">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="admin_home.html">Dashboard</a></li>
-                    <li class="nav-item"><a class="nav-link" href="admin_manage_students.html">Students</a></li>
-                    <li class="nav-item"><a class="nav-link" href="admin_manage_rooms.html">Rooms</a></li>
-                    <li class="nav-item"><a class="nav-link" href="admin_manage_payments.html">Payments</a></li>
-                    <li class="nav-item"><a class="nav-link" href="admin_manage_complaints.html">Complaints</a></li>
-                    <li class="nav-item">
-                        <button class="btn btn-sm btn-danger ms-2 px-3 align-self-center mt-1"
-                            style="border-radius:20px; font-weight:500;" onclick="logout()">
-                            <i class="fa fa-sign-out me-1"></i> Logout
-                        </button>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
-    <div class="container-fluid" style="margin-top:90px">
+    <div class="container-fluid" style="margin-top:70px">
         <div class="row">
 
             <!-- Sidebar -->
-            <div class="col-md-2 bg-dark text-white vh-100 p-3">
-                <h4 class="text-center">MENU</h4>
-                <hr>
+            
+            <div id="sidebar-mount" class="col-md-2 p-0"></div>
 
-                <ul class="nav flex-column">
-                    <li class="nav-item mb-3">
-                        <a href="admin_home.html" class="nav-link text-white">
-                            <i class="fa fa-home"></i> Dashboard
-                        </a>
-                    </li>
-                    <li class="nav-item mb-3">
-                        <a href="admin_manage_students.html" class="nav-link text-white">
-                            <i class="fa fa-user"></i> Students
-                        </a>
-                    </li>
-                    <li class="nav-item mb-3">
-                        <a href="admin_add_student.html" class="nav-link text-white">
-                            <i class="fa fa-user-plus"></i> Add Student
-                        </a>
-                    </li>
-                    <li class="nav-item mb-3">
-                        <a href="admin_manage_rooms.html" class="nav-link text-white">
-                            <i class="fa fa-bed"></i> Rooms
-                        </a>
-                    </li>
-                    <li class="nav-item mb-3">
-                        <a href="admin_manage_payments.html" class="nav-link text-white">
-                            <i class="fa fa-money-bill"></i> Payments
-                        </a>
-                    </li>
-                    <li class="nav-item mb-3">
-                        <a href="admin_manage_complaints.html" class="nav-link text-white">
-                            <i class="fa fa-exclamation-circle"></i> Complaints
-                        </a>
-                    </li>
-                    <li class="nav-item mb-3">
-                        <a href="admin_room_allocation.html" class="nav-link text-white">
-                            <i class="fa fa-key"></i> Room Allocation
-                        </a>
-                    </li>
-                    <li class="nav-item mb-3">
-                        <a href="admin_reports.html" class="nav-link text-white">
-                            <i class="fa fa-file-invoice"></i> Reports
-                        </a>
-                    </li>
-                    <li class="nav-item mb-3">
-                        <a href="admin_visitor_log.html" class="nav-link text-white">
-                            <i class="fa fa-address-book"></i> Visitor Log
-                        </a>
-                    </li>
-                    <li class="nav-item mb-3">
-                        <a href="admin_profile.html" class="nav-link active text-white"
-                            style="background-color:rgba(255,255,255,0.1); border-radius:8px;">
-                            <i class="fa fa-user-shield"></i> Admin Profile
-                        </a>
-                    </li>
-                </ul>
-            </div>
 
             <!-- Main Content -->
             <div class="col-md-10 p-4">
@@ -400,6 +322,10 @@
         }
     </script>
     <script src="../js/bootstrap.bundle.js"></script>
+
+    <!-- Shared Admin Layout -->
+    <script src="../js/admin_layout.js"></script>
+    <script>initAdminLayout('profile');</script>
 </body>
 
 </html>
