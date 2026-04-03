@@ -359,11 +359,7 @@
                 <table class="table table-bordered">
                     <thead class="table-dark"><tr><th>ID</th><th>Name</th><th>Course</th><th>Room</th><th>Phone</th><th>Status</th></tr></thead>
                     <tbody>${document.getElementById('r_studentTable').innerHTML}</tbody>
-                </table>
-    <!-- Shared Admin Layout -->
-    <script src="../js/admin_layout.js"></script>
-    <script>initAdminLayout('reports');</script>
-</body></html>`);
+                </table></body></html>`);
             win.document.close();
             win.focus();
             win.print();
@@ -433,6 +429,9 @@
         }
     </script>
     <script src="../js/bootstrap.bundle.js"></script>
+    <!-- Shared Admin Layout -->
+    <script src="../js/admin_layout.js"></script>
+    <script>initAdminLayout('reports');</script>
 </body>
 
 </html>
