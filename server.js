@@ -38,9 +38,16 @@ try {
         pool = new Pool({
             connectionString: process.env.SUPABASE_URL,
             ssl: { rejectUnauthorized: false },
-            connectionTimeoutMillis: 5000
+            connectionTimeoutMillis: 10000,
+            idleTimeoutMillis: 30000,
+            max: 10
         });
-        console.log('✅ PostgreSQL Pool created');
+        // Test connection on startup
+        pool.query('SELECT 1').then(() => {
+            console.log('✅ PostgreSQL Pool created & connected successfully');
+        }).catch(err => {
+            console.error('❌ PostgreSQL test query failed:', err.message);
+        });
     } else {
         console.error('❌ SUPABASE_URL not set — database features will fail');
     }
@@ -155,8 +162,8 @@ app.post('/api/auth/login', async (req, res) => {
                 
                 res.cookie('jwt', token, { 
                     httpOnly: true, 
-                    secure: process.env.NODE_ENV === 'production', 
-                    sameSite: 'strict', 
+                    secure: true,
+                    sameSite: 'none',
                     maxAge: 24 * 60 * 60 * 1000 
                 });
                 
@@ -168,8 +175,11 @@ app.post('/api/auth/login', async (req, res) => {
             res.status(401).json({ success: false, message: 'Invalid credentials' });
         }
     } catch (err) {
-        console.error('Login error:', err);
-        res.status(500).json({ success: false, message: 'Server error' });
+        console.error('Login error details:', err.message, err.code);
+        if (err.code === 'ECONNREFUSED' || err.code === 'ETIMEDOUT' || err.message.includes('connect')) {
+            return res.status(500).json({ success: false, message: 'Database connection failed. Check SUPABASE_URL in Vercel settings.' });
+        }
+        res.status(500).json({ success: false, message: 'Server error: ' + err.message });
     }
 });
 
