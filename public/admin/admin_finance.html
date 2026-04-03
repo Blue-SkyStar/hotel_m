@@ -264,12 +264,23 @@ if(localStorage.getItem("role") !== "admin"){
         // initAdminLayout('finance'); handles mounting. We just need to load data.
         
         try {
-            const res = await fetch(`${API_URL}/finance/summary`);
-            const data = await res.json();
-            
-            if (!data.success) {
-                console.error('Failed to load finance summary', data.message);
-                return;
+            let data;
+            const cached = sessionStorage.getItem('hs_cache_finance_summary');
+            if (cached) {
+                data = JSON.parse(cached);
+                // Trigger background refresh silently
+                fetch(`${API_URL}/finance/summary`).then(r => r.json()).then(d => {
+                    sessionStorage.setItem('hs_cache_finance_summary', JSON.stringify(d));
+                }).catch(()=>{});
+            } else {
+                const res = await fetch(`${API_URL}/finance/summary`);
+                data = await res.json();
+                
+                if (!data.success) {
+                    console.error('Failed to load finance summary', data.message);
+                    return;
+                }
+                sessionStorage.setItem('hs_cache_finance_summary', JSON.stringify(data));
             }
 
             const now = new Date();

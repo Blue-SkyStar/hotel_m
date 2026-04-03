@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<script>
-if(localStorage.getItem("role") !== "student"){ window.location.href = "../login.html"; }
-</script>
+    <script>
+        if (localStorage.getItem("role") !== "student") { window.location.href = "../login.html"; }
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Room Details</title>
@@ -15,24 +16,32 @@ if(localStorage.getItem("role") !== "student"){ window.location.href = "../login
     <script src="../js/sweetalert.js"></script>
     <script src="../js/storage.js"></script>
 </head>
+
 <body class="bg-light">
     <!-- Navbar -->
     <nav class="navbar navbar-expand-md navbar-dark bg-dark shadow-lg fixed-top">
         <div class="container-fluid">
             <img src="../img/logo/logo.png" class="rounded-circle" width="45">
             <a class="navbar-brand mx-3 fw-bold">Student Portal</a>
-            <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#menu"><span class="navbar-toggler-icon"></span></button>
+            <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#menu"><span
+                    class="navbar-toggler-icon"></span></button>
             <div class="collapse navbar-collapse" id="menu">
                 <ul class="navbar-nav ms-auto align-items-center">
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="profileDropdown"
+                            role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="fa fa-user-circle fs-4 me-2 text-white-50"></i>
                             <span id="welcomeUser" class="text-white">Student</span>
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2 animate__animated animate__fadeIn" aria-labelledby="profileDropdown" style="border-radius: 12px;">
-                            <li><a class="dropdown-item py-2" href="student_profile.html"><i class="fa fa-user me-2 text-primary"></i> My Profile</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item py-2 text-danger" href="#" onclick="logout()"><i class="fa fa-sign-out-alt me-2"></i> Logout</a></li>
+                        <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2 animate__animated animate__fadeIn"
+                            aria-labelledby="profileDropdown" style="border-radius: 12px;">
+                            <li><a class="dropdown-item py-2" href="student_profile.html"><i
+                                        class="fa fa-user me-2 text-primary"></i> My Profile</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item py-2 text-danger" href="#" onclick="logout()"><i
+                                        class="fa fa-sign-out-alt me-2"></i> Logout</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -44,45 +53,59 @@ if(localStorage.getItem("role") !== "student"){ window.location.href = "../login
         <div class="row">
             <!-- Sidebar -->
             <div class="col-md-2 bg-dark text-white p-3" style="min-height:100vh">
-                <h5 class="text-center mt-2 mb-3">MENU</h5><hr>
+                <h5 class="text-center mt-2 mb-3">MENU</h5>
+                <hr>
                 <ul class="nav flex-column">
-                    <li class="nav-item mb-3"><a href="student_dashboard.html" class="nav-link text-white"><i class="fa fa-home me-2"></i> Dashboard</a></li>
-                    <li class="nav-item mb-3"><a href="student_profile.html" class="nav-link text-white"><i class="fa fa-user me-2"></i> Profile</a></li>
-                    <li class="nav-item mb-3"><a href="student_room.html" class="nav-link text-white"><i class="fa fa-bed me-2"></i> My Room</a></li>
-                    <li class="nav-item mb-3"><a href="student_room_details.html" class="nav-link text-white active" style="background:rgba(255,255,255,0.1); border-radius:8px;"><i class="fa fa-building me-2"></i> Room Details</a></li>
-                    <li class="nav-item mb-3"><a href="student_application_status.html" class="nav-link text-white"><i class="fa fa-file-signature me-2"></i> My Applications</a></li>
-                    <li class="nav-item mb-3"><a href="student_payments.html" class="nav-link text-white"><i class="fa fa-credit-card me-2"></i> Fees / Payments</a></li>
-                    <li class="nav-item mb-3"><a href="student_complaints.html" class="nav-link text-white"><i class="fa fa-exclamation-circle me-2"></i> Complaints</a></li>
-                    <li class="nav-item mb-3"><a href="student_notices.html" class="nav-link text-white"><i class="fa fa-bullhorn me-2"></i> Notices</a></li>
+                    <li class="nav-item mb-3"><a href="student_dashboard.html" class="nav-link text-white"><i
+                                class="fa fa-home me-2"></i> Dashboard</a></li>
+                    <li class="nav-item mb-3"><a href="student_profile.html" class="nav-link text-white"><i
+                                class="fa fa-user me-2"></i> Profile</a></li>
+                    <li class="nav-item mb-3"><a href="student_room.html" class="nav-link text-white"><i
+                                class="fa fa-bed me-2"></i> My Room</a></li>
+                    <li class="nav-item mb-3"><a href="student_room_details.html" class="nav-link text-white active"
+                            style="background:rgba(255,255,255,0.1); border-radius:8px;"><i
+                                class="fa fa-building me-2"></i> Room Details</a></li>
+                    <li class="nav-item mb-3"><a href="student_application_status.html" class="nav-link text-white"><i
+                                class="fa fa-file-signature me-2"></i> My Applications</a></li>
+                    <li class="nav-item mb-3"><a href="student_payments.html" class="nav-link text-white"><i
+                                class="fa fa-credit-card me-2"></i> Fees / Payments</a></li>
+                    <li class="nav-item mb-3"><a href="student_complaints.html" class="nav-link text-white"><i
+                                class="fa fa-exclamation-circle me-2"></i> Complaints</a></li>
+                    <li class="nav-item mb-3"><a href="student_notices.html" class="nav-link text-white"><i
+                                class="fa fa-bullhorn me-2"></i> Notices</a></li>
                 </ul>
             </div>
 
             <!-- Main Content -->
             <div class="col-md-10 p-4">
                 <h2 class="mb-4"><i class="fa fa-building me-2 text-primary"></i>Browse Room Details</h2>
-                
+
                 <ul class="nav nav-pills mb-4" id="roomTabs" role="tablist">
-                  <li class="nav-item" role="presentation">
-                    <button class="nav-link active fw-bold px-4 rounded-pill" id="boys-tab" data-bs-toggle="pill" data-bs-target="#boys" type="button" role="tab" aria-controls="boys" aria-selected="true"><i class="fa fa-mars me-2"></i> Boys Hostel Rooms</button>
-                  </li>
-                  <li class="nav-item" role="presentation">
-                    <button class="nav-link fw-bold px-4 rounded-pill" id="girls-tab" data-bs-toggle="pill" data-bs-target="#girls" type="button" role="tab" aria-controls="girls" aria-selected="false"><i class="fa fa-venus me-2"></i> Girls Hostel Rooms</button>
-                  </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active fw-bold px-4 rounded-pill" id="boys-tab" data-bs-toggle="pill"
+                            data-bs-target="#boys" type="button" role="tab" aria-controls="boys" aria-selected="true"><i
+                                class="fa fa-mars me-2"></i> Boys Hostel Rooms</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link fw-bold px-4 rounded-pill" id="girls-tab" data-bs-toggle="pill"
+                            data-bs-target="#girls" type="button" role="tab" aria-controls="girls"
+                            aria-selected="false"><i class="fa fa-venus me-2"></i> Girls Hostel Rooms</button>
+                    </li>
                 </ul>
 
                 <div class="tab-content" id="roomTabsContent">
-                  <!-- Boys Tab -->
-                  <div class="tab-pane fade show active" id="boys" role="tabpanel" aria-labelledby="boys-tab">
-                      <div class="row g-4" id="boysRoomsGrid">
-                          <!-- Populated by JS -->
-                      </div>
-                  </div>
-                  <!-- Girls Tab -->
-                  <div class="tab-pane fade" id="girls" role="tabpanel" aria-labelledby="girls-tab">
-                      <div class="row g-4" id="girlsRoomsGrid">
-                          <!-- Populated by JS -->
-                      </div>
-                  </div>
+                    <!-- Boys Tab -->
+                    <div class="tab-pane fade show active" id="boys" role="tabpanel" aria-labelledby="boys-tab">
+                        <div class="row g-4" id="boysRoomsGrid">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                    <!-- Girls Tab -->
+                    <div class="tab-pane fade" id="girls" role="tabpanel" aria-labelledby="girls-tab">
+                        <div class="row g-4" id="girlsRoomsGrid">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
                 </div>
 
             </div>
@@ -91,90 +114,108 @@ if(localStorage.getItem("role") !== "student"){ window.location.href = "../login
 
     <!-- Application Modal -->
     <div class="modal fade" id="applyModal" tabindex="-1" aria-labelledby="applyModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content border-0 shadow-lg" style="border-radius:20px;">
-          <div class="modal-header bg-dark text-white border-0" style="border-radius:20px 20px 0 0; padding:20px 30px;">
-            <h5 class="modal-title fw-bold" id="applyModalLabel"><i class="fa fa-check-circle me-2"></i> Room Application</h5>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body p-4 p-md-5">
-            <div class="row mb-4">
-                <div class="col-md-5">
-                    <img src="" id="modalRoomImg" class="img-fluid rounded-4 mb-3 shadow-sm" style="width:100%; height:200px; object-fit:cover;">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content border-0 shadow-lg" style="border-radius:20px;">
+                <div class="modal-header bg-dark text-white border-0"
+                    style="border-radius:20px 20px 0 0; padding:20px 30px;">
+                    <h5 class="modal-title fw-bold" id="applyModalLabel"><i class="fa fa-check-circle me-2"></i> Room
+                        Application</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
                 </div>
-                <div class="col-md-7">
-                    <h4 class="fw-bold mb-1" id="modalRoomType">Standard Room</h4>
-                    <p class="text-muted"><i class="fa fa-door-open me-2"></i> Room Number: <strong id="modalRoomNum">101</strong></p>
-                    <p class="text-muted"><i class="fa fa-users me-2"></i> Capacity: <strong id="modalRoomCap">1 Person</strong></p>
-                    <h3 class="fw-bold text-success mt-3 mb-0">Base Price: ₹<span id="modalBasePrice">5000</span><small class="text-muted fs-6">/month</small></h3>
+                <div class="modal-body p-4 p-md-5">
+                    <div class="row mb-4">
+                        <div class="col-md-5">
+                            <img src="" id="modalRoomImg" class="img-fluid rounded-4 mb-3 shadow-sm"
+                                style="width:100%; height:200px; object-fit:cover;">
+                        </div>
+                        <div class="col-md-7">
+                            <h4 class="fw-bold mb-1" id="modalRoomType">Standard Room</h4>
+                            <p class="text-muted"><i class="fa fa-door-open me-2"></i> Room Number: <strong
+                                    id="modalRoomNum">101</strong></p>
+                            <p class="text-muted"><i class="fa fa-users me-2"></i> Capacity: <strong id="modalRoomCap">1
+                                    Person</strong></p>
+                            <h3 class="fw-bold text-success mt-3 mb-0">Base Price: ₹<span
+                                    id="modalBasePrice">5000</span><small class="text-muted fs-6">/month</small></h3>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <h5 class="fw-bold mb-3"><i class="fa fa-star text-warning me-2"></i> Choose Additional Facilities
+                        (Optional)</h5>
+                    <div class="row g-3 mb-4">
+                        <!-- Laundry -->
+                        <div class="col-md-6">
+                            <div
+                                class="form-check p-3 border rounded-3 d-flex align-items-center justify-content-between option-box">
+                                <div>
+                                    <input class="form-check-input ms-0 me-2 facility-checkbox" type="checkbox"
+                                        value="500" id="fac_laundry">
+                                    <label class="form-check-label fw-bold cursor-pointer" for="fac_laundry">
+                                        <i class="fa fa-soap text-primary me-1"></i> Laundry Service
+                                    </label>
+                                </div>
+                                <span class="badge bg-light text-dark shadow-sm">₹500/mo</span>
+                            </div>
+                        </div>
+                        <!-- Gym -->
+                        <div class="col-md-6">
+                            <div
+                                class="form-check p-3 border rounded-3 d-flex align-items-center justify-content-between option-box">
+                                <div>
+                                    <input class="form-check-input ms-0 me-2 facility-checkbox" type="checkbox"
+                                        value="800" id="fac_gym">
+                                    <label class="form-check-label fw-bold cursor-pointer" for="fac_gym">
+                                        <i class="fa fa-dumbbell text-success me-1"></i> Gym Access
+                                    </label>
+                                </div>
+                                <span class="badge bg-light text-dark shadow-sm">₹800/mo</span>
+                            </div>
+                        </div>
+                        <!-- Play Rooms -->
+                        <div class="col-md-6">
+                            <div
+                                class="form-check p-3 border rounded-3 d-flex align-items-center justify-content-between option-box">
+                                <div>
+                                    <input class="form-check-input ms-0 me-2 facility-checkbox" type="checkbox"
+                                        value="300" id="fac_play">
+                                    <label class="form-check-label fw-bold cursor-pointer" for="fac_play">
+                                        <i class="fa fa-gamepad text-warning me-1"></i> Play Room Access
+                                    </label>
+                                </div>
+                                <span class="badge bg-light text-dark shadow-sm">₹300/mo</span>
+                            </div>
+                        </div>
+                        <!-- Cafeteria Food -->
+                        <div class="col-md-6">
+                            <div
+                                class="form-check p-3 border rounded-3 d-flex align-items-center justify-content-between option-box">
+                                <div>
+                                    <input class="form-check-input ms-0 me-2 facility-checkbox" type="checkbox"
+                                        value="2500" id="fac_food">
+                                    <label class="form-check-label fw-bold cursor-pointer" for="fac_food">
+                                        <i class="fa fa-utensils text-danger me-1"></i> Cafeteria Food
+                                    </label>
+                                </div>
+                                <span class="badge bg-light text-dark shadow-sm">₹2500/mo</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-4 bg-light rounded-4 d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-0 small text-uppercase fw-bold">Calculated Total</p>
+                            <h2 class="fw-bold mb-0">₹<span id="modalTotalPrice">5000</span> <small
+                                    class="fs-6 text-muted">/month</small></h2>
+                        </div>
+                        <button class="btn btn-primary px-5 py-3 rounded-pill fw-bold shadow"
+                            onclick="submitApplication()"><i class="fa fa-paper-plane me-2"></i> Apply Now</button>
+                    </div>
+
                 </div>
             </div>
-
-            <hr>
-
-            <h5 class="fw-bold mb-3"><i class="fa fa-star text-warning me-2"></i> Choose Additional Facilities (Optional)</h5>
-            <div class="row g-3 mb-4">
-                <!-- Laundry -->
-                <div class="col-md-6">
-                    <div class="form-check p-3 border rounded-3 d-flex align-items-center justify-content-between option-box">
-                        <div>
-                            <input class="form-check-input ms-0 me-2 facility-checkbox" type="checkbox" value="500" id="fac_laundry">
-                            <label class="form-check-label fw-bold cursor-pointer" for="fac_laundry">
-                                <i class="fa fa-soap text-primary me-1"></i> Laundry Service
-                            </label>
-                        </div>
-                        <span class="badge bg-light text-dark shadow-sm">₹500/mo</span>
-                    </div>
-                </div>
-                <!-- Gym -->
-                <div class="col-md-6">
-                    <div class="form-check p-3 border rounded-3 d-flex align-items-center justify-content-between option-box">
-                        <div>
-                            <input class="form-check-input ms-0 me-2 facility-checkbox" type="checkbox" value="800" id="fac_gym">
-                            <label class="form-check-label fw-bold cursor-pointer" for="fac_gym">
-                                <i class="fa fa-dumbbell text-success me-1"></i> Gym Access
-                            </label>
-                        </div>
-                        <span class="badge bg-light text-dark shadow-sm">₹800/mo</span>
-                    </div>
-                </div>
-                <!-- Play Rooms -->
-                <div class="col-md-6">
-                    <div class="form-check p-3 border rounded-3 d-flex align-items-center justify-content-between option-box">
-                        <div>
-                            <input class="form-check-input ms-0 me-2 facility-checkbox" type="checkbox" value="300" id="fac_play">
-                            <label class="form-check-label fw-bold cursor-pointer" for="fac_play">
-                                <i class="fa fa-gamepad text-warning me-1"></i> Play Room Access
-                            </label>
-                        </div>
-                        <span class="badge bg-light text-dark shadow-sm">₹300/mo</span>
-                    </div>
-                </div>
-                <!-- Cafeteria Food -->
-                <div class="col-md-6">
-                    <div class="form-check p-3 border rounded-3 d-flex align-items-center justify-content-between option-box">
-                        <div>
-                            <input class="form-check-input ms-0 me-2 facility-checkbox" type="checkbox" value="2500" id="fac_food">
-                            <label class="form-check-label fw-bold cursor-pointer" for="fac_food">
-                                <i class="fa fa-utensils text-danger me-1"></i> Cafeteria Food
-                            </label>
-                        </div>
-                        <span class="badge bg-light text-dark shadow-sm">₹2500/mo</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="p-4 bg-light rounded-4 d-flex justify-content-between align-items-center">
-                <div>
-                    <p class="text-muted mb-0 small text-uppercase fw-bold">Calculated Total</p>
-                    <h2 class="fw-bold mb-0">₹<span id="modalTotalPrice">5000</span> <small class="fs-6 text-muted">/month</small></h2>
-                </div>
-                <button class="btn btn-primary px-5 py-3 rounded-pill fw-bold shadow" onclick="submitApplication()"><i class="fa fa-paper-plane me-2"></i> Apply Now</button>
-            </div>
-
-          </div>
         </div>
-      </div>
     </div>
 
     <script>
@@ -182,7 +223,7 @@ if(localStorage.getItem("role") !== "student"){ window.location.href = "../login
         let selectedRoom = null;
         let basePriceInt = 0;
 
-        window.onload = async function(){
+        window.onload = async function () {
             await initData();
             document.getElementById("welcomeUser").textContent = "Hi, " + currentUserId;
             renderRooms();
@@ -192,7 +233,7 @@ if(localStorage.getItem("role") !== "student"){ window.location.href = "../login
         function renderRooms() {
             const boysGrid = document.getElementById("boysRoomsGrid");
             const girlsGrid = document.getElementById("girlsRoomsGrid");
-            
+
             let boysHtml = '';
             let girlsHtml = '';
 
@@ -215,16 +256,16 @@ if(localStorage.getItem("role") !== "student"){ window.location.href = "../login
                                 </div>
                                 <div class="room-price mt-auto">
                                     <span class="price-tag">₹${room.price}/mo</span>
-                                    <button class="buy-btn btn btn-sm btn-outline-dark" onclick="openApplyModal(${room.id})">View / Apply</button>
+                                    <button class="buy-btn btn btn-sm btn-outline-dark" onclick="openApplyModal('${room.id}')">View / Apply</button>
                                 </div>
                             </div>
                         </div>
                     </div>
                 `;
-                
-                if(room.gender === 'Boys'){
+
+                if (room.gender === 'Boys') {
                     boysHtml += cardHtml;
-                } else if(room.gender === 'Girls'){
+                } else if (room.gender === 'Girls') {
                     girlsHtml += cardHtml;
                 }
             });
@@ -234,17 +275,17 @@ if(localStorage.getItem("role") !== "student"){ window.location.href = "../login
         }
 
         function openApplyModal(roomId) {
-            selectedRoom = rooms.find(r => r.id === roomId);
-            if(!selectedRoom) return;
+            selectedRoom = rooms.find(r => r.id == roomId);
+            if (!selectedRoom) return;
 
             document.getElementById("modalRoomImg").src = selectedRoom.image;
             document.getElementById("modalRoomType").textContent = selectedRoom.type;
             document.getElementById("modalRoomNum").textContent = selectedRoom.number;
             document.getElementById("modalRoomCap").textContent = selectedRoom.capacity + (selectedRoom.capacity > 1 ? " Persons" : " Person");
-            
+
             basePriceInt = selectedRoom.price;
             document.getElementById("modalBasePrice").textContent = basePriceInt;
-            
+
             // Reset checkboxes
             document.querySelectorAll('.facility-checkbox').forEach(cb => cb.checked = false);
             updateTotalPrice();
@@ -262,7 +303,7 @@ if(localStorage.getItem("role") !== "student"){ window.location.href = "../login
         function updateTotalPrice() {
             let total = basePriceInt;
             document.querySelectorAll('.facility-checkbox').forEach(cb => {
-                if(cb.checked) {
+                if (cb.checked) {
                     total += parseInt(cb.value);
                 }
             });
@@ -272,7 +313,7 @@ if(localStorage.getItem("role") !== "student"){ window.location.href = "../login
         function submitApplication() {
             let chosenFacilities = [];
             document.querySelectorAll('.facility-checkbox').forEach(cb => {
-                if(cb.checked) {
+                if (cb.checked) {
                     chosenFacilities.push(cb.nextElementSibling.innerText.trim());
                 }
             });
@@ -287,4 +328,5 @@ if(localStorage.getItem("role") !== "student"){ window.location.href = "../login
     </script>
     <script src="../js/bootstrap.bundle.js"></script>
 </body>
+
 </html>
