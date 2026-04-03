@@ -585,11 +585,7 @@ body.dark-mode .text-muted {
     .admin-sidebar.mobile-open { transform: translateX(0); }
 }
 
-/* Main content offset */
-#sidebar-mount ~ .col-md-10,
-.admin-main-content {
-    margin-left: 230px;
-}
+/* Main content offset relies on Bootstrap col-md-2 */
 
 /* ── Top Navbar ───────────────────────────────────────────────── */
 .admin-topbar {
@@ -705,9 +701,5 @@ body:has(.admin-topbar) {
     padding-top: 60px;
 }
 
-/* Main container left offset for desktop */
-body:has(#adminSidebar) .container-fluid.mt-0,
-body:has(#adminSidebar) [style*="margin-top"] {
-    margin-left: 230px;
-}
+/* Bootstrap col-md-2 handles the sidebar width natively */
 
