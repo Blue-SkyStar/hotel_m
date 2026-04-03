@@ -33,8 +33,35 @@ app.get('/', (req, res) => {
 
 // Helper functions for DB
 // Replaced db.json file ops with MySQL pool
-const pool = require('./config/db');
-const { verifyToken } = require('./config/authMiddleware');
+const { Pool } = require('pg');
+let pool;
+
+if (process.env.SUPABASE_URL) {
+    try {
+        pool = new Pool({
+            connectionString: process.env.SUPABASE_URL,
+            ssl: { rejectUnauthorized: false }
+        });
+        console.log('✅ PostgreSQL Connected');
+    } catch (err) {
+        console.error('❌ PostgreSQL Connection Error:', err);
+    }
+}
+
+// Authentication Middleware
+const verifyToken = (req, res, next) => {
+    const token = req.cookies.jwt;
+    if (!token) return res.status(401).json({ success: false, message: 'Access Denied: No Token Provided!' });
+
+    try {
+        const secret = process.env.JWT_SECRET || 'task_jwt_secretpasswordshouldbestrongasPi3.141592';
+        const verified = jwt.verify(token, secret);
+        req.user = verified;
+        next();
+    } catch (error) {
+        res.status(401).json({ success: false, message: 'Invalid Token' });
+    }
+};
 
 // ─── Razorpay Setup ───────────────────────────────────────────────────────────
 let Razorpay;
