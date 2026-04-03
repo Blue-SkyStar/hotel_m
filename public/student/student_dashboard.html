@@ -2,11 +2,9 @@
 <html lang="en">
 
 <head>
-    <script>
-        if (localStorage.getItem("role") !== "student") {
-            window.location.href = "../login.html";
-        }
-    </script>
+    <!-- Authentication -->
+    <script src="../js/auth_service.js"></script>
+    <script>AuthService.init('student');</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Dashboard</title>
@@ -37,6 +35,7 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
     </style>
+    <script src="../js/theme_service.js"></script>
 </head>
 
 <body class="bg-light">
@@ -51,6 +50,11 @@
             </button>
             <div class="collapse navbar-collapse" id="menu">
                 <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item me-3">
+                        <button class="btn btn-outline-light border-0 rounded-circle p-2" onclick="ThemeService.toggle()" title="Toggle Dark Mode">
+                            <i class="fa fa-moon fs-5"></i>
+                        </button>
+                    </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="profileDropdown"
                             role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -122,47 +126,99 @@
             <div class="col-md-10 p-4">
 
                 <!-- Welcome Banner -->
-                <div class="welcome-banner text-white p-5 mb-4 shadow">
+                <div class="welcome-banner text-white p-5 mb-4 shadow position-relative">
+                    <button class="btn btn-sm btn-light position-absolute top-0 end-0 m-4 rounded-pill px-3 shadow-sm" onclick="location.reload()">
+                        <i class="fa fa-sync-alt me-1"></i> Refresh
+                    </button>
                     <h2 class="fw-bold mb-2"><i class="fa fa-graduation-cap me-2"></i> Welcome back, <span
                             id="dashUsername">Student</span>!</h2>
                     <p class="mb-0 text-white-50 fs-5">Here's your hostel overview at a glance.</p>
                 </div>
 
+                
+                <div id="priorityBanner" class="mb-4"></div>
+
                 <!-- Stats -->
                 <div class="row g-4 mb-4">
                     <div class="col-md-3">
-                        <div class="card stat-card bg-primary text-white shadow">
-                            <div class="card-body text-center p-4">
-                                <i class="fa fa-bed fs-1 mb-2 opacity-75"></i>
-                                <h4 class="fw-bold mb-1" id="myRoom">Not Assigned</h4>
-                                <p class="mb-0 text-white-50">My Room</p>
+                        <div class="stat-card bg-white p-3 shadow-sm border-start border-primary border-4" style="border-radius: 12px;">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="text-muted mb-1 small uppercase fw-bold">Monthly Rent</h6>
+                                    <h4 class="mb-0 fw-bold text-dark" id="dash_rent">₹0</h4>
+                                </div>
+                                <div class="p-2 bg-primary bg-opacity-10 rounded-pill">
+                                    <i class="fa fa-home text-primary"></i>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-3">
-                        <div class="card stat-card bg-success text-white shadow">
-                            <div class="card-body text-center p-4">
-                                <i class="fa fa-check-circle fs-1 mb-2 opacity-75"></i>
-                                <h4 class="fw-bold mb-1" id="paymentStatus">Pending</h4>
-                                <p class="mb-0 text-white-50">Payment Status</p>
+                        <div class="stat-card bg-white p-3 shadow-sm border-start border-warning border-4" style="border-radius: 12px;">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="text-muted mb-1 small uppercase fw-bold">Pending Balance</h6>
+                                    <h4 class="mb-0 fw-bold text-danger" id="dash_balance">₹0</h4>
+                                </div>
+                                <div class="p-2 bg-warning bg-opacity-10 rounded-pill">
+                                    <i class="fa fa-clock text-warning"></i>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-3">
-                        <div class="card stat-card bg-warning text-dark shadow">
-                            <div class="card-body text-center p-4">
-                                <i class="fa fa-comment-dots fs-1 mb-2 opacity-75"></i>
-                                <h4 class="fw-bold mb-1" id="complaintCount">0</h4>
-                                <p class="mb-0">My Complaints</p>
+                        <div class="stat-card bg-white p-3 shadow-sm border-start border-success border-4" style="border-radius: 12px;">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="text-muted mb-1 small uppercase fw-bold">Contract End</h6>
+                                    <h4 class="mb-0 fw-bold" id="dash_expiry" style="font-size: 0.95rem; color: #10b981;">No Contract</h4>
+                                </div>
+                                <div class="p-2 bg-success bg-opacity-10 rounded-pill">
+                                    <i class="fa fa-calendar-check text-success"></i>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-3">
-                        <div class="card stat-card bg-info text-white shadow">
-                            <div class="card-body text-center p-4">
-                                <i class="fa fa-bell fs-1 mb-2 opacity-75"></i>
-                                <h4 class="fw-bold mb-1" id="noticeCount">0</h4>
-                                <p class="mb-0 text-white-50">Notices</p>
+                        <div class="stat-card bg-white p-3 shadow-sm border-start border-info border-4" style="border-radius: 12px;">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="text-muted mb-1 small uppercase fw-bold">Room Status</h6>
+                                    <h4 class="mb-0 fw-bold text-info" id="dash_status" style="font-size: 0.9rem;">—</h4>
+                                </div>
+                                <div class="p-2 bg-info bg-opacity-10 rounded-pill">
+                                    <i class="fa fa-info-circle text-info"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                                </div>
+
+                <!-- Secondary Stats Row -->
+                <div class="row g-4 mb-4">
+                    <div class="col-md-6">
+                        <div class="card stat-card bg-warning text-dark shadow-sm border-0 h-100" style="border-radius:16px;">
+                            <div class="card-body d-flex align-items-center p-4">
+                                <div class="bg-white bg-opacity-25 p-3 rounded-circle me-4">
+                                    <i class="fa fa-comment-dots fs-3"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h4 class="fw-bold mb-1" id="complaintCount">0</h4>
+                                    <p class="mb-0 fw-semibold opacity-75">My Complaints</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card stat-card bg-info text-white shadow-sm border-0 h-100" style="border-radius:16px;">
+                            <div class="card-body d-flex align-items-center p-4">
+                                <div class="bg-white bg-opacity-25 p-3 rounded-circle me-4">
+                                    <i class="fa fa-bell fs-3"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h4 class="fw-bold mb-1" id="noticeCount">0</h4>
+                                    <p class="mb-0 fw-semibold opacity-75">Active Notices</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -220,17 +276,78 @@
     </div>
 
     <script>
+        
         window.onload = async function () {
             await initData();
             let user = localStorage.getItem("loggedUser") || "Student";
             document.getElementById("dashUsername").textContent = user;
             document.getElementById("welcomeUser").textContent = "Hi, " + user;
 
-            let notices = JSON.parse(localStorage.getItem("notices")) || [];
-            document.getElementById("noticeCount").textContent = notices.length;
+            // ── Financial & Application Logic ────────────────────────────
+            const userApps = applications.filter(a => a.student && a.student.toLowerCase() === user.toLowerCase());
+            const userPayments = (typeof payments !== 'undefined' ? payments : []).filter(p => p.student && p.student.toLowerCase() === user.toLowerCase());
+            
+            // Priority for Allocated application, else Pending
+            const activeApp = userApps.find(a => a.status === 'Allocated') || userApps.find(a => a.status !== 'Rejected' && a.status !== 'Cancelled') || null;
 
-            let myComplaints = complaints.filter(c => c.student && c.student.toLowerCase() === user.toLowerCase());
-            document.getElementById("complaintCount").textContent = myComplaints.length;
+            if (activeApp) {
+                if (document.getElementById("dash_status")) document.getElementById("dash_status").textContent = activeApp.status;
+                if (document.getElementById("dash_rent"))   document.getElementById("dash_rent").textContent = "₹" + (activeApp.monthlyRent || activeApp.totalPrice || 0);
+                
+                const totalDue = parseFloat(activeApp.totalAmount || activeApp.totalPrice || 0);
+                const paidSum = userPayments.reduce((s, p) => s + parseFloat(p.amount || 0), 0);
+                const balance = totalDue - paidSum;
+                
+                if (document.getElementById("dash_balance")) {
+                    document.getElementById("dash_balance").textContent = "₹" + (balance > 0 ? balance.toLocaleString() : 0);
+                }
+                
+                if (document.getElementById("dash_expiry")) {
+                    
+                if (activeApp.endDate) {
+                    const expiry = new Date(activeApp.endDate);
+                    const now = new Date();
+                    const diffDays = Math.ceil((expiry - now) / (1000 * 60 * 60 * 24));
+                    
+                    if (document.getElementById("dash_expiry")) {
+                        document.getElementById("dash_expiry").textContent = "Till " + expiry.toLocaleDateString();
+                    }
+
+                    // --- Resident Priority Banner (15 Day Window) ---
+                    if (diffDays <= 15 && diffDays > 0) {
+                        const banner = document.getElementById("priorityBanner");
+                        banner.innerHTML = `
+                            <div class="alert alert-warning border-0 shadow-sm d-flex align-items-center p-4 animate__animated animate__pulse animate__infinite" style="border-radius:16px;">
+                                <div class="bg-warning bg-opacity-25 p-3 rounded-circle me-4">
+                                    <i class="fa fa-clock text-warning fs-3"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h5 class="fw-bold mb-1">Contract Ending Soon!</h5>
+                                    <p class="mb-0 text-muted">Your resident contract expires in <strong>${diffDays} days</strong> (${expiry.toLocaleDateString()}). You have priority access to extend your stay.</p>
+                                </div>
+                                <a href="student_room_application.html?roomId=${activeApp.roomId}&extend=true" class="btn btn-warning px-4 py-2 rounded-pill fw-bold shadow-sm">Extend Stay</a>
+                            </div>`;
+                    }
+                } else {
+                    if (document.getElementById("dash_expiry")) document.getElementById("dash_expiry").textContent = "No Expiry Set";
+                }
+
+                }
+            } else {
+                if (document.getElementById("dash_status")) document.getElementById("dash_status").textContent = "No Active Application";
+                if (document.getElementById("dash_expiry")) document.getElementById("dash_expiry").textContent = "None";
+            }
+
+            // ── Other Stats ──────────────────────────────────────────────
+            let notices = JSON.parse(localStorage.getItem("notices")) || [];
+            if (document.getElementById("noticeCount")) {
+                document.getElementById("noticeCount").textContent = notices.length;
+            }
+
+            if (document.getElementById("complaintCount") && typeof complaints !== 'undefined') {
+                let myComplaints = complaints.filter(c => c.student && c.student.toLowerCase() === user.toLowerCase());
+                document.getElementById("complaintCount").textContent = myComplaints.length;
+            }
 
             loadFacilities();
             loadPopularRooms();

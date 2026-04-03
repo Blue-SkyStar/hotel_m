@@ -1,11 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<script>
-if(localStorage.getItem("role") !== "admin"){
-    window.location.href = "../login.html";
-}
-</script>
+<!-- Authentication -->
+    <script src="../js/auth_service.js"></script>
+    <script>AuthService.init('admin');</script>
 
 
     <meta charset="UTF-8">
@@ -67,6 +65,7 @@ if(localStorage.getItem("role") !== "admin"){
                             <li class="nav-item"><a class="nav-link text-muted" href="#" onclick="event.preventDefault(); filterApps('Approved - Awaiting Payment', this)">Awaiting Payment</a></li>
                             <li class="nav-item"><a class="nav-link text-muted" href="#" onclick="event.preventDefault(); filterApps('Allocated', this)"><i class="fa fa-circle-check text-success me-1"></i> Allocated</a></li>
                             <li class="nav-item"><a class="nav-link text-muted" href="#" onclick="event.preventDefault(); filterApps('Rejected', this)">Rejected</a></li>
+                            <li class="nav-item"><a class="nav-link text-muted text-danger" href="#" onclick="event.preventDefault(); filterApps('Refund Pending', this)">Refund Requests</a></li>
                         </ul>
                     </div>
                     <div class="card-body p-0">

@@ -2,8 +2,182 @@
 <html lang="en">
 
 <head>
+    <!-- Authentication -->
+    <script src="../js/auth_service.js"></script>
+    
     <script>
-        if (localStorage.getItem("role") !== "student") { window.location.href = "../login.html"; }
+        function fmt(n) { return Number(n || 0).toLocaleString('en-IN'); }
+
+        window.onload = async function () {
+            await initData();
+            let username = localStorage.getItem("loggedUser") || "";
+            let myPayments = payments.filter(p => p.student && p.student.toLowerCase() === username.toLowerCase());
+
+            // ── Calculate Financials ──────────────────────────────────────
+            const userApp = applications.find(a => a.student && a.student.toLowerCase() === username.toLowerCase() && (a.status === 'Allocated' || a.status === 'Approved - Awaiting Payment'));
+            const totalContract = userApp ? parseFloat(userApp.totalAmount || 0) : 0;
+            const totalPaid = myPayments.reduce((s, p) => s + Number(p.amount), 0);
+            const pending = totalContract - totalPaid;
+
+            window.userApp = userApp; // Global for modal
+            document.getElementById("totalPaid").textContent = "₹" + fmt(totalPaid);
+            document.getElementById("pendingAmount").textContent = "₹" + fmt(pending > 0 ? pending : 0);
+            document.getElementById("totalTxns").textContent = myPayments.length;
+            
+            // Show/Hide Pay button
+            if (userApp) {
+                document.getElementById("payNowBtn").style.display = "block";
+            } else {
+                document.getElementById("payNowBtn").style.display = "none";
+            }
+
+            let tbody = document.getElementById("payBody");
+            tbody.innerHTML = "";
+            if (myPayments.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted py-5"><i class="fa fa-receipt fa-2x d-block mb-2 opacity-25"></i>No payment records found.</td></tr>';
+            } else {
+                myPayments.forEach(p => {
+                    let statusBadge = p.status === "Paid"
+                        ? '<span class="badge bg-success bg-opacity-10 text-success border border-success">Paid</span>'
+                        : '<span class="badge bg-warning bg-opacity-10 text-warning border border-warning">Pending</span>';
+                    
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td class="ps-4 fw-medium text-primary">#${p.id || '—'}</td>
+                        <td>${p.date || '—'}</td>
+                        <td class="fw-bold">₹${fmt(p.amount)}</td>
+                        <td><i class="fa fa-credit-card me-1 small opacity-50"></i> ${p.method || 'Cash'}</td>
+                        <td>${statusBadge}</td>
+                        <td class="pe-4 text-center">
+                            <button class="btn btn-sm btn-outline-dark px-3 rounded-pill" onclick='viewReceipt(${JSON.stringify(p).replace(/'/g, "&apos;")})'>
+                                <i class="fa fa-eye me-1"></i>Receipt
+                            </button>
+                        </td>`;
+                    tbody.appendChild(row);
+                });
+            }
+        }
+
+        function viewReceipt(p) {
+            Swal.fire({
+                title: '<i class="fa fa-file-invoice me-2"></i>Payment Receipt',
+                html: `
+                    <div class="text-start p-3 border rounded-4 bg-light">
+                        <div class="d-flex justify-content-between mb-4 pb-2 border-bottom">
+                            <div>
+                                <h6 class="mb-0 fw-bold">HostelSphere Management</h6>
+                                <p class="text-muted small mb-0">Official Digital Receipt</p>
+                            </div>
+                            <div class="text-end">
+                                <span class="badge bg-success">PAID</span>
+                            </div>
+                        </div>
+                        <div class="row g-2 mb-3">
+                            <div class="col-6">
+                                <p class="text-muted small mb-0 uppercase fw-bold">Receipt ID</p>
+                                <p class="fw-bold">#${p.id}</p>
+                            </div>
+                            <div class="col-6 text-end">
+                                <p class="text-muted small mb-0 uppercase fw-bold">Date</p>
+                                <p class="fw-bold">${p.date || 'N/A'}</p>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <p class="text-muted small mb-0 uppercase fw-bold">Student Name</p>
+                            <p class="fw-bold">${p.studentName || p.student}</p>
+                        </div>
+                        <div class="p-3 bg-white rounded-3 border mb-3">
+                            <div class="d-flex justify-content-between mb-1">
+                                <span>Hostel Fee / Rent</span>
+                                <span class="fw-bold">₹${fmt(p.amount)}</span>
+                            </div>
+                            <div class="d-flex justify-content-between small text-muted">
+                                <span>Payment Method</span>
+                                <span>${p.method || 'Online'}</span>
+                            </div>
+                        </div>
+                        <div class="text-center mt-4">
+                            <p class="text-muted small mb-0">Thank you for your payment!</p>
+                            <img src="../img/logo/logo.png" style="width:40px; opacity:0.5; margin-top:10px" class="rounded-circle">
+                        </div>
+                    </div>
+                `,
+                confirmButtonText: 'Close',
+                confirmButtonColor: '#1e293b',
+                width: '450px',
+                customClass: {
+                    container: 'animate__animated animate__fadeIn'
+                }
+            });
+        }
+
+        // --- NEW FLEXIBLE PAYMENT LOGIC ---
+        function openPaymentModal() {
+            if (!window.userApp) return;
+            const rent = window.userApp.monthlyRent || 5000;
+            document.getElementById("modalRentLabel").textContent = "₹" + fmt(rent) + " / month";
+            updateTotalToPay();
+            const modal = new bootstrap.Modal(document.getElementById('flexiblePayModal'));
+            modal.show();
+        }
+
+        function updateTotalToPay() {
+            const months = parseInt(document.getElementById("payMonths").value || 1);
+            const rent = window.userApp ? (window.userApp.monthlyRent || 5000) : 5000;
+            
+            let total = months * rent;
+            let services = [];
+
+            if (document.getElementById("checkMess").checked) { total += 3000; services.push("Mess Fee"); }
+            if (document.getElementById("checkLaundry").checked) { total += 500; services.push("Laundry"); }
+            if (document.getElementById("checkGym").checked) { total += 300; services.push("Gym"); }
+
+            document.getElementById("modalTotal").textContent = "₹" + fmt(total);
+            document.getElementById("checkoutBtnText").textContent = "Pay ₹" + fmt(total);
+            window.lastCalcTotal = total;
+            window.lastCalcType = "Rent (" + months + " mo) " + (services.length ? "+ " + services.join(", ") : "");
+        }
+
+        async function processFlexiblePayment() {
+            const btn = document.getElementById("mainPayBtn");
+            const originalHtml = btn.innerHTML;
+            btn.innerHTML = '<i class="fa fa-spinner fa-spin me-2"></i> Processing...';
+            btn.disabled = true;
+
+            const paymentData = {
+                student: localStorage.getItem("loggedUser") || "Student",
+                studentName: window.userApp ? window.userApp.studentName : (localStorage.getItem("loggedUser") || "Student"),
+                amount: window.lastCalcTotal,
+                method: document.getElementById("payMethod").value,
+                date: new Date().toLocaleDateString(),
+                status: "Paid",
+                type: window.lastCalcType,
+                room: window.userApp ? window.userApp.roomNumber : "N/A"
+            };
+
+            try {
+                const res = await fetch(`${API_URL}/data/payments`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(paymentData)
+                });
+                const result = await res.json();
+                
+                if (result.success) {
+                    Swal.fire({ icon: 'success', title: 'Payment Success!', text: 'Your fees have been updated.' }).then(() => {
+                        window.location.reload();
+                    });
+                } else {
+                    Swal.fire({ icon: 'error', title: 'Payment Failed', text: result.message });
+                }
+            } catch (e) {
+                console.error(e);
+                Swal.fire({ icon: 'error', title: 'Error', text: 'Could not connect to server.' });
+            } finally {
+                btn.innerHTML = originalHtml;
+                btn.disabled = false;
+            }
+        }
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,6 +189,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="../js/sweetalert.js"></script>
     <script src="../js/storage.js"></script>
+    <script src="../js/theme_service.js"></script>
 </head>
 
 <body class="bg-light">
@@ -26,6 +201,12 @@
                     class="navbar-toggler-icon"></span></button>
             <div class="collapse navbar-collapse" id="menu">
                 <ul class="navbar-nav ms-auto align-items-center">
+                    
+                    <li class="nav-item me-2">
+                        <button class="btn btn-outline-light border-0 rounded-circle p-2" onclick="ThemeService.toggle()" title="Toggle Dark Mode">
+                            <i class="fa fa-moon fs-5"></i>
+                        </button>
+                    </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="profileDropdown"
                             role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -75,7 +256,13 @@
             </div>
 
             <div class="col-md-10 p-4">
-                <h2 class="mb-4"><i class="fa fa-credit-card me-2 text-success"></i>Fees & Payments</h2>
+                
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2 class="m-0"><i class="fa fa-credit-card me-2 text-success"></i>Fees & Payments</h2>
+                    <button class="btn btn-success btn-lg rounded-pill fw-bold shadow-sm px-4" id="payNowBtn" style="display:none;" onclick="openPaymentModal()">
+                        <i class="fa fa-plus me-2"></i> Make a Payment
+                    </button>
+                </div>
 
                 <!-- Summary Cards -->
                 <div class="row g-4 mb-4">
@@ -116,6 +303,7 @@
                                     <th class="py-3">Amount</th>
                                     <th class="py-3">Method</th>
                                     <th class="py-3">Status</th>
+                                    <th class="pe-4 py-3 text-center">Action</th>
                                 </tr>
                             </thead>
                             <tbody id="payBody">
@@ -158,6 +346,77 @@
         }
 
     </script>
+    <!-- Flexible Payment Modal -->
+    <div class="modal fade" id="flexiblePayModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="border-radius:20px; border:none;">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold"><i class="fa fa-wallet me-2 text-success"></i> Make a Payment</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <p class="text-muted small mb-4">Choose your payment duration and additional services.</p>
+                    
+                    <div class="mb-4">
+                        <label class="form-label fw-bold small text-uppercase text-muted">Rent Duration</label>
+                        <select class="form-select form-select-lg border-0 bg-light" id="payMonths" onchange="updateTotalToPay()">
+                            <option value="1">1 Month</option>
+                            <option value="2">2 Months</option>
+                            <option value="3">3 Months</option>
+                            <option value="6">6 Months</option>
+                            <option value="12">12 Months (Full Term)</option>
+                        </select>
+                        <small class="text-muted mt-1 d-block">Monthly Rent: <span id="modalRentLabel">₹0</span></small>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold small text-uppercase text-muted">Add-on Services</label>
+                        <div class="form-check p-3 border rounded-3 mb-2 bg-white shadow-xs">
+                            <input class="form-check-input ms-0 me-3" type="checkbox" id="checkMess" onchange="updateTotalToPay()">
+                            <label class="form-check-label d-flex justify-content-between align-items-center w-100" for="checkMess">
+                                <span>Mess Fee (Food)</span>
+                                <span class="fw-bold text-success">+ ₹3,000</span>
+                            </label>
+                        </div>
+                        <div class="form-check p-3 border rounded-3 mb-2 bg-white">
+                            <input class="form-check-input ms-0 me-3" type="checkbox" id="checkLaundry" onchange="updateTotalToPay()">
+                            <label class="form-check-label d-flex justify-content-between align-items-center w-100" for="checkLaundry">
+                                <span>Professional Laundry</span>
+                                <span class="fw-bold text-success">+ ₹500</span>
+                            </label>
+                        </div>
+                        <div class="form-check p-3 border rounded-3 bg-white">
+                            <input class="form-check-input ms-0 me-3" type="checkbox" id="checkGym" onchange="updateTotalToPay()">
+                            <label class="form-check-label d-flex justify-content-between align-items-center w-100" for="checkGym">
+                                <span>Health & Gym Access</span>
+                                <span class="fw-bold text-success">+ ₹300</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="bg-dark text-white p-4 rounded-4 mb-3 d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="mb-0 small text-white-50">Total Amount</p>
+                            <h3 class="mb-0 fw-bold" id="modalTotal">₹0</h3>
+                        </div>
+                        <div class="text-end">
+                            <select class="form-select form-select-sm bg-secondary border-0 text-white" id="payMethod" style="font-size:0.8rem;">
+                                <option value="UPI">UPI / GPay</option>
+                                <option value="Razorpay">Razorpay</option>
+                                <option value="Card">Credit/Debit Card</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-success btn-lg w-100 rounded-pill fw-bold py-3 shadow-lg" id="mainPayBtn" onclick="processFlexiblePayment()">
+                        <i class="fa fa-lock me-2"></i><span id="checkoutBtnText">Pay Now</span>
+                    </button>
+                    <p class="text-center mt-3 mb-0 small text-muted"><i class="fa fa-shield-check me-1"></i>Secure Online Payment</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="../js/bootstrap.bundle.js"></script>
 </body>
 

@@ -97,196 +97,21 @@ app.post('/api/razorpay/create-order', async (req, res) => {
 
     if (!RAZORPAY_LIVE) {
         // DEMO mode: return a fake order so the flow still works
-        return res.json({
-            success: true,
-            demo: true,
-            order: {
-                id: 'demo_order_' + Date.now(),
-                amount: amount * 100,
-                currency,
-                receipt
-            },
-            key_id: 'rzp_test_demo'
-        });
-    }
-
-    try {
-        const order = await razorpayInstance.orders.create({
-            amount: amount * 100, // paise
-            currency,
-            receipt,
-            payment_capture: 1
-        });
-        res.json({ success: true, order, key_id: process.env.RAZORPAY_KEY_ID });
-    } catch (err) {
-        console.error('Razorpay order error:', err);
-        res.status(500).json({ success: false, message: err.message });
-    }
-});
-
-// POST /api/razorpay/verify
-app.post('/api/razorpay/verify', async (req, res) => {
-    const { order_id, payment_id, signature, demo } = req.body;
-
-    if (demo) {
-        // Demo mode — always succeed
-        return res.json({ success: true, verified: true, demo: true });
-    }
-
-    const body = order_id + '|' + payment_id;
-    const expectedSignature = crypto
-        .createHmac('sha256', process.env.RAZORPAY_KEY_SECRET)
-        .update(body)
-        .digest('hex');
-
-    if (expectedSignature === signature) {
-        res.json({ success: true, verified: true });
-    } else {
-        res.status(400).json({ success: false, message: 'Invalid payment signature' });
-    }
-});
-
-// ─── AUTH API ─────────────────────────────────────────────────────────────────
-app.post('/api/auth/login', async (req, res) => {
-    const { email, password, role } = req.body;
-    if (!pool) return res.status(500).json({ success: false, message: 'Database not configured. Please set SUPABASE_URL in Vercel environment variables.' });
-    try {
-        const { rows } = await pool.query('SELECT * FROM users WHERE email = $1 AND role = $2', [email, role]);
-        if (rows.length > 0) {
-            const user = rows[0];
-            const match = await bcrypt.compare(password, user.password);
-            
-            if (match) {
-                const secret = process.env.JWT_SECRET || 'task_jwt_secretpasswordshouldbestrongasPi3.141592';
-                const token = jwt.sign({ username: user.username, role: user.role }, secret, { expiresIn: '1d' });
-                
-                res.cookie('jwt', token, { 
-                    httpOnly: true, 
-                    secure: true,
-                    sameSite: 'none',
-                    maxAge: 24 * 60 * 60 * 1000 
-                });
-                
-                res.json({ success: true, user: { username: user.username, role: user.role } });
-            } else {
-                res.status(401).json({ success: false, message: 'Invalid credentials' });
-            }
-        } else {
-            res.status(401).json({ success: false, message: 'Invalid credentials' });
-        }
-    } catch (err) {
-        console.error('Login error details:', err.message, err.code);
-        if (err.code === 'ECONNREFUSED' || err.code === 'ETIMEDOUT' || err.message.includes('connect')) {
-            return res.status(500).json({ success: false, message: 'Database connection failed. Check SUPABASE_URL in Vercel settings.' });
-        }
-        res.status(500).json({ success: false, message: 'Server error: ' + err.message });
-    }
-});
-
-app.post('/api/auth/signup', async (req, res) => {
-    const { username, email, password } = req.body;
-    try {
-        const { rows: existing } = await pool.query('SELECT * FROM users WHERE username = $1 OR email = $2', [username, email]);
-        if (existing.length > 0) {
-            return res.status(400).json({ success: false, message: 'User already exists' });
-        }
-        
-        const hashedPassword = await bcrypt.hash(password, 10);
-        await pool.query('INSERT INTO users ("username", "email", "password", "role") VALUES ($1, $2, $3, $4)', [username, email, hashedPassword, 'student']);
-        res.json({ success: true, message: 'User registered successfully' });
-    } catch (err) {
-        console.error('Signup error:', err);
-        res.status(500).json({ success: false, message: 'Server error' });
-    }
-});
-
-app.post('/api/auth/logout', (req, res) => {
-    res.clearCookie('jwt');
-    res.json({ success: true, message: 'Logged out successfully' });
-});
-
-app.post('/api/auth/fcm-token', verifyToken, async (req, res) => {
-    const { token } = req.body;
-    try {
-        await pool.query('UPDATE users SET fcm_token = $1 WHERE username = $2', [token, req.user.username]);
-        res.json({ success: true });
-    } catch (err) {
-        console.error('FCM Token Save Error:', err);
-        res.status(500).json({ success: false });
-    }
-});
-
-// ─── DATA API & REALTIME ──────────────────────────────────────────────────────
-app.get('/api/stream', (req, res) => {
-    res.setHeader('Content-Type', 'text/event-stream');
-    res.setHeader('Cache-Control', 'no-cache');
-    res.setHeader('Connection', 'keep-alive');
-    res.flushHeaders();
-
-    clients.push({ id: Date.now(), res });
-    req.on('close', () => {
-        clients = clients.filter(c => c.res !== res);
-    });
-});
-
-app.get('/api/finance/summary', verifyToken, async (req, res) => {
-    try {
-        const [{ rows: payments }, { rows: expenses }, { rows: applications }] = await Promise.all([
-            pool.query('SELECT amount, date, method FROM payments'),
-            pool.query('SELECT amount, type FROM expenses'),
-            pool.query('SELECT student, "studentName", "roomNumber", date, status FROM applications WHERE status = $1', ['Approved - Awaiting Payment'])
-        ]);
-
-        const now = new Date();
-        const curMonth = now.getMonth();
-        const curYear = now.getFullYear();
-
-        const totalRevenue = payments.reduce((s, p) => s + Number(p.amount || 0), 0);
-        const totalExpenses = expenses.reduce((s, e) => s + Number(e.amount || 0), 0);
-        const netProfit = totalRevenue - totalExpenses;
-
-        const monthIncome = payments.filter(p => {
-            if (!p.date) return false;
-            const d = new Date(p.date);
-            return !isNaN(d) && d.getFullYear() === curYear && d.getMonth() === curMonth;
-        }).reduce((s, p) => s + Number(p.amount || 0), 0);
-
-        // Revenue by month (last 6 months)
-        const revenueByMonth = [];
-        for (let i = 5; i >= 0; i--) {
-            const mDate = new Date(curYear, curMonth - i, 1);
-            const mYear = mDate.getFullYear();
-            const mMon = mDate.getMonth();
-            const mTotal = payments.filter(p => {
-                if (!p.date) return false;
-                const d = new Date(p.date);
-                return !isNaN(d) && d.getFullYear() === mYear && d.getMonth() === mMon;
-            }).reduce((s, p) => s + Number(p.amount || 0), 0);
-            revenueByMonth.push(mTotal);
-        }
-
-        const expenseByCategory = {};
-        expenses.forEach(e => {
-            const cat = e.type || 'Other';
-            expenseByCategory[cat] = (expenseByCategory[cat] || 0) + Number(e.amount || 0);
-        });
-
-        const paymentMethods = {};
-        payments.forEach(p => {
-            const m = p.method || 'Other';
-            paymentMethods[m] = (paymentMethods[m] || 0) + 1;
-        });
-
+        return
         res.json({
             success: true,
             totalRevenue,
             totalExpenses,
+            refundLiability,
             netProfit,
             monthIncome,
             revenueByMonth,
+            occupancyTrend,
+            totalCapacity,
             expenseByCategory,
             paymentMethods,
-            pendingPayments: applications,
+            pendingPayments: allApplications.filter(a => a.status === 'Approved - Awaiting Payment'),
+            moveOutRequests: allApplications.filter(a => a.status === 'Refund Pending'),
             paymentCount: payments.length,
             expenseCount: expenses.length
         });
@@ -347,24 +172,49 @@ app.post('/api/data/:key', verifyToken, async (req, res) => {
 
         // --- ROOM APPLICATION ENGINE (Capacity, Waitlist, Duplicates) ---
         if (key === 'applications') {
-            // Check Room Capacity
+            // 1. Check for existing active application for this student
+            const { rows: existingApps } = await pool.query(
+                'SELECT id, status FROM applications WHERE "student" = $1 AND "status" IN (\'Pending Review\', \'Approved\', \'Approved - Awaiting Payment\', \'Waitlisted\', \'Allocated\')',
+                [item.student]
+            );
+            
+            if (existingApps.length > 0) {
+                const activeApp = existingApps[0];
+                return res.status(409).json({ 
+                    success: false, 
+                    message: `You already have an active application (Status: ${activeApp.status}). Please cancel it or contact weights admin to change rooms.` 
+                });
+            }
+
+            // 2. Validate Term and Calculate Dates/Amounts
+            const months = parseInt(item.termMonths) || 1;
+            const rent = parseFloat(item.monthlyRent) || 0;
+            
+            const start = new Date();
+            const end = new Date();
+            end.setMonth(start.getMonth() + months);
+            
+            item.startDate = start.toISOString().split('T')[0];
+            item.endDate = end.toISOString().split('T')[0];
+            item.totalAmount = months * rent;
+
+            // 3. Check Room Capacity
             const { rows: roomRows } = await pool.query('SELECT capacity, occupied, number FROM rooms WHERE id = $1', [item.roomId]);
             if (roomRows.length > 0) {
                 const room = roomRows[0];
                 if (room.occupied >= room.capacity) {
-                    // Room full. Did user consent to waitlisting yet?
                     if (!item.forceWaitlist) {
                         return res.json({ 
                             success: false, 
                             requireConfirmation: true, 
-                            message: `Room ${room.number} is completely full! Your 2nd Choice might be available. Do you want to Waitlist for this room instead?` 
+                            message: `Room ${room.number} is completely full! Do you want to Waitlist for this room?` 
                         });
                     } else {
-                        item.status = 'Waitlisted'; // Override status
+                        item.status = 'Waitlisted';
                     }
                 }
             }
-            delete item.forceWaitlist; // Strip dummy flag before inserting
+            delete item.forceWaitlist;
         }
 
         const cols = Object.keys(item);
@@ -466,10 +316,28 @@ app.put('/api/data/:key/:id', verifyToken, async (req, res) => {
                          sendPushNotification(users[0].fcm_token, 'Complaint Resolved!', `Your complaint regarding ${updatedItem.category} was resolved.`);
                      }
                 }
-                if (key === 'applications' && updatedItem.status === 'Approved') {
+                // --- IN-APP NOTIFICATIONS & FCM PUSH NOTIFICATIONS ---
+                if (key === 'applications' && (updatedItem.status === 'Approved' || updatedItem.status === 'Allocated' || updatedItem.status === 'Rejected')) {
+                     const statusMsg = updatedItem.status === 'Allocated' 
+                        ? `Congratulations! You have been allocated to Room ${updatedItem.roomNumber}.` 
+                        : (updatedItem.status === 'Approved' ? 'Your application has been approved! Please proceed with payment.' : 'Your application has been rejected.');
+                     
+                     // 1. Insert into persistent notifications table for in-app viewing
+                     await pool.query(
+                        'INSERT INTO notifications (student, title, message, type, date, read) VALUES ($1, $2, $3, $4, $5, $6)',
+                        [updatedItem.student, 'Application Update', statusMsg, 'info', new Date().toLocaleDateString(), false]
+                     );
+
+                     // 2. Trigger FCM Push Notification
                      const { rows: users } = await pool.query('SELECT fcm_token FROM users WHERE username = $1 AND fcm_token IS NOT NULL', [updatedItem.student]);
                      if (users.length && users[0].fcm_token) {
-                         sendPushNotification(users[0].fcm_token, 'Room Application Approved!', `Your application for Room ${updatedItem.roomNumber} is approved!`);
+                         sendPushNotification(users[0].fcm_token, 'Application Update', statusMsg);
+                     }
+
+                     // 3. Increment room occupancy if allocated
+                     if (updatedItem.status === 'Allocated') {
+                         await pool.query('UPDATE rooms SET occupied = occupied + 1 WHERE id = $1', [updatedItem.roomId]);
+                         broadcastUpdate('rooms');
                      }
                 }
             

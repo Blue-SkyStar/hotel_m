@@ -7,6 +7,7 @@ const API_URL = window.location.hostname === 'localhost' || window.location.host
 let students = [];
 let rooms = [];
 let payments = [];
+let applications = [];
 let complaints = [];
 let visitors = [];
 
@@ -57,6 +58,7 @@ async function fetchWithCache(key) {
                 if (key === 'students') students = data;
                 if (key === 'rooms') rooms = data;
                 if (key === 'payments') payments = data;
+                if (key === 'applications') applications = data;
                 if (key === 'complaints') complaints = data;
                 if (key === 'visitors') visitors = data;
                 
@@ -85,17 +87,19 @@ function initData() {
         fetchWithCache('students'),
         fetchWithCache('rooms'),
         fetchWithCache('payments'),
+        fetchWithCache('applications'),
         fetchWithCache('complaints'),
         fetchWithCache('visitors').catch(() => [])
-    ]).then(([sRes, rRes, pRes, cRes, vRes]) => {
+    ]).then(([sRes, rRes, pRes, aRes, cRes, vRes]) => {
         students = sRes || [];
         rooms = rRes || [];
         payments = pRes || [];
+        applications = aRes || [];
         complaints = cRes || [];
         visitors = vRes || [];
 
         if (typeof updateDashboardStats === 'function') updateDashboardStats();
-        return { students, rooms, payments, complaints, visitors };
+        return { students, rooms, payments, applications, complaints, visitors };
     }).catch(err => {
         console.error("Error loading data from server:", err);
     });

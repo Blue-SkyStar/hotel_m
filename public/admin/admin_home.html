@@ -2,11 +2,9 @@
 <html lang="en">
 
 <head>
-    <script>
-        if (localStorage.getItem("role") !== "admin") {
-            window.location.href = "../login.html";
-        }
-    </script>
+    <!-- Authentication -->
+    <script src="../js/auth_service.js"></script>
+    <script>AuthService.init('admin');</script>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -191,8 +189,17 @@
             document.getElementById("dash_rooms").textContent = rooms.length;
             document.getElementById("dash_complaints").textContent = complaints.length;
 
-            let totalFees = payments.reduce((sum, payment) => sum + (Number(payment.amount) || 0), 0);
-            document.getElementById("dash_fees").textContent = totalFees.toLocaleString('en-IN');
+            
+            try {
+                const res = await fetch(`${API_URL}/finance/summary`);
+                const fin = await res.json();
+                document.getElementById("dash_fees").textContent = Math.round(fin.netProfit || 0).toLocaleString('en-IN');
+                if (fin.moveOutRequests && fin.moveOutRequests.length > 0) {
+                    const alertEl = document.getElementById("dash_refund_alert");
+                    alertEl.textContent = `${fin.moveOutRequests.length} Refund Request${fin.moveOutRequests.length > 1 ? 's' : ''}`;
+                    alertEl.style.display = "inline-block";
+                }
+            } catch(e) { console.warn('Could not load net revenue:', e); }
 
             let table = document.getElementById("recentStudentsTable");
             table.innerHTML = "";
@@ -202,13 +209,20 @@
             } else {
                 recent.forEach(student => {
                     let statusClass = student.status === "Active" ? "bg-success text-success border-success" : "bg-warning text-warning border-warning";
+                    const isLeaving = applications.some(a => a.student === student.name && a.status === "Refund Pending");
+                    let statusClass = student.status === "Active" ? "bg-success text-success border-success" : "bg-warning text-warning border-warning";
+                    if (isLeaving) statusClass = "bg-danger text-danger border-danger";
+                    
                     table.innerHTML += `
                     <tr>
                         <td>${student.id}</td>
                         <td class="fw-medium">${student.name}</td>
                         <td>${student.room}</td>
                         <td><span class="badge bg-secondary">${student.course}</span></td>
-                        <td><span class="badge bg-opacity-10 border ${statusClass}">${student.status || 'Active'}</span></td>
+                        <td>
+                            ${isLeaving ? '<span class="badge bg-danger bg-opacity-10 border border-danger me-1">Leaving Soon</span>' : ''}
+                            <span class="badge bg-opacity-10 border ${statusClass}">${student.status || 'Active'}</span>
+                        </td>
                     </tr>`;
                 });
             }

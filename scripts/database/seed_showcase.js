@@ -79,21 +79,40 @@ async function seed() {
         }
 
         console.log("Seeding Applications...");
-        const applications = [
-            { s: "Ravi Kumar", stat: "Approved - Awaiting Payment" },
-            { s: "Kavya Menon", stat: "Approved - Awaiting Payment" },
-            { s: "Arif Khan", stat: "Approved - Awaiting Payment" },
-            { s: "Isha Jain", stat: "Pending Review" },
-            { s: "Sameer Joshi", stat: "Pending Review" },
-            { s: "Riya Sen", stat: "Rejected" },
-            { s: "Arjun Reddy", stat: "Allocated" }
+        const appSetup = [
+            { s: "Ravi Kumar", stat: "Approved - Awaiting Payment", term: 3, rent: 5000 },
+            { s: "Kavya Menon", stat: "Approved - Awaiting Payment", term: 6, rent: 5500 },
+            { s: "Arif Khan", stat: "Approved - Awaiting Payment", term: 11, rent: 4500 },
+            { s: "Isha Jain", stat: "Pending Review", term: 3, rent: 6000 },
+            { s: "Sameer Joshi", stat: "Pending Review", term: 6, rent: 5000 },
+            { s: "Arjun Reddy", stat: "Allocated", term: 11, rent: 5000 }
         ];
 
-        for (let i = 0; i < applications.length; i++) {
-            const a = applications[i];
+        for (let i = 0; i < appSetup.length; i++) {
+            const a = appSetup[i];
+            const start = new Date();
+            start.setMonth(start.getMonth() - Math.floor(Math.random() * 3)); // Random start in last 3 months
+            const end = new Date(start);
+            end.setMonth(start.getMonth() + a.term);
+
             await pool.query(
-                `INSERT INTO applications (id, student, "studentName", "roomNumber", "roomType", status, date) VALUES ($1, $2, $3, $4, $5, $6, $7)`,
-                [generateId(), a.s.replace(' ', '').toLowerCase(), a.s, `B-10${i}`, "Double Sharing", a.stat, new Date().toISOString().split('T')[0]]
+                `INSERT INTO applications (id, student, "studentName", "roomNumber", "roomType", status, date, "termMonths", "monthlyRent", "totalAmount", "startDate", "endDate", "roomId") 
+                 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)`,
+                [
+                    generateId(), 
+                    a.s.replace(' ', '').toLowerCase(), 
+                    a.s, 
+                    `B-10${i}`, 
+                    "Double Sharing", 
+                    a.stat, 
+                    new Date().toISOString().split('T')[0],
+                    a.term,
+                    a.rent,
+                    a.term * a.rent,
+                    start.toISOString().split('T')[0],
+                    end.toISOString().split('T')[0],
+                    '1' // Referencing first room for simplicity
+                ]
             );
         }
 

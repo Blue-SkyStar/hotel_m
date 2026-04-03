@@ -1,11 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<script>
-if(localStorage.getItem("role") !== "admin"){
-    window.location.href = "../login.html";
-}
-</script>
+<!-- Authentication -->
+    <script src="../js/auth_service.js"></script>
+    <script>AuthService.init('admin');</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Finance Dashboard — HostelSphere</title>
@@ -21,6 +19,7 @@ if(localStorage.getItem("role") !== "admin"){
     <script src="../js/sweetalert.js"></script>
     <script src="../js/storage.js"></script>
 
+    <style>
         /* ── Professional Finance Dashboard Styles ─────────────────── */
         :root {
             --slate-50: #f8fafc;
@@ -175,59 +174,22 @@ if(localStorage.getItem("role") !== "admin"){
 
                 <!-- ── KPI Cards ─────────────────────────────────────────── -->
                 <div class="row g-4 mb-5" id="kpiRow">
-                    <div class="col-md col-6">
-                        <div class="kpi-card shadow-sm h-100">
-                            <div class="kpi-icon icon-revenue"><i class="fa fa-chart-line"></i></div>
-                            <div class="kpi-value">₹<span id="kpi_total_revenue">0</span></div>
-                            <div class="kpi-label">Total Revenue</div>
-                            <div class="kpi-trend text-muted"><i class="fa fa-circle-check text-success small me-1"></i><span id="kpi_total_count">0</span> payments</div>
-                        </div>
-                    </div>
-                    <div class="col-md col-6">
-                        <div class="kpi-card shadow-sm h-100">
-                            <div class="kpi-icon icon-income"><i class="fa fa-calendar-check"></i></div>
-                            <div class="kpi-value">₹<span id="kpi_month_income">0</span></div>
-                            <div class="kpi-label">This Month</div>
-                            <div class="kpi-trend text-muted"><span id="kpi_month_name">—</span></div>
-                        </div>
-                    </div>
-                    <div class="col-md col-6">
-                        <div class="kpi-card shadow-sm h-100">
-                            <div class="kpi-icon icon-expense"><i class="fa fa-receipt"></i></div>
-                            <div class="kpi-value">₹<span id="kpi_total_expense">0</span></div>
-                            <div class="kpi-label">Total Expenses</div>
-                            <div class="kpi-trend text-muted"><span id="kpi_expense_count" class="text-danger fw-bold">0</span> entries</div>
-                        </div>
-                    </div>
-                    <div class="col-md col-6">
-                        <div class="kpi-card shadow-sm h-100">
-                            <div class="kpi-icon icon-profit"><i class="fa fa-balance-scale"></i></div>
-                            <div class="kpi-value">₹<span id="kpi_net_profit">0</span></div>
-                            <div class="kpi-label">Net Profit / Loss</div>
-                            <div class="kpi-trend"><span id="kpi_profit_label">—</span></div>
-                        </div>
-                    </div>
+                    
                     <div class="col-md col-6">
                         <div class="kpi-card shadow-sm h-100">
                             <div class="kpi-icon icon-pending"><i class="fa fa-clock"></i></div>
                             <div class="kpi-value"><span id="kpi_pending_count">0</span></div>
-                            <div class="kpi-label">Awaiting Payment</div>
-                            <div class="kpi-trend text-muted small">Students approved, unpaid</div>
+                            <div class="kpi-label">Awaiting Pay</div>
                         </div>
                     </div>
-                </div>
-
-                <!-- ── Charts Row ─────────────────────────────────────────── -->
-                <div class="row g-3 mb-4">
-                    <!-- Monthly Revenue Bar Chart -->
-                    <div class="col-md-6">
-                        <div class="chart-card h-100">
-                            <div class="chart-header d-flex justify-content-between align-items-center">
-                                <div>
-                                    <h6><i class="fa fa-chart-bar me-2 text-primary"></i>Monthly Revenue</h6>
-                                    <span>Last 6 months</span>
-                                </div>
-                            </div>
+                    <div class="col-md col-6">
+                        <div class="kpi-card shadow-sm h-100" style="border-bottom: 3px solid var(--rose-500);">
+                            <div class="kpi-icon" style="background:#fff1f2; color:var(--rose-500);"><i class="fa fa-wallet"></i></div>
+                            <div class="kpi-value text-danger">₹<span id="kpi_refund_liability">0</span></div>
+                            <div class="kpi-label">Refund Liability</div>
+                            <div class="kpi-trend text-muted"><span id="pendingRefundsCount">0</span> requests</div>
+                        </div>
+                    </div>
                             <div class="p-3" style="height:260px">
                                 <canvas id="revenueBarChart"></canvas>
                             </div>
@@ -235,11 +197,11 @@ if(localStorage.getItem("role") !== "admin"){
                     </div>
 
                     <!-- Expense Breakdown Doughnut -->
-                    <div class="col-md-3">
+                    <div class="col-md-3 col-6">
                         <div class="chart-card h-100">
                             <div class="chart-header">
-                                <h6><i class="fa fa-chart-pie me-2 text-danger"></i>Expenses Breakdown</h6>
-                                <span>By category</span>
+                                <h6><i class="fa fa-chart-pie me-2 text-danger"></i>Expenses</h6>
+                                <span>Categories</span>
                             </div>
                             <div class="p-3 d-flex align-items-center justify-content-center" style="height:260px">
                                 <canvas id="expenseDoughnut"></canvas>
@@ -248,13 +210,53 @@ if(localStorage.getItem("role") !== "admin"){
                     </div>
 
                     <!-- Payment Method Doughnut -->
-                    <div class="col-md-3">
+                    <div class="col-md-3 col-6">
                         <div class="chart-card h-100">
                             <div class="chart-header">
-                                <h6><i class="fa fa-credit-card me-2 text-success"></i>Payment Methods</h6>
+                                <h6><i class="fa fa-credit-card me-2 text-success"></i>Methods</h6>
                                 <span>Distribution</span>
                             </div>
                             <div class="p-3 d-flex align-items-center justify-content-center" style="height:260px">
+                                <canvas id="methodDoughnut"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── Charts Row 2: Occupancy & Forecasting ───────────────────── -->
+                <div class="row g-3 mb-4">
+                    <!-- Occupancy Trend (Next 6 Months) -->
+                    <div class="col-md-8">
+                        <div class="chart-card h-100">
+                            <div class="chart-header">
+                                <h6><i class="fa fa-chart-line me-2 text-info"></i>Occupancy Forecasting</h6>
+                                <span>Projected vacancy for next 6 months</span>
+                            </div>
+                            <div class="p-3" style="height:300px">
+                                <canvas id="occupancyTrendChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Peak Booking Radial -->
+                    <div class="col-md-4">
+                        <div class="chart-card h-100">
+                            <div class="chart-header">
+                                <h6><i class="fa fa-fire me-2 text-warning"></i>Peak Demand</h6>
+                                <span>Overall Capacity Utilization</span>
+                            </div>
+                            <div class="p-3 d-flex flex-column align-items-center justify-content-center text-center" style="height:300px">
+                                <div style="height:200px; width:100%">
+                                    <canvas id="peakRadialChart"></canvas>
+                                </div>
+                                <div class="mt-2">
+                                    <h4 class="fw-bold mb-0" id="totalCapLabel">0%</h4>
+                                    <p class="text-muted small">Total Capacity Used</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>nter justify-content-center" style="height:260px">
                                 <canvas id="methodDoughnut"></canvas>
                             </div>
                         </div>
@@ -357,7 +359,26 @@ if(localStorage.getItem("role") !== "admin"){
             document.getElementById('kpi_profit_label').innerHTML = data.netProfit >= 0
                 ? `<span style="color:#32dc6e"><i class="fa fa-arrow-up me-1"></i>Profit</span>`
                 : `<span style="color:#ff6b6b"><i class="fa fa-arrow-down me-1"></i>Loss</span>`;
+            
             document.getElementById('kpi_pending_count').textContent = data.pendingPayments.length;
+            document.getElementById('kpi_refund_liability').textContent = fmt(data.refundLiability || 0);
+            document.getElementById('pendingRefundsCount').textContent = data.moveOutRequests ? data.moveOutRequests.length : 0;
+            
+            // Populate Move-out Ledger
+            if (data.moveOutRequests && data.moveOutRequests.length > 0) {
+                document.getElementById('moveOutCount').textContent = data.moveOutRequests.length + " Requests";
+                document.getElementById('moveOutBody').innerHTML = data.moveOutRequests.map(r => `
+                    <tr>
+                        <td class="ps-4 fw-medium">${r.studentName || r.student}</td>
+                        <td>${r.roomNumber || '—'}</td>
+                        <td>${r.date || r.withdrawalDate || '—'}</td>
+                        <td class="small text-muted">${r.reason || 'Not specified'}</td>
+                        <td class="text-danger fw-bold">${r.refundAmount || (r.refundEst || '—')}</td>
+                        <td class="text-end pe-4">
+                            <span class="badge bg-danger bg-opacity-10 text-danger border border-danger">${r.status}</span>
+                        </td>
+                    </tr>`).join('');
+            }
             document.getElementById('defaultersCount').textContent = data.pendingPayments.length + ' pending';
 
             // ── Monthly Revenue Bar Chart ─────────────────────────────────
@@ -422,6 +443,67 @@ if(localStorage.getItem("role") !== "admin"){
                 },
                 options: { responsive: true, maintainAspectRatio: false, cutout: '78%',
                     plugins: { legend: { position: 'bottom', labels: { boxWidth: 8, padding: 15, font: { weight: 600, size: 11 } } } } }
+            });
+
+            // ── Occupancy Trend Line Chart ───────────────────────────────
+            if (data.occupancyTrend) {
+                const occCtx = document.getElementById('occupancyTrendChart').getContext('2d');
+                const occGradient = occCtx.createLinearGradient(0, 0, 0, 300);
+                occGradient.addColorStop(0, 'rgba(6, 182, 212, 0.2)');
+                occGradient.addColorStop(1, 'rgba(6, 182, 212, 0)');
+
+                new Chart(occCtx, {
+                    type: 'line',
+                    data: {
+                        labels: data.occupancyTrend.map(m => m.label),
+                        datasets: [{
+                            label: 'Occupancy Rate (%)',
+                            data: data.occupancyTrend.map(m => m.rate),
+                            borderColor: '#06b6d4',
+                            backgroundColor: occGradient,
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: 4,
+                            pointBackgroundColor: '#fff',
+                            pointBorderColor: '#06b6d4',
+                            pointBorderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true, maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            y: { beginAtZero: true, max: 100, 
+                                 ticks: { callback: v => v + '%' },
+                                 grid: { color: '#f1f5f9' } },
+                            x: { grid: { display: false } }
+                        }
+                    }
+                });
+            }
+
+            // ── Peak Demand Radial (Overall Utilization) ─────────────────
+            const lastOcc = data.occupancyTrend ? data.occupancyTrend[0].rate : 0;
+            document.getElementById('totalCapLabel').textContent = lastOcc + '%';
+            
+            const peakCtx = document.getElementById('peakRadialChart').getContext('2d');
+            new Chart(peakCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Occupied', 'Available'],
+                    datasets: [{
+                        data: [lastOcc, 100 - lastOcc],
+                        backgroundColor: ['#f59e0b', '#f1f5f9'],
+                        borderWidth: 0,
+                        circumference: 270,
+                        rotation: 225,
+                        cutout: '85%'
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { display: false }, tooltip: { enabled: false } }
+                }
             });
 
             // ── Defaulters Table ─────────────────────────────────────────

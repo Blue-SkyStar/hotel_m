@@ -2,9 +2,9 @@
 <html lang="en">
 
 <head>
-    <script>
-        if (localStorage.getItem("role") !== "student") { window.location.href = "../login.html"; }
-    </script>
+    <!-- Authentication -->
+    <script src="../js/auth_service.js"></script>
+    <script>AuthService.init('student');</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Applications</title>
@@ -164,6 +164,7 @@
             color: #dc3545;
         }
     </style>
+    <script src="../js/theme_service.js"></script>
 </head>
 
 <body class="bg-light">
@@ -176,6 +177,12 @@
                     class="navbar-toggler-icon"></span></button>
             <div class="collapse navbar-collapse" id="menu">
                 <ul class="navbar-nav ms-auto align-items-center">
+                    
+                    <li class="nav-item me-2">
+                        <button class="btn btn-outline-light border-0 rounded-circle p-2" onclick="ThemeService.toggle()" title="Toggle Dark Mode">
+                            <i class="fa fa-moon fs-5"></i>
+                        </button>
+                    </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="profileDropdown"
                             role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -229,9 +236,15 @@
             <!-- Main Content -->
             <div class="col-md-10 p-4">
                 <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h2><i class="fa fa-file-signature me-2 text-primary"></i>My Applications</h2>
-                    <a href="student_room_details.html" class="btn btn-primary rounded-pill fw-bold"><i
-                            class="fa fa-plus me-2"></i> New Application</a>
+                    <h2 class="m-0"><i class="fa fa-file-signature me-2 text-primary"></i>My Applications</h2>
+                    <div>
+                        <button class="btn btn-outline-secondary rounded-pill me-2" onclick="loadApplications(true)">
+                            <i class="fa fa-sync-alt me-1"></i> Refresh
+                        </button>
+                        <a href="student_room_details.html" class="btn btn-primary rounded-pill fw-bold">
+                            <i class="fa fa-plus me-1"></i> New Application
+                        </a>
+                    </div>
                 </div>
 
                 <div id="applicationsContainer">
@@ -515,13 +528,14 @@
                 if (app.status === 'Allocated') badgeClass = 'status-allocated';
                 if (app.status === 'Rejected') badgeClass = 'status-rejected';
 
+                
                 // Build progress timeline
                 const isRejected = app.status === 'Rejected';
                 const steps = [
-                    { label: 'Submitted', icon: 'fa-paper-plane', done: true, active: false },
-                    { label: 'Under Review', icon: 'fa-search', done: app.status !== 'Pending Review' && !isRejected, active: app.status === 'Pending Review' },
-                    { label: 'Payment', icon: 'fa-credit-card', done: app.status === 'Allocated', active: app.status === 'Approved - Awaiting Payment' },
-                    { label: 'Allocated', icon: 'fa-key', done: app.status === 'Allocated', active: false }
+                    { label: 'Submitted', icon: 'fa-paper-plane', done: true },
+                    { label: isRejected ? 'Rejected' : 'Under Review', icon: isRejected ? 'fa-times' : 'fa-search', done: app.status !== 'Pending Review', active: app.status === 'Pending Review' },
+                    { label: 'Payment', icon: 'fa-credit-card', done: app.status === 'Allocated', active: app.status === 'Approved - Awaiting Payment', disabled: isRejected },
+                    { label: 'Allocated', icon: 'fa-key', done: app.status === 'Allocated', active: false, disabled: isRejected }
                 ];
 
                 let timelineHtml = '<div class="step-timeline">';
@@ -530,11 +544,19 @@
                     if (isRejected && i === 1) cls = 'rejected';
                     else if (s.done) cls = 'done';
                     else if (s.active) cls = 'active';
-                    let iconHtml = cls === 'done' ? '<i class="fa fa-check"></i>' : `<i class="fa ${s.icon}"></i>`;
-                    if (isRejected && i === 1) iconHtml = '<i class="fa fa-times"></i>';
-                    timelineHtml += `<div class="step-item ${cls}"><div class="step-icon">${iconHtml}</div><div class="step-label">${s.label}</div></div>`;
+                    else if (s.disabled) cls = 'disabled opacity-50';
+
+                    let iconHtml = cls.includes('done') ? '<i class="fa fa-check"></i>' : `<i class="fa ${s.icon}"></i>`;
+                    if (isRejected && i === 1) iconHtml = '<i class="fa fa-times text-white"></i>';
+
+                    timelineHtml += `
+                        <div class="step-item ${cls}">
+                            <div class="step-icon shadow-sm" style="${isRejected && i === 1 ? 'background:#dc3545;' : ''}">${iconHtml}</div>
+                            <div class="step-label">${s.label}</div>
+                        </div>`;
                 });
                 timelineHtml += '</div>';
+
 
                 let paymentButtonHtml = '';
                 if (app.status === 'Approved - Awaiting Payment') {
@@ -759,17 +781,24 @@
             try {
                 // 1. Update application status → Allocated
                 app.status = "Allocated";
-                await fetch(`${API_URL}/data/applications/${app.id}`, {
+                const appUpdateRes = await fetch(`${API_URL}/data/applications/${app.id}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(app)
                 });
                 
-                // Invalidate frontend cache
+                const appUpdateData = await appUpdateRes.json();
+                if (!appUpdateData.success) {
+                    throw new Error(appUpdateData.message || "Failed to update application status");
+                }
+                
+                // Invalidate frontend cache immediately
                 if (typeof invalidateCache === 'function') {
                     invalidateCache('applications');
+                    invalidateCache('rooms'); // Also refresh rooms since occupancy changed
                 } else {
-                    sessionStorage.clear(); // Fallback
+                    sessionStorage.removeItem('applications');
+                    sessionStorage.removeItem('rooms');
                 }
 
                 // 2. Record payment

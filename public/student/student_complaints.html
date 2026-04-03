@@ -2,9 +2,9 @@
 <html lang="en">
 
 <head>
-    <script>
-        if (localStorage.getItem("role") !== "student") { window.location.href = "../login.html"; }
-    </script>
+    <!-- Authentication -->
+    <script src="../js/auth_service.js"></script>
+    <script>AuthService.init('student');</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Complaints</title>
@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="../js/sweetalert.js"></script>
     <script src="../js/storage.js"></script>
+    <script src="../js/theme_service.js"></script>
 </head>
 
 <body class="bg-light">
@@ -26,6 +27,12 @@
                     class="navbar-toggler-icon"></span></button>
             <div class="collapse navbar-collapse" id="menu">
                 <ul class="navbar-nav ms-auto align-items-center">
+                    
+                    <li class="nav-item me-2">
+                        <button class="btn btn-outline-light border-0 rounded-circle p-2" onclick="ThemeService.toggle()" title="Toggle Dark Mode">
+                            <i class="fa fa-moon fs-5"></i>
+                        </button>
+                    </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="profileDropdown"
                             role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -88,8 +95,8 @@
                                 <div class="col-md-6">
                                     <label class="form-label fw-bold text-muted small text-uppercase">Room
                                         Number</label>
-                                    <input type="text" id="cRoom" class="form-control form-control-lg bg-light border-0"
-                                        placeholder="Your room number" required>
+                                    <input type="text" id="cRoom" class="form-control form-control-lg bg-light border-0" placeholder="Your room number" required readonly>
+                                    <small class="text-muted" style="font-size:0.75rem;"><i class="fa fa-lock me-1"></i> Locked to your assigned room</small>
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label fw-bold text-muted small text-uppercase">Complaint
@@ -170,21 +177,68 @@
             });
         }
 
-        document.getElementById("complaintForm").addEventListener("submit", function (e) {
+        document.getElementById("complaintForm").addEventListener("submit", async function (e) {
             e.preventDefault();
+            
+            // --- ANTI-SPAM & VALIDATION ---
+            const myComplaints = complaints.filter(c => c.student && c.student.toLowerCase() === username.toLowerCase());
+            const pendingCount = myComplaints.filter(c => c.status === 'Pending').length;
+            
+            if (pendingCount >= 3) {
+                Swal.fire({ icon: 'warning', title: 'Limit Reached', text: 'You can only have 3 active (Pending) complaints. Please wait for resolution.' });
+                return;
+            }
+
+            const lastTime = localStorage.getItem("last_comp_time");
+            const now = Date.now();
+            if (lastTime && (now - lastTime) < 300000) { // 5 min cooldown
+                const diff = Math.ceil((300000 - (now - lastTime)) / 60000);
+                Swal.fire({ icon: 'clock', title: 'Slow Down', text: `Please wait ${diff} more minute(s) before submitting again.` });
+                return;
+            }
+
             let room = document.getElementById("cRoom").value;
             let type = document.getElementById("cType").value;
             let desc = document.getElementById("cDesc").value;
 
-            addComplaint(username, room, type, desc);
+            if (desc.trim().length < 15) {
+                Swal.fire({ icon: 'error', title: 'Too Short', text: 'Please provide at least 15 characters of detail.' });
+                return;
+            }
 
-            Swal.fire({ icon: 'success', title: 'Submitted!', text: 'Your complaint has been registered.' });
+            const btn = e.target.querySelector('button[type="submit"]');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa fa-spinner fa-spin me-2"></i> Submitting...';
+
+            try {
+                await addComplaint(username, room, type, desc);
+                localStorage.setItem("last_comp_time", Date.now());
+                Swal.fire({ icon: 'success', title: 'Submitted!', text: 'Your complaint has been registered.' });
+                document.getElementById("complaintForm").reset();
+                if (window.myAssignedRoom) document.getElementById("cRoom").value = window.myAssignedRoom;
+                loadMyComplaints();
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa fa-paper-plane me-2"></i> Submit';
+            }
+        });
             document.getElementById("complaintForm").reset();
             loadMyComplaints();
         });
 
         window.onload = async function () {
-            await initData(); loadMyComplaints();
+            await initData();
+            
+            // Auto-fill locked room
+            const myRecord = students.find(s => s.name && s.name.toLowerCase() === username.toLowerCase());
+            if (myRecord && myRecord.room) {
+                window.myAssignedRoom = myRecord.room;
+                document.getElementById("cRoom").value = myRecord.room;
+            } else {
+                document.getElementById("cRoom").value = "Not Assigned";
+            }
+            
+            loadMyComplaints();
         }
 
     </script>

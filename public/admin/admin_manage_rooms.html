@@ -2,11 +2,9 @@
 <html lang="en">
 
 <head>
-<script>
-if(localStorage.getItem("role") !== "admin"){
-    window.location.href = "../login.html";
-}
-</script>
+<!-- Authentication -->
+    <script src="../js/auth_service.js"></script>
+    <script>AuthService.init('admin');</script>
 
 
     <meta charset="UTF-8">
@@ -100,6 +98,7 @@ if(localStorage.getItem("role") !== "admin"){
                                         <th class="py-3">Capacity</th>
                                         <th class="py-3">Occupied</th>
                                         <th class="py-3">Status</th>
+                                        <th class="py-3">Next Vacancy</th>
                                         <th class="pe-4 py-3 text-center">Action</th>
                                     </tr>
                                 </thead>
@@ -187,12 +186,13 @@ if(localStorage.getItem("role") !== "admin"){
 
     <!-- Scripts -->
     <script>
+        
         function loadRooms() {
             let table = document.querySelector("#roomsTable tbody");
             table.innerHTML = "";
             
             if(rooms.length === 0) {
-                table.innerHTML = `<tr><td colspan="7" class="text-center text-muted py-4">No rooms added.</td></tr>`;
+                table.innerHTML = '<tr><td colspan="8" class="text-center text-muted py-4">No rooms added.</td></tr>';
                 return;
             }
 
@@ -200,6 +200,20 @@ if(localStorage.getItem("role") !== "admin"){
                 let statusBadge = '<span class="badge bg-success bg-opacity-10 text-success border border-success">Available</span>';
                 if(room.status === "Full") statusBadge = '<span class="badge bg-danger bg-opacity-10 text-danger border border-danger">Full</span>';
                 if(room.status === "Almost Full") statusBadge = '<span class="badge bg-warning bg-opacity-10 text-warning border border-warning">Almost Full</span>';
+
+                // ── Calculate Next Vacancy ────────────────────────────
+                const roomApps = (typeof applications !== 'undefined' ? applications : []).filter(a => a.roomNumber === room.number && a.status === 'Allocated');
+                let vacancyText = '<span class="text-success small">Now</span>';
+                
+                if (roomApps.length >= room.capacity) {
+                    const endDates = roomApps.map(a => new Date(a.endDate)).filter(d => !isNaN(d));
+                    if (endDates.length > 0) {
+                        const earliestEnd = new Date(Math.min(...endDates));
+                        vacancyText = '<span class="text-danger fw-bold small">' + earliestEnd.toLocaleDateString('en-IN', {day: 'numeric', month: 'short'}) + '</span>';
+                    } else {
+                        vacancyText = '<span class="text-muted small">N/A</span>';
+                    }
+                }
 
                 let row = `
                 <tr>
@@ -209,6 +223,7 @@ if(localStorage.getItem("role") !== "admin"){
                     <td>${room.capacity}</td>
                     <td>${room.occupied || 0}</td>
                     <td>${statusBadge}</td>
+                    <td>${vacancyText}</td>
                     <td class="pe-4 text-center">
                         <button class="btn btn-sm btn-outline-primary me-1"><i class="fa fa-edit"></i></button>
                         <button class="btn btn-sm btn-outline-danger" onclick="deleteRoom(${room.id})"><i class="fa fa-trash"></i></button>
@@ -218,26 +233,6 @@ if(localStorage.getItem("role") !== "admin"){
                 table.innerHTML += row;
             });
         }
-
-        async function deleteRoom(id) {
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this room deletion!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Yes, delete it!'
-            }).then(async (result) => {
-                if (result.isConfirmed) {
-                    const success = await deleteData('rooms', id);
-                    if (success) {
-                        loadRooms();
-                        Swal.fire('Deleted!', 'Room has been deleted.', 'success');
-                    } else {
-                        Swal.fire('Error', 'Could not delete room.', 'error');
-                    }
-                }
             })
         }
 

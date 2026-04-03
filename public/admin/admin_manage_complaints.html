@@ -2,11 +2,9 @@
 <html lang="en">
 
 <head>
-<script>
-if(localStorage.getItem("role") !== "admin"){
-    window.location.href = "../login.html";
-}
-</script>
+<!-- Authentication -->
+    <script src="../js/auth_service.js"></script>
+    <script>AuthService.init('admin');</script>
 
 
     <meta charset="UTF-8">
@@ -163,11 +161,32 @@ if(localStorage.getItem("role") !== "admin"){
                     <td>${complaint.date}</td>
                     <td>${statusBadge}</td>
                     <td class="pe-4 text-center">
-                        <button class="btn btn-sm btn-outline-success" onclick="resolveComplaint(${complaint.id})" ${disableBtn}><i class="fa fa-check"></i></button>
+                        <button class="btn btn-sm btn-outline-success me-1" title="Resolve" onclick="resolveComplaint(${complaint.id})" ${disableBtn}><i class="fa fa-check"></i></button>
+                        <button class="btn btn-sm btn-outline-danger" title="Mark as Spam" onclick="spamComplaint(${complaint.id})" ${disableBtn}><i class="fa fa-ban"></i></button>
                     </td>
                 </tr>
                 `;
                 table.innerHTML += row;
+            });
+        }
+
+        
+        async function spamComplaint(id) {
+            Swal.fire({
+                title: 'Mark as Spam?',
+                text: "This will dismiss the complaint and flag it as abusive.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                confirmButtonText: 'Yes, Mark as Spam'
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    const success = await updateData('complaints', id, { status: "Spam", description: "[SPAM] " + complaints.find(c => c.id == id).description });
+                    if(success) {
+                        Swal.fire('Updated!', 'Complaint marked as spam.', 'success');
+                        loadComplaints();
+                    }
+                }
             });
         }
 

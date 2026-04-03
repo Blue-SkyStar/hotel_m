@@ -2,9 +2,9 @@
 <html lang="en">
 
 <head>
-    <script>
-        if (localStorage.getItem("role") !== "student") { window.location.href = "../login.html"; }
-    </script>
+    <!-- Authentication -->
+    <script src="../js/auth_service.js"></script>
+    <script>AuthService.init('student');</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hostel Notices</title>
@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="../js/sweetalert.js"></script>
     <script src="../js/storage.js"></script>
+    <script src="../js/theme_service.js"></script>
 </head>
 
 <body class="bg-light">
@@ -26,6 +27,12 @@
                     class="navbar-toggler-icon"></span></button>
             <div class="collapse navbar-collapse" id="menu">
                 <ul class="navbar-nav ms-auto align-items-center">
+                    
+                    <li class="nav-item me-2">
+                        <button class="btn btn-outline-light border-0 rounded-circle p-2" onclick="ThemeService.toggle()" title="Toggle Dark Mode">
+                            <i class="fa fa-moon fs-5"></i>
+                        </button>
+                    </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="profileDropdown"
                             role="button" data-bs-toggle="dropdown" aria-expanded="false">
