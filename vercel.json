@@ -1,14 +1,22 @@
 {
   "version": 2,
-  "functions": {
-    "server.js": {
-      "includeFiles": "data/**"
-    }
-  },
-  "rewrites": [
+  "builds": [
     {
-      "source": "/api/(.*)",
-      "destination": "/server.js"
+      "src": "server.js",
+      "use": "@vercel/node",
+      "config": {
+        "includeFiles": ["public/**", "data/**", "utils/**"]
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/server.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/server.js"
     }
   ]
 }

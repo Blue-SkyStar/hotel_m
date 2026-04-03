@@ -1,28 +1,29 @@
-const admin = require("firebase-admin");
+// Firebase Admin - loaded lazily so a missing config never crashes the server
+let admin = null;
+let serviceAccount = null;
 
-// Initialize Firebase Admin gracefully handling Env parsing
-let serviceAccount;
 try {
   if (process.env.FIREBASE_SERVICE_ACCOUNT) {
     serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT.replace(/^'|'$/g, ''));
+    admin = require("firebase-admin");
+    admin.initializeApp({
+      credential: admin.credential.cert(serviceAccount)
+    });
+    console.log("✅ Firebase Admin initialized");
+  } else {
+    console.log("⚠️ FIREBASE_SERVICE_ACCOUNT not set – push notifications disabled.");
   }
 } catch (err) {
-  console.log("⚠️ Could not parse FIREBASE_SERVICE_ACCOUNT. Push notifications may fail.", err.message);
-}
-
-if (serviceAccount) {
-  admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount)
-  });
-} else {
-  console.log("⚠️ Firebase Admin is bypassed because FIREBASE_SERVICE_ACCOUNT is not set.");
+  console.error("⚠️ Firebase init failed (notifications disabled):", err.message);
 }
 
 /**
  * Sends an FCM push notification to a specific device token.
  */
 async function sendPushNotification(token, title, body, data = {}) {
-  if (!token || !serviceAccount) return console.log('⚠️ Notice: Skipped Push (No FCM token or Service Account config provided)');
+  if (!token || !admin || !serviceAccount) {
+    return; // Silently skip – no crash
+  }
 
   const message = {
     notification: { title, body },
@@ -40,4 +41,4 @@ async function sendPushNotification(token, title, body, data = {}) {
   }
 }
 
-module.exports = { admin, sendPushNotification };
+module.exports = { sendPushNotification };

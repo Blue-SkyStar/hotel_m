@@ -1,13 +1,12 @@
 require('dotenv').config();
-const path = require('path');
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const fs = require('fs-extra');
 const crypto = require('crypto');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { Pool } = require('pg');
 const { sendPushNotification } = require('./utils/firebase');
 
 const app = express();
@@ -31,37 +30,10 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(process.cwd(), 'public', 'index.html'));
 });
 
-// ─── PostgreSQL Pool ─────────────────────────────────────────────────────────
-let pool = null;
-try {
-    if (process.env.SUPABASE_URL) {
-        pool = new Pool({
-            connectionString: process.env.SUPABASE_URL,
-            ssl: { rejectUnauthorized: false },
-            connectionTimeoutMillis: 5000
-        });
-        console.log('✅ PostgreSQL Pool created');
-    } else {
-        console.error('❌ SUPABASE_URL not set — database features will fail');
-    }
-} catch (err) {
-    console.error('❌ PostgreSQL Connection Error:', err.message);
-}
-
-// Authentication Middleware
-const verifyToken = (req, res, next) => {
-    const token = req.cookies.jwt;
-    if (!token) return res.status(401).json({ success: false, message: 'Access Denied: No Token Provided!' });
-
-    try {
-        const secret = process.env.JWT_SECRET || 'task_jwt_secretpasswordshouldbestrongasPi3.141592';
-        const verified = jwt.verify(token, secret);
-        req.user = verified;
-        next();
-    } catch (error) {
-        res.status(401).json({ success: false, message: 'Invalid Token' });
-    }
-};
+// Helper functions for DB
+// Replaced db.json file ops with MySQL pool
+const pool = require('./config/db');
+const { verifyToken } = require('./config/authMiddleware');
 
 // ─── Razorpay Setup ───────────────────────────────────────────────────────────
 let Razorpay;
