@@ -317,7 +317,24 @@ app.put('/api/data/:key/:id', verifyToken, async (req, res) => {
                      }
                 }
                 // --- IN-APP NOTIFICATIONS & FCM PUSH NOTIFICATIONS ---
-                if (key === 'applications' && (updatedItem.status === 'Approved' || updatedItem.status === 'Allocated' || updatedItem.status === 'Rejected')) {
+                if (key === 'applications' && (updatedItem.status === 'Approved - Awaiting Payment' || updatedItem.status === 'Allocated' || updatedItem.status === 'Rejected')) {
+                    const title = updatedItem.status === 'Rejected' ? 'Application Rejected' : 'Application Status Update';
+                    const message = updatedItem.status === 'Rejected' 
+                        ? 'Your room application was unfortunately rejected. Please contact the warden if you believe this was an error.'
+                        : `Your application status has been updated to: ${updatedItem.status}`;
+
+                    // Insert into notifications table for our live bell icon
+                    await pool.query(
+                        'INSERT INTO notifications (student, title, message, date) VALUES ($1, $2, $3, $4)',
+                        [updatedItem.student, title, message, new Date().toLocaleDateString()]
+                    );
+
+                    // Also try Push Notifications (Old logic)
+                    const { rows: users } = await pool.query('SELECT fcm_token FROM users WHERE username = $1 AND fcm_token IS NOT NULL', [updatedItem.student]);
+                    if (users.length && users[0].fcm_token) {
+                        sendPushNotification(users[0].fcm_token, title, message);
+                    }
+                }
                      const statusMsg = updatedItem.status === 'Allocated' 
                         ? `Congratulations! You have been allocated to Room ${updatedItem.roomNumber}.` 
                         : (updatedItem.status === 'Approved' ? 'Your application has been approved! Please proceed with payment.' : 'Your application has been rejected.');
