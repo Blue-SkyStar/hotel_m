@@ -235,6 +235,20 @@
                 });
                 const result = await res.json();
                 if(result.success) {
+                    // Create Notification for Admin/Warden
+                    const notif = {
+                        student: 'Warden', // Target
+                        title: 'New Move-out Request',
+                        message: `Student ${localStorage.getItem("loggedUser")} has requested an early move-out from Room ${window.myRoomNo}. Refund Pending: ${payload.refundAmount}`,
+                        date: new Date().toLocaleDateString(),
+                        read: false
+                    };
+                    await fetch(`${API_URL}/data/notifications`, {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify(notif)
+                    });
+
                     Swal.fire({
                         icon: 'success', 
                         title: 'Request Registered!', 

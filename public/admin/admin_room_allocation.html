@@ -32,24 +32,16 @@
         .status-approved { background-color: #d4edda; color: #155724; }
         .status-allocated { background-color: #cce5ff; color: #004085; }
         .status-rejected { background-color: #f8d7da; color: #721c24; }
+        .status-withdrawn { background-color: #e2e3e5; color: #383d41; }
     </style>
 </head>
 <body class="bg-light">
     <div id="navbar-mount"></div>
 
-    <!-- Navbar -->
-    
-
     <div class="container-fluid" style="margin-top:70px">
-
         <div class="row">
-
-            <!-- Sidebar -->
-            
             <div id="sidebar-mount" class="col-md-2 p-0"></div>
 
-
-            <!-- Main Content -->
             <div class="col-md-10 p-4">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h2><i class="fa fa-key me-2 text-primary"></i>Room Applications & Allocation</h2>
@@ -103,17 +95,12 @@
                     <h5 class="modal-title fw-bold"><i class="fa fa-file-contract me-2 text-primary"></i> Application Details</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-                <div class="modal-body p-4" id="modalDetailsContent">
-                    <!-- Loaded dynamically -->
-                </div>
-                <div class="modal-footer border-top-0 d-flex justify-content-between bg-light" style="border-radius: 0 0 16px 16px;" id="modalActions">
-                    <!-- Actions -->
-                </div>
+                <div class="modal-body p-4" id="modalDetailsContent"></div>
+                <div class="modal-footer border-top-0 d-flex justify-content-between bg-light" style="border-radius: 0 0 16px 16px;" id="modalActions"></div>
             </div>
         </div>
     </div>
 
-    <!-- JS -->
     <script>
         let allApplications = [];
         let currentFilter = 'Pending Review';
@@ -128,9 +115,7 @@
                 const res = await fetch(`${API_URL}/data/applications`);
                 allApplications = await res.json();
                 renderTable();
-            } catch(e) {
-                console.error(e);
-            }
+            } catch(e) { console.error(e); }
         }
 
         function filterApps(status, element) {
@@ -155,10 +140,11 @@
 
             let html = '';
             filtered.sort((a,b)=>b.id-a.id).forEach(app => {
-                let badgeClass = 'status-pending';
-                if(app.status === 'Approved - Awaiting Payment') badgeClass = 'status-approved';
-                if(app.status === 'Allocated') badgeClass = 'status-allocated';
-                if(app.status === 'Rejected') badgeClass = 'status-rejected';
+                let statusClass = 'status-pending';
+                if(app.status === 'Approved - Awaiting Payment') statusClass = 'status-approved';
+                if(app.status === 'Allocated') statusClass = 'status-allocated';
+                if(app.status === 'Rejected') statusClass = 'status-rejected';
+                if(app.status === 'Withdrawn') statusClass = 'status-withdrawn';
 
                 html += `
                     <tr>
@@ -174,7 +160,7 @@
                             <div class="small text-muted">${app.roomType}</div>
                         </td>
                         <td class="fw-bold">₹${app.totalPrice}</td>
-                        <td><span class="badge ${badgeClass}">${app.status}</span></td>
+                        <td><span class="status-badge ${statusClass}">${app.status}</span></td>
                         <td class="text-end pe-4">
                             <button class="btn btn-sm btn-outline-primary rounded-pill px-3" onclick="viewDetails(${app.id})">Review/View</button>
                         </td>
@@ -188,124 +174,69 @@
             let app = allApplications.find(a => a.id == id);
             if(!app) return;
 
-            let badgeClass = 'status-pending';
-            if(app.status === 'Approved - Awaiting Payment') badgeClass = 'status-approved';
-            if(app.status === 'Allocated') badgeClass = 'status-allocated';
-            if(app.status === 'Rejected') badgeClass = 'status-rejected';
+            let statusClass = 'status-pending';
+            if(app.status === 'Approved - Awaiting Payment') statusClass = 'status-approved';
+            if(app.status === 'Allocated') statusClass = 'status-allocated';
+            if(app.status === 'Rejected') statusClass = 'status-rejected';
+            if(app.status === 'Withdrawn') statusClass = 'status-withdrawn';
 
-            // Build document preview HTML
             function docPreview(docObj, label) {
                 if (!docObj || !docObj.data) return `<div class="text-muted small fst-italic">Not provided</div>`;
                 if (docObj.data.startsWith('data:image')) {
-                    return `
-                        <div class="mt-1">
-                            <img src="${docObj.data}" alt="${label}" style="max-width:100%; max-height:160px; border-radius:8px; border:1px solid #dee2e6;">
-                            <div class="small text-muted mt-1">${docObj.name}</div>
-                        </div>`;
-                } else {
-                    return `<a href="${docObj.data}" download="${docObj.name}" class="btn btn-sm btn-outline-primary mt-1"><i class="fa fa-download me-1"></i>${docObj.name}</a>`;
+                    return `<div class="mt-1"><img src="${docObj.data}" alt="${label}" style="max-width:100%; max-height:160px; border-radius:8px; border:1px solid #dee2e6;"></div>`;
                 }
+                return `<a href="${docObj.data}" download="${docObj.name}" class="btn btn-sm btn-outline-primary mt-1"><i class="fa fa-download me-1"></i>${docObj.name}</a>`;
             }
 
             let content = `
                 <div class="d-flex justify-content-between mb-4">
                     <h4 class="fw-bold m-0">Room ${app.roomNumber} - ${app.roomType}</h4>
-                    <span class="badge ${badgeClass} fs-6">${app.status}</span>
+                    <span class="status-badge ${statusClass} fs-6">${app.status}</span>
                 </div>
                 <div class="row g-4 mb-4">
-                    <div class="col-md-6">
-                        <label class="text-muted small text-uppercase fw-bold">Applicant Name</label>
-                        <div class="fs-5">${app.studentName} (${app.student})</div>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="text-muted small text-uppercase fw-bold">Course</label>
-                        <div class="fs-5">${app.course}</div>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="text-muted small text-uppercase fw-bold">Phone</label>
-                        <div class="fs-5">${app.phone}</div>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="text-muted small text-uppercase fw-bold">Guardian</label>
-                        <div class="fs-5">${app.guardian}</div>
-                    </div>
+                    <div class="col-md-6"><label class="text-muted small text-uppercase fw-bold">Applicant</label><div class="fs-5">${app.studentName}</div></div>
+                    <div class="col-md-6"><label class="text-muted small text-uppercase fw-bold">Course</label><div class="fs-5">${app.course}</div></div>
+                    <div class="col-md-6"><label class="text-muted small text-uppercase fw-bold">Phone</label><div class="fs-5">${app.phone}</div></div>
+                    <div class="col-md-6"><label class="text-muted small text-uppercase fw-bold">Guardian</label><div class="fs-5">${app.guardian}</div></div>
                 </div>
-
                 <div class="row g-3 mb-4">
-                    <div class="col-6">
-                        <label class="text-muted small text-uppercase fw-bold">ID Proof</label>
-                        ${docPreview(app.idProof, 'ID Proof')}
-                    </div>
-                    <div class="col-6">
-                        <label class="text-muted small text-uppercase fw-bold">Passport Photo</label>
-                        ${docPreview(app.photo, 'Passport Photo')}
+                    <div class="col-6"><label class="text-muted small text-uppercase fw-bold">ID Proof</label>${docPreview(app.idProof, 'ID')}</div>
+                    <div class="col-6"><label class="text-muted small text-uppercase fw-bold">Photo</label>${docPreview(app.photo, 'Photo')}</div>
+                </div>
+                <div class="p-3 rounded-3" style="background:#1a1a2e; color:#fff;">
+                    <div class="row">
+                        <div class="col-7"><label class="text-white-50 small text-uppercase fw-bold">Facilities</label><div class="fw-bold">${app.facilities || 'Standard'}</div></div>
+                        <div class="col-5 text-end"><label class="text-white-50 small text-uppercase fw-bold">Total Cost</label><h3 class="fw-bold text-warning mb-0">₹${app.totalPrice}</h3></div>
                     </div>
                 </div>
-
-                <div class="p-3 rounded-3 mb-3" style="background:#1a1a2e; color:#fff;">
-                    <div class="row align-items-center">
-                        <div class="col-7">
-                            <label class="text-white-50 small text-uppercase fw-bold d-block mb-1">Included Facilities</label>
-                            <span class="fw-bold text-white">${app.facilities || 'None'}</span>
-                        </div>
-                        <div class="col-5 text-end">
-                            <label class="text-white-50 small text-uppercase fw-bold d-block mb-1">Total Cost / Month</label>
-                            <h3 class="fw-bold mb-0" style="color:#ffd700;">₹${app.totalPrice}</h3>
-                        </div>
-                    </div>
-                </div>
+                ${app.refundAmount ? `<div class="alert alert-warning mt-3 mb-0"><b>Refund Due:</b> ${app.refundAmount}</div>` : ''}
             `;
             document.getElementById('modalDetailsContent').innerHTML = content;
 
             let actionsHtml = `<button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">Close</button>`;
-            
             if(app.status === 'Pending Review') {
-                actionsHtml += `
-                    <div>
-                        <button class="btn btn-danger rounded-pill px-4 me-2" onclick="updateStatus(${app.id}, 'Rejected')"><i class="fa fa-times me-2"></i> Reject</button>
-                        <button class="btn btn-success rounded-pill px-4" onclick="updateStatus(${app.id}, 'Approved - Awaiting Payment')"><i class="fa fa-check me-2"></i> Approve Request</button>
-                    </div>
-                `;
-            } else if (app.status === 'Approved - Awaiting Payment') {
-                actionsHtml += `<div class="text-muted small fst-italic py-2"><i class="fa fa-info-circle me-1"></i> Waiting for student to complete ₹1000 down payment.</div>`;
+                actionsHtml += `<div><button class="btn btn-danger rounded-pill px-3 me-2" onclick="updateStatus(${app.id}, 'Rejected')">Reject</button><button class="btn btn-success rounded-pill px-3" onclick="updateStatus(${app.id}, 'Approved - Awaiting Payment')">Approve</button></div>`;
+            } else if (app.status === 'Refund Pending') {
+                actionsHtml += `<div><button class="btn btn-warning rounded-pill px-3" onclick="updateStatus(${app.id}, 'Withdrawn')">Process Refund & Vacate</button></div>`;
             }
-
             document.getElementById('modalActions').innerHTML = actionsHtml;
 
-            let modal = new bootstrap.Modal(document.getElementById('appDetailsModal'));
-            modal.show();
+            new bootstrap.Modal(document.getElementById('appDetailsModal')).show();
         }
 
         async function updateStatus(id, newStatus) {
             let app = allApplications.find(a => a.id == id);
-            app.status = newStatus;
-
             try {
                 await fetch(`${API_URL}/data/applications/${id}`, {
                     method: 'PUT',
                     headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify(app)
+                    body: JSON.stringify({...app, status: newStatus})
                 });
-                
-                let modal = bootstrap.Modal.getInstance(document.getElementById('appDetailsModal'));
-                modal.hide();
-
-                Swal.fire({
-                    icon: newStatus === 'Rejected' ? 'info' : 'success',
-                    title: 'Application ' + (newStatus === 'Rejected' ? 'Rejected' : 'Approved'),
-                    text: 'The student will see the updated status in their portal.',
-                }).then(() => {
-                    loadApplications(); // refresh table
-                });
-            } catch(e) {
-                console.error(e);
-                Swal.fire('Error', 'Failed to update Application Status', 'error');
-            }
+                bootstrap.Modal.getInstance(document.getElementById('appDetailsModal')).hide();
+                Swal.fire({icon: 'success', title: 'Status Updated'}).then(() => loadApplications());
+            } catch(e) { Swal.fire('Error', 'Update failed', 'error'); }
         }
-
     </script>
-
-    <!-- Shared Admin Layout -->
     <script src="../js/admin_layout.js"></script>
     <script>initAdminLayout('room-allocation');</script>
 </body>
