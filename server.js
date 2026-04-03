@@ -141,6 +141,7 @@ app.post('/api/razorpay/verify', async (req, res) => {
 
 // ─── AUTH API ─────────────────────────────────────────────────────────────────
 app.post('/api/auth/login', async (req, res) => {
+    if (!pool) return res.status(500).json({ success: false, message: 'FATAL: Database connection (pool) is undefined. Check Vercel SUPABASE_URL.' });
     const { email, password, role } = req.body;
     try {
         const { rows } = await pool.query('SELECT * FROM users WHERE email = $1 AND role = $2', [email, role]);
@@ -168,11 +169,12 @@ app.post('/api/auth/login', async (req, res) => {
         }
     } catch (err) {
         console.error('Login error:', err);
-        res.status(500).json({ success: false, message: 'Server error' });
+        res.status(500).json({ success: false, message: err.message || 'Server error' });
     }
 });
 
 app.post('/api/auth/signup', async (req, res) => {
+    if (!pool) return res.status(500).json({ success: false, message: 'FATAL: Database connection (pool) is undefined. Check Vercel SUPABASE_URL.' });
     const { username, email, password } = req.body;
     try {
         const { rows: existing } = await pool.query('SELECT * FROM users WHERE username = $1 OR email = $2', [username, email]);
@@ -185,7 +187,7 @@ app.post('/api/auth/signup', async (req, res) => {
         res.json({ success: true, message: 'User registered successfully' });
     } catch (err) {
         console.error('Signup error:', err);
-        res.status(500).json({ success: false, message: 'Server error' });
+        res.status(500).json({ success: false, message: err.message || 'Server error' });
     }
 });
 
@@ -219,6 +221,7 @@ app.get('/api/stream', (req, res) => {
 });
 
 app.get('/api/data/:key', verifyToken, async (req, res) => {
+    if (!pool) return res.status(500).json([]);
     const { key } = req.params;
     try {
         const allowedTables = ['users', 'students', 'rooms', 'applications', 'payments', 'visitors', 'complaints', 'notices', 'facilities_info'];
@@ -241,6 +244,7 @@ app.get('/api/data/:key', verifyToken, async (req, res) => {
 });
 
 app.post('/api/data/:key', verifyToken, async (req, res) => {
+    if (!pool) return res.status(500).json({ success: false, message: 'Database disconnected explicitly. Missing Env Vars.' });
     const { key } = req.params;
     const item = req.body;
     try {
