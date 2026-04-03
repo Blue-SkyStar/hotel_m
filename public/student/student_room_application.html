@@ -115,6 +115,17 @@ if(localStorage.getItem("role") !== "student"){ window.location.href = "../login
                                 </div>
                             </div>
 
+                            <h5 class="fw-bold mb-3 border-bottom pb-2 mt-5 text-warning"><i class="fa fa-star me-2"></i> Priority System</h5>
+                            <div class="row g-4 mb-4">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold text-muted small text-uppercase">2nd Choice Room (Backup)</label>
+                                    <select id="appSecondChoice" class="form-select form-select-lg border-0 bg-light">
+                                        <option value="">No backup (Waitlist me for 1st choice instead)</option>
+                                    </select>
+                                    <small class="text-muted mt-1 d-block">If your primary choice is completely full, we will fall back to this or waitlist you based on your preference.</small>
+                                </div>
+                            </div>
+
                             <h5 class="fw-bold mb-3 border-bottom pb-2 mt-5">Document Uploads</h5>
                             <div class="row g-4 mb-5">
                                 <div class="col-md-6">
@@ -134,12 +145,13 @@ if(localStorage.getItem("role") !== "student"){ window.location.href = "../login
                             <div class="form-check mb-4">
                                 <input class="form-check-input" type="checkbox" value="" id="termCheck" required>
                                 <label class="form-check-label text-muted" for="termCheck">
-                                    I agree to the Hostel Rules & Regulations and confirm that all information provided is accurate. I understand that my allocation is subject to admin approval and a ₹1000 down payment.
+                                    I agree to the Hostel Rules & Regulations and confirm that all information provided is accurate. I understand that my allocation is subject to admin approval and capacity restrictions.
                                 </label>
                             </div>
 
                             <div class="text-end">
                                 <button type="submit" id="submitBtn" class="btn btn-primary px-5 py-3 rounded-pill fw-bold shadow-sm" style="font-size:1.1rem;"><i class="fa fa-paper-plane me-2"></i> Submit Application</button>
+                                <button type="button" id="changePrefBtn" class="btn btn-warning px-5 py-3 rounded-pill fw-bold shadow-sm d-none" style="font-size:1.1rem;"><i class="fa fa-exchange-alt me-2"></i> Change Room Preference</button>
                             </div>
                         </form>
                     </div>
@@ -152,6 +164,7 @@ if(localStorage.getItem("role") !== "student"){ window.location.href = "../login
     <script>
         let currentUserId = localStorage.getItem("loggedUser") || "Student";
         let roomIdParam, totalParam, facilitiesParam, roomObj;
+        let existingCollisionAppId = null;
 
         window.onload = async function(){
             await initData();
@@ -188,14 +201,24 @@ if(localStorage.getItem("role") !== "student"){ window.location.href = "../login
             }
             document.getElementById("appTotal").textContent = totalParam || "0";
             document.getElementById("appFacilities").textContent = facilitiesParam || "None";
+            
+            // Populate 2nd Choice Dropdown
+            const choiceSelect = document.getElementById('appSecondChoice');
+            rooms.forEach(r => {
+                if(r.id != roomIdParam && r.status !== 'Full') {
+                    const opt = document.createElement('option');
+                    opt.value = r.id;
+                    opt.textContent = `${r.number} - ${r.type} (Available: ${r.capacity - r.occupied})`;
+                    choiceSelect.appendChild(opt);
+                }
+            });
         }
 
-        // Helper: convert file to base64 (max 4MB, otherwise store name only)
+        // Helper: convert file to base64
         function fileToBase64(file) {
             return new Promise((resolve) => {
                 if (!file) { resolve(null); return; }
                 if (file.size > 4 * 1024 * 1024) {
-                    // File too large — store only the name
                     resolve({ name: file.name, data: null, tooBig: true });
                     return;
                 }
@@ -206,20 +229,16 @@ if(localStorage.getItem("role") !== "student"){ window.location.href = "../login
             });
         }
 
-        document.getElementById("applicationForm").addEventListener('submit', async function(e){
-            e.preventDefault();
-            
-            const btn = document.getElementById("submitBtn");
-            btn.innerHTML = `<i class="fa fa-spinner fa-spin me-2"></i> Submitting...`;
+        // Processing Logic with Waitlist & Rejection Flows
+        async function processApplication(forceWaitlist = false, isUpdate = false) {
+            const btn = isUpdate ? document.getElementById("changePrefBtn") : document.getElementById("submitBtn");
+            const originalText = btn.innerHTML;
+            btn.innerHTML = `<i class="fa fa-spinner fa-spin me-2"></i> Processing...`;
             btn.disabled = true;
 
-            // Convert uploaded files to base64
             const idProofFile = document.getElementById("appIdProof").files[0];
             const photoFile = document.getElementById("appPhoto").files[0];
-            const [idProofData, photoData] = await Promise.all([
-                fileToBase64(idProofFile),
-                fileToBase64(photoFile)
-            ]);
+            const [idProofData, photoData] = await Promise.all([ fileToBase64(idProofFile), fileToBase64(photoFile) ]);
 
             const applicationData = {
                 student: currentUserId,
@@ -230,29 +249,88 @@ if(localStorage.getItem("role") !== "student"){ window.location.href = "../login
                 roomId: roomObj ? roomObj.id : roomIdParam,
                 roomNumber: roomObj ? roomObj.number : "",
                 roomType: roomObj ? roomObj.type : "",
+                secondChoiceRoomId: document.getElementById("appSecondChoice").value,
                 totalPrice: totalParam,
                 facilities: facilitiesParam,
                 status: "Pending Review",
                 date: new Date().toLocaleDateString(),
-                idProof: idProofData,
-                photo: photoData
+                idProof: idProofData || null,
+                photo: photoData || null,
+                forceWaitlist: forceWaitlist
             };
 
+            const endpoint = isUpdate ? `${API_URL}/data/applications/${existingCollisionAppId}` : `${API_URL}/data/applications`;
+            const method = isUpdate ? 'PUT' : 'POST';
+
             try {
-                const res = await fetch(`${API_URL}/data/applications`, {
-                    method: 'POST',
+                const res = await fetch(endpoint, {
+                    method: method,
                     headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
                     body: JSON.stringify(applicationData)
                 });
+                
+                // Active Application Duplication Caught!
+                if (res.status === 409) {
+                    const data = await res.json();
+                    existingCollisionAppId = data.existingAppId;
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Active Application Detected',
+                        text: 'You already have an active application. You can only maintain one active queue at a time.',
+                        footer: 'Click "Change Room Preference" below to gracefully substitute your existing application.'
+                    });
+                    document.getElementById("submitBtn").classList.add("d-none");
+                    const changeBtn = document.getElementById("changePrefBtn");
+                    changeBtn.classList.remove("d-none");
+                    changeBtn.disabled = false;
+                    changeBtn.innerHTML = `<i class="fa fa-exchange-alt me-2"></i> Update Priority Preference`;
+                    return;
+                }
+
                 const data = await res.json();
 
-                if(data.success){
-                    btn.innerHTML = `<i class="fa fa-check me-2"></i> Submitted ✔️`;
-                    btn.className = "btn btn-success btn-lg px-5 rounded-pill shadow-sm py-3 fw-bold";
+                // Advanced Waitlist Capacity Check System
+                if (!data.success && data.requireConfirmation) {
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                    
+                    const secondChoiceId = document.getElementById("appSecondChoice").value;
+                    const choice = await Swal.fire({
+                        title: 'Room Occupied!',
+                        text: data.message,
+                        icon: 'info',
+                        showCancelButton: true,
+                        showDenyButton: secondChoiceId ? true : false,
+                        confirmButtonText: 'Waitlist for 1st Choice',
+                        denyButtonText: 'Auto-Assign 2nd Choice',
+                        cancelButtonText: 'Cancel',
+                        confirmButtonColor: '#ffc107',
+                        denyButtonColor: '#28a745'
+                    });
+
+                    if (choice.isConfirmed) {
+                        // User chose Waitlist -> Force re-send bypassing confirmation check
+                        processApplication(true, isUpdate);
+                    } else if (choice.isDenied && secondChoiceId) {
+                        // User chose 2nd Room -> Switch Target and Resend instantly
+                        const sRoom = rooms.find(r => r.id == secondChoiceId);
+                        roomObj = sRoom;
+                        roomIdParam = sRoom.id;
+                        totalParam = sRoom.price;
+                        facilitiesParam = sRoom.facilities;
+                        processApplication(false, isUpdate);
+                    }
+                    return;
+                }
+
+                if (data.success) {
+                    btn.innerHTML = `<i class="fa fa-check me-2"></i> Recorded ✔️`;
+                    btn.className = `btn ${applicationData.forceWaitlist ? "btn-warning" : "btn-success"} btn-lg px-5 rounded-pill shadow-sm py-3 fw-bold`;
                     Swal.fire({
                         icon: 'success',
-                        title: 'Application Submitted!',
-                        text: 'Your application has been sent to the Admin for review.',
+                        title: applicationData.forceWaitlist ? 'Waitlisted Successfully!' : 'Application Approved for Review!',
+                        text: applicationData.forceWaitlist ? 'You have been placed on the waitlist.' : 'Your application has been logged and sent to the Admin!',
                         confirmButtonColor: '#00d2ff'
                     }).then(() => {
                         window.location.href = 'student_application_status.html';
@@ -262,12 +340,21 @@ if(localStorage.getItem("role") !== "student"){ window.location.href = "../login
                 }
             } catch(err) {
                 console.error(err);
-                Swal.fire('Error', 'Failed to submit application: ' + err.message, 'error');
-                btn.innerHTML = `<i class="fa fa-paper-plane me-2"></i> Submit Application`;
+                Swal.fire('Error', 'Failed to process priority chain: ' + err.message, 'error');
+                btn.innerHTML = originalText;
                 btn.disabled = false;
             }
+        }
+
+        document.getElementById("applicationForm").addEventListener('submit', function(e){
+            e.preventDefault();
+            processApplication(false, false);
         });
 
+        document.getElementById("changePrefBtn").addEventListener('click', function(e){
+            e.preventDefault();
+            processApplication(false, true);
+        });
     </script>
     <script src="../js/bootstrap.bundle.js"></script>
 </body>
