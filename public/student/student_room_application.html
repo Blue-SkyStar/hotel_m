@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <!-- Authentication -->
     <script src="../js/auth_service.js"></script>
@@ -34,36 +35,45 @@
     <link rel="stylesheet" href="../css/index.css">
     <link rel="stylesheet" href="../css/animate.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    
+
     <!-- Scripts -->
     <script src="../js/sweetalert.js"></script>
     <script src="../js/constants.js"></script>
     <script src="../js/storage.js"></script>
     <script src="../js/theme_service.js"></script>
 </head>
+
 <body class="bg-light">
     <!-- Navbar -->
     <nav class="navbar navbar-expand-md navbar-dark bg-dark shadow-lg fixed-top">
         <div class="container-fluid">
             <img src="../img/logo/logo.png" class="rounded-circle" width="45">
             <a class="navbar-brand mx-3 fw-bold">Student Portal</a>
-            <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#menu"><span class="navbar-toggler-icon"></span></button>
+            <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#menu"><span
+                    class="navbar-toggler-icon"></span></button>
             <div class="collapse navbar-collapse" id="menu">
                 <ul class="navbar-nav ms-auto align-items-center">
                     <li class="nav-item me-2">
-                        <button class="btn btn-outline-light border-0 rounded-circle p-2" onclick="ThemeService.toggle()" title="Toggle Dark Mode">
+                        <button class="btn btn-outline-light border-0 rounded-circle p-2"
+                            onclick="ThemeService.toggle()" title="Toggle Dark Mode">
                             <i class="fa fa-moon fs-5"></i>
                         </button>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="profileDropdown"
+                            role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="fa fa-user-circle fs-4 me-2 text-white-50"></i>
                             <span id="welcomeUser" class="text-white">Student</span>
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2 animate__animated animate__fadeIn" aria-labelledby="profileDropdown">
-                            <li><a class="dropdown-item py-2" href="student_profile.html"><i class="fa fa-user me-2 text-primary"></i> My Profile</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item py-2 text-danger" href="#" onclick="logout()"><i class="fa fa-sign-out-alt me-2"></i> Logout</a></li>
+                        <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2 animate__animated animate__fadeIn"
+                            aria-labelledby="profileDropdown">
+                            <li><a class="dropdown-item py-2" href="student_profile.html"><i
+                                        class="fa fa-user me-2 text-primary"></i> My Profile</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item py-2 text-danger" href="#" onclick="logout()"><i
+                                        class="fa fa-sign-out-alt me-2"></i> Logout</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -75,15 +85,24 @@
         <div class="row">
             <!-- Sidebar -->
             <div class="col-md-2 bg-dark text-white p-3 sidebar-nav" style="min-height:100vh">
-                <h5 class="text-center mt-2 mb-3 fw-bold">HOSTEL MENU</h5><hr>
+                <h5 class="text-center mt-2 mb-3 fw-bold">HOSTEL MENU</h5>
+                <hr>
                 <ul class="nav flex-column">
-                    <li class="nav-item mb-2"><a href="student_dashboard.html" class="nav-link text-white"><i class="fa fa-home me-2"></i> Dashboard</a></li>
-                    <li class="nav-item mb-2"><a href="student_profile.html" class="nav-link text-white"><i class="fa fa-user me-2"></i> Profile</a></li>
-                    <li class="nav-item mb-2"><a href="student_room.html" class="nav-link text-white"><i class="fa fa-bed me-2"></i> My Room</a></li>
-                    <li class="nav-item mb-2"><a href="student_room_details.html" class="nav-link text-white fw-bold active"><i class="fa fa-building me-2"></i> Room Details</a></li>
-                    <li class="nav-item mb-2"><a href="student_application_status.html" class="nav-link text-white"><i class="fa fa-file-signature me-2"></i> My Applications</a></li>
-                    <li class="nav-item mb-2"><a href="student_payments.html" class="nav-link text-white"><i class="fa fa-credit-card me-2"></i> Payments</a></li>
-                    <li class="nav-item mb-2"><a href="student_complaints.html" class="nav-link text-white"><i class="fa fa-exclamation-circle me-2"></i> Complaints</a></li>
+                    <li class="nav-item mb-2"><a href="student_dashboard.html" class="nav-link text-white"><i
+                                class="fa fa-home me-2"></i> Dashboard</a></li>
+                    <li class="nav-item mb-2"><a href="student_profile.html" class="nav-link text-white"><i
+                                class="fa fa-user me-2"></i> Profile</a></li>
+                    <li class="nav-item mb-2"><a href="student_room.html" class="nav-link text-white"><i
+                                class="fa fa-bed me-2"></i> My Room</a></li>
+                    <li class="nav-item mb-2"><a href="student_room_details.html"
+                            class="nav-link text-white fw-bold active"><i class="fa fa-building me-2"></i> Room
+                            Details</a></li>
+                    <li class="nav-item mb-2"><a href="student_application_status.html" class="nav-link text-white"><i
+                                class="fa fa-file-signature me-2"></i> My Applications</a></li>
+                    <li class="nav-item mb-2"><a href="student_payments.html" class="nav-link text-white"><i
+                                class="fa fa-credit-card me-2"></i> Payments</a></li>
+                    <li class="nav-item mb-2"><a href="student_complaints.html" class="nav-link text-white"><i
+                                class="fa fa-exclamation-circle me-2"></i> Complaints</a></li>
                 </ul>
             </div>
 
@@ -92,13 +111,13 @@
                 <a href="student_room_details.html" class="btn btn-outline-secondary mb-4 rounded-pill px-4 shadow-sm">
                     <i class="fa fa-arrow-left me-2"></i> Back to Rooms
                 </a>
-                
+
                 <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
                     <div class="card-header bg-primary text-white py-4 px-5">
                         <h2 class="mb-0 fw-bold"><i class="fa fa-file-contract me-3"></i>Room Application Form</h2>
                     </div>
                     <div class="card-body p-5">
-                        
+
                         <!-- Summary Section -->
                         <div class="bg-light p-4 rounded-4 mb-5 border">
                             <div class="row text-center">
@@ -124,33 +143,43 @@
                         <form id="applicationForm">
                             <div class="row g-4">
                                 <!-- Personal Section -->
-                                <div class="col-md-12 mb-2"><h5 class="fw-bold text-muted border-bottom pb-2">1. Personal Information</h5></div>
+                                <div class="col-md-12 mb-2">
+                                    <h5 class="fw-bold text-muted border-bottom pb-2">1. Personal Information</h5>
+                                </div>
                                 <div class="col-md-4">
                                     <label class="form-label fw-bold small">First Name</label>
-                                    <input type="text" id="appFirstName" class="form-control form-control-lg bg-light" required>
+                                    <input type="text" id="appFirstName" class="form-control form-control-lg bg-light"
+                                        required>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label fw-bold small">Last Name</label>
-                                    <input type="text" id="appLastName" class="form-control form-control-lg bg-light" required>
+                                    <input type="text" id="appLastName" class="form-control form-control-lg bg-light"
+                                        required>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label fw-bold small">Direct Contact</label>
-                                    <input type="tel" id="appPhone" class="form-control form-control-lg bg-light" required>
+                                    <input type="tel" id="appPhone" class="form-control form-control-lg bg-light"
+                                        required>
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label fw-bold small">Academic Course</label>
-                                    <input type="text" id="appCourse" class="form-control form-control-lg bg-light" placeholder="e.g. B.Tech Computer Science" required>
+                                    <input type="text" id="appCourse" class="form-control form-control-lg bg-light"
+                                        placeholder="e.g. B.Tech Computer Science" required>
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label fw-bold small">Guardian/Parent Name</label>
-                                    <input type="text" id="appGuardian" class="form-control form-control-lg bg-light" required>
+                                    <input type="text" id="appGuardian" class="form-control form-control-lg bg-light"
+                                        required>
                                 </div>
 
                                 <!-- Booking Section -->
-                                <div class="col-md-12 mt-5 mb-2"><h5 class="fw-bold text-muted border-bottom pb-2">2. Tenure & Calculations</h5></div>
+                                <div class="col-md-12 mt-5 mb-2">
+                                    <h5 class="fw-bold text-muted border-bottom pb-2">2. Tenure & Calculations</h5>
+                                </div>
                                 <div class="col-md-6">
                                     <label class="form-label fw-bold small">Duration of Stay</label>
-                                    <select id="appTerm" class="form-select form-select-lg bg-light" onchange="updateCalculations()" required>
+                                    <select id="appTerm" class="form-select form-select-lg bg-light"
+                                        onchange="updateCalculations()" required>
                                         <option value="1">1 Month</option>
                                         <option value="3">3 Months</option>
                                         <option value="6">6 Months</option>
@@ -158,10 +187,12 @@
                                     </select>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="p-3 border rounded-3 bg-light h-100 d-flex flex-column justify-content-center">
+                                    <div
+                                        class="p-3 border rounded-3 bg-light h-100 d-flex flex-column justify-content-center">
                                         <div class="d-flex justify-content-between">
                                             <span class="text-muted fw-bold small">Total Contract Value:</span>
-                                            <span class="fw-bold text-primary h5 mb-0">₹<span id="calcTotal">0</span></span>
+                                            <span class="fw-bold text-primary h5 mb-0">₹<span
+                                                    id="calcTotal">0</span></span>
                                         </div>
                                         <div class="d-flex justify-content-between mt-2">
                                             <span class="text-muted fw-bold small">Estimate End Date:</span>
@@ -171,7 +202,9 @@
                                 </div>
 
                                 <!-- Backup Section -->
-                                <div class="col-md-12 mt-5 mb-2"><h5 class="fw-bold text-muted border-bottom pb-2">3. Preference & Backups</h5></div>
+                                <div class="col-md-12 mt-5 mb-2">
+                                    <h5 class="fw-bold text-muted border-bottom pb-2">3. Preference & Backups</h5>
+                                </div>
                                 <div class="col-md-6">
                                     <label class="form-label fw-bold small">Waitlist / 2nd Choice Preference</label>
                                     <select id="appSecondChoice" class="form-select form-select-lg bg-light">
@@ -180,7 +213,9 @@
                                 </div>
 
                                 <!-- Documentation -->
-                                <div class="col-md-12 mt-5 mb-2"><h5 class="fw-bold text-muted border-bottom pb-2">4. Identity Documentation</h5></div>
+                                <div class="col-md-12 mt-5 mb-2">
+                                    <h5 class="fw-bold text-muted border-bottom pb-2">4. Identity Documentation</h5>
+                                </div>
                                 <div class="col-md-6">
                                     <label class="form-label fw-bold small">ID Proof (Aadhar/Passport)</label>
                                     <input type="file" id="appIdProof" class="form-control" required>
@@ -194,17 +229,20 @@
                                     <div class="form-check bg-light p-3 rounded-3">
                                         <input class="form-check-input ms-0" type="checkbox" id="termCheck" required>
                                         <label class="form-check-label ms-2 text-muted small" for="termCheck">
-                                            I confirm that the details provided are correct and I adhere to the hostel policies. 
+                                            I confirm that the details provided are correct and I adhere to the hostel
+                                            policies.
                                             I understand that room availability is subject to change upon admin review.
                                         </label>
                                     </div>
                                 </div>
 
                                 <div class="col-md-12 text-end mt-5">
-                                    <button type="submit" id="submitBtn" class="btn btn-primary btn-lg px-5 py-3 rounded-pill fw-bold shadow">
+                                    <button type="submit" id="submitBtn"
+                                        class="btn btn-primary btn-lg px-5 py-3 rounded-pill fw-bold shadow">
                                         <i class="fa fa-paper-plane me-2"></i> Submit Application
                                     </button>
-                                    <button type="button" id="changePrefBtn" class="btn btn-warning btn-lg px-5 py-3 rounded-pill fw-bold shadow d-none">
+                                    <button type="button" id="changePrefBtn"
+                                        class="btn btn-warning btn-lg px-5 py-3 rounded-pill fw-bold shadow d-none">
                                         <i class="fa fa-history me-2"></i> Replace Existing Request
                                     </button>
                                 </div>
@@ -221,7 +259,7 @@
         const welcomeUserEl = document.getElementById("welcomeUser");
 
         // Initialization
-        window.onload = async function() {
+        window.onload = async function () {
             await initData();
             if (welcomeUserEl) welcomeUserEl.textContent = "Hi, " + currentUserId;
 
@@ -314,9 +352,29 @@
             btn.disabled = true;
 
             try {
+                // --- FIX: Guard against missing API_URL ---
+                if (typeof API_URL === 'undefined' || !API_URL) {
+                    throw new Error("API_URL is not defined. Please check constants.js is loaded correctly.");
+                }
+
+                // --- FIX: Guard against missing roomObj ---
+                if (!roomObj) {
+                    throw new Error("Room data not loaded. Please go back and select a room again.");
+                }
+
                 const idFile = document.getElementById("appIdProof").files[0];
                 const photoFile = document.getElementById("appPhoto").files[0];
-                const [idD, photoD] = await Promise.all([fileToBase64(idFile), fileToBase64(photoFile)]);
+
+                // --- FIX: Await file reads with proper error handling ---
+                let idD = null, photoD = null;
+                try {
+                    [idD, photoD] = await Promise.all([
+                        fileToBase64(idFile),
+                        fileToBase64(photoFile)
+                    ]);
+                } catch (fileErr) {
+                    throw new Error("Failed to read uploaded files: " + fileErr.message);
+                }
 
                 const payload = {
                     student: currentUserId,
@@ -325,8 +383,8 @@
                     phone: document.getElementById("appPhone").value,
                     guardian: document.getElementById("appGuardian").value,
                     roomId: roomIdParam,
-                    roomNumber: roomObj ? roomObj.number : "",
-                    roomType: roomObj ? roomObj.type : "",
+                    roomNumber: roomObj.number,
+                    roomType: roomObj.type,
                     termMonths: parseInt(document.getElementById("appTerm").value),
                     monthlyRent: parseFloat(totalParam),
                     totalAmount: parseInt(document.getElementById("appTerm").value) * parseFloat(totalParam),
@@ -339,15 +397,41 @@
                     forceWaitlist
                 };
 
-                const url = isUpdate ? `${API_URL}/data/applications/${existingCollisionAppId}` : `${API_URL}/data/applications`;
-                const response = await fetch(url, {
-                    method: isUpdate ? 'PUT' : 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    credentials: 'include',
-                    body: JSON.stringify(payload)
-                });
+                const url = isUpdate
+                    ? `${API_URL}/data/applications/${existingCollisionAppId}`
+                    : `${API_URL}/data/applications`;
 
-                const result = await response.json();
+                // --- FIX: Add timeout to prevent indefinite buffering ---
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 30000); // 30s timeout
+
+                let response;
+                try {
+                    response = await fetch(url, {
+                        method: isUpdate ? 'PUT' : 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        credentials: 'include',
+                        body: JSON.stringify(payload),
+                        signal: controller.signal
+                    });
+                } catch (fetchErr) {
+                    if (fetchErr.name === 'AbortError') {
+                        throw new Error("Request timed out. Please check your connection and try again.");
+                    }
+                    throw new Error("Could not reach the server: " + fetchErr.message);
+                } finally {
+                    clearTimeout(timeoutId);
+                }
+
+                // --- FIX: Handle non-JSON responses gracefully ---
+                let result;
+                const contentType = response.headers.get("content-type") || "";
+                if (contentType.includes("application/json")) {
+                    result = await response.json();
+                } else {
+                    const text = await response.text();
+                    throw new Error("Unexpected server response: " + text.substring(0, 200));
+                }
 
                 if (response.status === 409) {
                     existingCollisionAppId = result.existingAppId;
@@ -372,11 +456,16 @@
                     Swal.fire({ icon: 'success', title: 'Success!', text: 'Your application has been received.' })
                         .then(() => window.location.href = 'student_application_status.html');
                 } else {
-                    throw new Error(result.message || "Submission failed");
+                    throw new Error(result.message || "Submission failed. Please try again.");
                 }
+
             } catch (err) {
-                console.error(err);
-                Swal.fire('Error', 'Communication failure: ' + err.message, 'error');
+                console.error("Application submission error:", err);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Submission Failed',
+                    text: err.message || "An unexpected error occurred. Please try again."
+                });
                 btn.innerHTML = originalHTML;
                 btn.disabled = false;
             }
@@ -392,4 +481,5 @@
     <script src="../js/bootstrap.bundle.js"></script>
     <script src="../js/student_notifications.js"></script>
 </body>
+
 </html>
