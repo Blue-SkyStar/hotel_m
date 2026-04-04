@@ -8,6 +8,7 @@
         let roomIdParam = null;
         let totalParam = 0;
         let facilitiesParam = "";
+        let existingCollisionAppId = null;
 
         function updateCalculations() {
             const term = parseInt(document.getElementById("appTerm").value) || 1;
@@ -20,7 +21,8 @@
             end.setMonth(end.getMonth() + term);
             document.getElementById("calcEndDate").textContent = end.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
         }
-AuthService.init('student');</script>
+        AuthService.init('student');
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Room Application</title>
@@ -213,8 +215,6 @@ AuthService.init('student');</script>
 
     <script>
         let currentUserId = localStorage.getItem("loggedUser") || "Student";
-        let roomIdParam, totalParam, facilitiesParam, roomObj;
-        let existingCollisionAppId = null;
 
         window.onload = async function(){
             await initData();
