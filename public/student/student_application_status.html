@@ -1,7 +1,7 @@
-/* RESTORING FILE FROM KNOWN STABLE STATE */
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Authentication -->
     <script src="../js/auth_service.js"></script>
     <script>AuthService.init('student');</script>
     <meta charset="UTF-8">
@@ -112,29 +112,37 @@
 
         async function loadApplications() {
             try {
-                console.log("Fetching applications for:", currentUserId);
+                console.log("Fetching applications for user:", currentUserId);
                 const res = await fetch(`${API_URL}/data/applications`, { credentials: 'include' });
-                const allApps = await res.json();
+                
+                if (!res.ok) {
+                    if (res.status === 401) throw new Error('Session expired. Please login again.');
+                    throw new Error('Server returned an error: ' + res.status);
+                }
 
+                const allApps = await res.json();
                 if (!Array.isArray(allApps)) {
                     throw new Error('Please login again to view your applications.');
                 }
 
                 // Filter by current student
                 applications = allApps.filter(app => app.student === currentUserId);
-                console.log("Loaded applications:", applications.length);
+                console.log("Filtered applications:", applications.length);
 
                 renderApplications();
             } catch (e) {
                 console.error("Load Error:", e);
-                document.getElementById('applicationsContainer').innerHTML = `
-                    <div class="alert alert-danger border-0 rounded-4 text-center p-5 shadow-lg" style="background: rgba(220, 53, 69, 0.1);">
-                        <i class="fas fa-exclamation-triangle fa-3x mb-3 text-danger"></i>
-                        <h4 class="fw-bold">Unable to Load Applications</h4>
-                        <p class="text-secondary mb-4">${e.message}</p>
-                        <a href="../login.html" class="btn btn-danger rounded-pill px-5">Go to Login</a>
-                    </div>
-                `;
+                const container = document.getElementById('applicationsContainer');
+                if (container) {
+                    container.innerHTML = `
+                        <div class="alert alert-danger border-0 rounded-4 text-center p-5 shadow-lg" style="background: rgba(220, 53, 69, 0.1);">
+                            <i class="fas fa-exclamation-triangle fa-3x mb-3 text-danger"></i>
+                            <h4 class="fw-bold">Unable to Load Applications</h4>
+                            <p class="text-secondary mb-4">${e.message}</p>
+                            <a href="../login.html" class="btn btn-danger rounded-pill px-5">Go to Login</a>
+                        </div>
+                    `;
+                }
             }
         }
 
@@ -167,20 +175,20 @@
                                 <small class="text-secondary"><i class="far fa-calendar-alt me-2"></i> ${app.date}</small>
                             </div>
                             
-                            <h4 class="fw-bold mb-3">${app.roomType} Room</h4>
+                            <h4 class="fw-bold mb-3">${app.roomType || "Room"} Application</h4>
                             
                             <div class="d-flex flex-column gap-2 mb-4">
                                 <div class="d-flex align-items-center gap-2 text-secondary">
                                     <i class="fas fa-door-closed w-25px"></i>
-                                    <span>Room #${app.roomNumber}</span>
+                                    <span>Room #${app.roomNumber || "N/A"}</span>
                                 </div>
                                 <div class="d-flex align-items-center gap-2 text-secondary">
                                     <i class="fas fa-hourglass-half w-25px"></i>
-                                    <span>${app.termMonths} Months Stay</span>
+                                    <span>${app.termMonths || 0} Months Stay</span>
                                 </div>
                                 <div class="d-flex align-items-center gap-2 text-secondary">
                                     <i class="fas fa-rupee-sign w-25px"></i>
-                                    <span>Monthly: ₹${app.monthlyRent.toLocaleString()}</span>
+                                    <span>Monthly: ₹${(app.monthlyRent || 0).toLocaleString()}</span>
                                 </div>
                             </div>
 
@@ -188,7 +196,7 @@
 
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="text-secondary small">Total Due</div>
-                                <div class="h4 mb-0 fw-bold text-white">₹${app.totalAmount.toLocaleString()}</div>
+                                <div class="h4 mb-0 fw-bold text-white">₹${(app.totalAmount || 0).toLocaleString()}</div>
                             </div>
                         </div>
                     </div>
@@ -203,6 +211,7 @@
                 case 'rejected': return '#ff4b5c';
                 case 'waitlisted': return '#ffca2c';
                 case 'paid': return '#0dcaf0';
+                case 'allocated': return '#20c997';
                 default: return '#6c757d';
             }
         }

@@ -117,6 +117,7 @@ app.get('/api/auth/verify', (req, res) => {
 // ─── DATA API ─────────────────────────────────────────────────────────────────
 app.get('/api/data/:key', verifyToken, async (req, res) => {
     const { key } = req.params;
+    if (!pool) return res.status(500).json({ success: false, message: 'Database not connected' });
     try {
         const { rows } = await pool.query(`SELECT * FROM ${key}`);
         const parsed = rows.map(r => {
@@ -126,7 +127,10 @@ app.get('/api/data/:key', verifyToken, async (req, res) => {
             return r;
         });
         res.json(parsed);
-    } catch (e) { res.status(500).json([]); }
+    } catch (e) { 
+        console.error(`Error fetching ${key}:`, e.message);
+        res.status(500).json([]); 
+    }
 });
 
 app.post('/api/data/:key', verifyToken, async (req, res) => {
