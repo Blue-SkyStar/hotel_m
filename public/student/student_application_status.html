@@ -1,506 +1,140 @@
-﻿<!DOCTYPE html>
+/* RESTORING FILE FROM KNOWN STABLE STATE */
+<!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <!-- Authentication -->
     <script src="../js/auth_service.js"></script>
     <script>AuthService.init('student');</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Applications</title>
-    <link rel="icon" href="../img/logo/logo.png">
-    <link rel="stylesheet" href="../css/bootstrap.css">
-    <link rel="stylesheet" href="../css/index.css">
-    <link rel="stylesheet" href="../css/animate.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script src="../js/sweetalert.js"></script>
-    <script src="../js/storage.js"></script>
+    <!-- Bootstrap 5 CSS -->
+    <link href="../css/bootstrap.css" rel="stylesheet">
+    <link href="../css/index.css" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        .status-badge {
-            font-size: 0.9rem;
-            padding: 8px 16px;
+        .application-card {
+            border: none;
             border-radius: 20px;
-            font-weight: 600;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-
-        .status-pending {
-            background-color: #fff3cd;
-            color: #856404;
+        .application-card:hover {
+            transform: translateY(-8px);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
         }
-
-        .status-approved {
-            background-color: #d4edda;
-            color: #155724;
-        }
-
-        .status-allocated {
-            background-color: #cce5ff;
-            color: #004085;
-        }
-
-        .status-rejected {
-            background-color: #f8d7da;
-            color: #721c24;
-        }
-
-        .timeline {
-            position: relative;
-            padding-left: 30px;
-            list-style: none;
-        }
-
-        .timeline::before {
-            content: '';
-            position: absolute;
-            left: 5px;
-            top: 0;
-            bottom: 0;
-            width: 2px;
-            background: #e9ecef;
-        }
-
-        .timeline-item {
-            position: relative;
-            margin-bottom: 20px;
-        }
-
-        .timeline-item::before {
-            content: '';
-            position: absolute;
-            left: -33px;
-            top: 5px;
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            background: #0d6efd;
-            border: 3px solid #fff;
-            box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.2);
-        }
-
-        .timeline-item.completed::before {
-            background: #198754;
-            box-shadow: 0 0 0 2px rgba(25, 135, 84, 0.2);
-        }
-
-        .timeline-item.active::before {
-            background: #ffc107;
-            box-shadow: 0 0 0 2px rgba(255, 193, 7, 0.2);
-        }
-
-        /* Horizontal step progress timeline */
-        .step-timeline {
-            display: flex;
-            align-items: flex-start;
-            position: relative;
-            margin: 12px 0 4px;
-        }
-
-        .step-timeline::before {
-            content: '';
-            position: absolute;
-            top: 18px;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: #e9ecef;
-            z-index: 0;
-        }
-
-        .step-item {
-            flex: 1;
-            text-align: center;
-            position: relative;
-            z-index: 1;
-        }
-
-        .step-icon {
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            background: #e9ecef;
-            color: #adb5bd;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 6px;
-            font-size: 1rem;
-            border: 3px solid #fff;
-            box-shadow: 0 0 0 2px #e9ecef;
-            transition: all 0.3s;
-        }
-
-        .step-item.done .step-icon {
-            background: #198754;
-            color: #fff;
-            box-shadow: 0 0 0 2px rgba(25, 135, 84, 0.25);
-        }
-
-        .step-item.active .step-icon {
-            background: #0d6efd;
-            color: #fff;
-            box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.25);
-        }
-
-        .step-item.rejected .step-icon {
-            background: #dc3545;
-            color: #fff;
-            box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.25);
-        }
-
-        .step-label {
-            font-size: 0.72rem;
-            font-weight: 600;
-            color: #adb5bd;
+        .status-badge {
+            font-weight: 700;
+            padding: 8px 16px;
+            border-radius: 50px;
             text-transform: uppercase;
-            letter-spacing: 0.03em;
-        }
-
-        .step-item.done .step-label,
-        .step-item.active .step-label {
-            color: #495057;
-        }
-
-        .step-item.rejected .step-label {
-            color: #dc3545;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
         }
     </style>
-    <script src="../js/theme_service.js"></script>
 </head>
+<body class="bg-dark text-white">
+    <div id="sidebar-placeholder"></div>
 
-<body class="bg-light">
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-md navbar-dark bg-dark shadow-lg fixed-top">
+    <div class="main-content p-4">
         <div class="container-fluid">
-            <img src="../img/logo/logo.png" class="rounded-circle" width="45">
-            <a class="navbar-brand mx-3 fw-bold">Student Portal</a>
-            <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#menu"><span
-                    class="navbar-toggler-icon"></span></button>
-            <div class="collapse navbar-collapse" id="menu">
-                <ul class="navbar-nav ms-auto align-items-center">
-                    
-                    <li class="nav-item me-2">
-                        <button class="btn btn-outline-light border-0 rounded-circle p-2" onclick="ThemeService.toggle()" title="Toggle Dark Mode">
-                            <i class="fa fa-moon fs-5"></i>
-                        </button>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="profileDropdown"
-                            role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fa fa-user-circle fs-4 me-2 text-white-50"></i>
-                            <span id="welcomeUser" class="text-white">Student</span>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2 animate__animated animate__fadeIn"
-                            aria-labelledby="profileDropdown" style="border-radius: 12px;">
-                            <li><a class="dropdown-item py-2" href="student_profile.html"><i
-                                        class="fa fa-user me-2 text-primary"></i> My Profile</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item py-2 text-danger" href="#" onclick="logout()"><i
-                                        class="fa fa-sign-out-alt me-2"></i> Logout</a></li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
-    <div class="container-fluid" style="margin-top:80px">
-        <div class="row">
-            <!-- Sidebar -->
-            <div class="col-md-2 bg-dark text-white p-3" style="min-height:100vh">
-                <h5 class="text-center mt-2 mb-3">MENU</h5>
-                <hr>
-                <ul class="nav flex-column">
-                    <li class="nav-item mb-3"><a href="student_dashboard.html" class="nav-link text-white"><i
-                                class="fa fa-home me-2"></i> Dashboard</a></li>
-                    <li class="nav-item mb-3"><a href="student_profile.html" class="nav-link text-white"><i
-                                class="fa fa-user me-2"></i> Profile</a></li>
-                    <li class="nav-item mb-3"><a href="student_room.html" class="nav-link text-white"><i
-                                class="fa fa-bed me-2"></i> My Room</a></li>
-                    <li class="nav-item mb-3"><a href="student_room_details.html" class="nav-link text-white"><i
-                                class="fa fa-building me-2"></i> Room Details</a></li>
-                    <li class="nav-item mb-3"><a href="student_application_status.html"
-                            class="nav-link text-white active"
-                            style="background:rgba(255,255,255,0.1); border-radius:8px;"><i
-                                class="fa fa-file-signature me-2"></i> My Applications</a></li>
-                    <li class="nav-item mb-3"><a href="student_payments.html" class="nav-link text-white"><i
-                                class="fa fa-credit-card me-2"></i> Fees / Payments</a></li>
-                    <li class="nav-item mb-3"><a href="student_complaints.html" class="nav-link text-white"><i
-                                class="fa fa-exclamation-circle me-2"></i> Complaints</a></li>
-                    <li class="nav-item mb-3"><a href="student_notices.html" class="nav-link text-white"><i
-                                class="fa fa-bullhorn me-2"></i> Notices</a></li>
-                </ul>
-            </div>
-
-            <!-- Main Content -->
-            <div class="col-md-10 p-4">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h2 class="m-0"><i class="fa fa-file-signature me-2 text-primary"></i>My Applications</h2>
-                    <div>
-                        <button class="btn btn-outline-secondary rounded-pill me-2" onclick="loadApplications(true)">
-                            <i class="fa fa-sync-alt me-1"></i> Refresh
-                        </button>
-                        <a href="student_room_details.html" class="btn btn-primary rounded-pill fw-bold">
-                            <i class="fa fa-plus me-1"></i> New Application
-                        </a>
+            <!-- Header section -->
+            <div class="d-flex justify-content-between align-items-center mb-5">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="bg-primary bg-opacity-25 p-3 rounded-4">
+                        <i class="fas fa-file-signature text-primary fa-2x"></i>
                     </div>
+                    <h1 class="h2 mb-0 fw-bold">My Applications</h1>
                 </div>
-
-                <div id="applicationsContainer">
-                    <div class="text-center p-5 text-muted">
-                        <div class="spinner-border text-primary" role="status">
-                            <span class="visually-hidden">Loading...</span>
-                        </div>
-                        <p class="mt-3">Loading your applications...</p>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-    <!-- Payment Modal -->
-    <div class="modal fade" id="paymentModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content" style="border-radius:20px;overflow:hidden;">
-
-                <!-- Header -->
-                <div class="modal-header border-0 text-white"
-                    style="background:linear-gradient(135deg,#1a6b3c,#198754);">
-                    <div>
-                        <h5 class="modal-title fw-bold mb-0"><i class="fa fa-lock me-2"></i>Secure Payment Gateway</h5>
-                        <small style="opacity:0.8;">â‚¹1,000 Down Payment Â· SSL Encrypted</small>
-                    </div>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-
-                <div class="modal-body p-0">
-                    <div class="row g-0">
-
-                        <!-- Left: Amount Summary -->
-                        <div class="col-md-4 p-4" style="background:#f8fdf9;border-right:1px solid #e9ecef;">
-                            <p class="text-muted small fw-bold text-uppercase mb-3">Order Summary</p>
-                            <div class="mb-3">
-                                <p class="mb-1 text-muted small">Room Down Payment</p>
-                                <h3 class="fw-bold text-success mb-0">â‚¹1,000</h3>
-                            </div>
-                            <hr>
-                            <div class="d-flex justify-content-between mb-1">
-                                <span class="text-muted small">Subtotal</span>
-                                <span class="small fw-bold">â‚¹1,000</span>
-                            </div>
-                            <div class="d-flex justify-content-between mb-1">
-                                <span class="text-muted small">Processing Fee</span>
-                                <span class="small text-success fw-bold">FREE</span>
-                            </div>
-                            <hr>
-                            <div class="d-flex justify-content-between">
-                                <span class="fw-bold">Total</span>
-                                <span class="fw-bold text-success">â‚¹1,000</span>
-                            </div>
-                            <div class="mt-4 p-2 rounded-3" style="background:#eafbf0;border:1px solid #b2dfcc;">
-                                <p class="mb-0 small text-success"><i class="fa fa-shield-halved me-1"></i>Your payment
-                                    is 100% secure & encrypted.</p>
-                            </div>
-                        </div>
-
-                        <!-- Right: Payment Methods -->
-                        <div class="col-md-8 p-4">
-                            <p class="text-muted small fw-bold text-uppercase mb-3">Choose Payment Method</p>
-
-                            <!-- Method Tabs -->
-                            <div class="d-flex gap-2 flex-wrap mb-4" id="payMethodBtns">
-                                <button class="pay-method-btn active" onclick="selectMethod('upi',this)"
-                                    style="border:2px solid #0d6efd;background:#e8f0fe;color:#0d6efd;border-radius:12px;padding:8px 14px;font-size:0.85rem;font-weight:600;cursor:pointer;transition:all 0.2s;">
-                                    <i class="fa fa-mobile-screen me-1"></i>UPI / GPay
-                                </button>
-                                <button class="pay-method-btn" onclick="selectMethod('razorpay',this)"
-                                    style="border:2px solid #dee2e6;background:#fff;color:#555;border-radius:12px;padding:8px 14px;font-size:0.85rem;font-weight:600;cursor:pointer;transition:all 0.2s;">
-                                    <i class="fa fa-bolt me-1"></i>Razorpay
-                                </button>
-                                <button class="pay-method-btn" onclick="selectMethod('card',this)"
-                                    style="border:2px solid #dee2e6;background:#fff;color:#555;border-radius:12px;padding:8px 14px;font-size:0.85rem;font-weight:600;cursor:pointer;transition:all 0.2s;">
-                                    <i class="fa fa-credit-card me-1"></i>Card
-                                </button>
-                                <button class="pay-method-btn" onclick="selectMethod('netbanking',this)"
-                                    style="border:2px solid #dee2e6;background:#fff;color:#555;border-radius:12px;padding:8px 14px;font-size:0.85rem;font-weight:600;cursor:pointer;transition:all 0.2s;">
-                                    <i class="fa fa-building-columns me-1"></i>Net Banking
-                                </button>
-                            </div>
-
-                            <!-- UPI Panel -->
-                            <div id="panel_upi">
-                                <p class="text-muted small mb-3">Pay using any UPI app</p>
-                                <div class="d-flex gap-3 mb-4 flex-wrap">
-                                    <div class="upi-app-card" onclick="selectUpiApp('gpay',this)"
-                                        style="border:2px solid #0d6efd;background:#e8f0fe;border-radius:12px;padding:12px 18px;text-align:center;cursor:pointer;min-width:80px;transition:all 0.2s;">
-                                        <div style="font-size:1.6rem;">ðŸ…¶</div>
-                                        <small class="fw-bold" style="color:#0d6efd;">GPay</small>
-                                    </div>
-                                    <div class="upi-app-card" onclick="selectUpiApp('phonepe',this)"
-                                        style="border:2px solid #dee2e6;background:#fff;border-radius:12px;padding:12px 18px;text-align:center;cursor:pointer;min-width:80px;transition:all 0.2s;">
-                                        <div style="font-size:1.6rem;">ðŸ“±</div>
-                                        <small class="fw-bold" style="color:#5f259f;">PhonePe</small>
-                                    </div>
-                                    <div class="upi-app-card" onclick="selectUpiApp('paytm',this)"
-                                        style="border:2px solid #dee2e6;background:#fff;border-radius:12px;padding:12px 18px;text-align:center;cursor:pointer;min-width:80px;transition:all 0.2s;">
-                                        <div style="font-size:1.6rem;">ðŸ’™</div>
-                                        <small class="fw-bold" style="color:#00baf2;">Paytm</small>
-                                    </div>
-                                    <div class="upi-app-card" onclick="selectUpiApp('other',this)"
-                                        style="border:2px solid #dee2e6;background:#fff;border-radius:12px;padding:12px 18px;text-align:center;cursor:pointer;min-width:80px;transition:all 0.2s;">
-                                        <div style="font-size:1.6rem;">ðŸ”—</div>
-                                        <small class="fw-bold" style="color:#555;">Other</small>
-                                    </div>
-                                </div>
-                                <input type="text" id="upiId" class="form-control rounded-3 mb-1"
-                                    placeholder="Enter UPI ID (e.g. name@gpay)" style="font-size:0.9rem;">
-                                <small class="text-muted">We'll send a payment request to your UPI app</small>
-                            </div>
-
-                            <!-- Razorpay Panel -->
-                            <div id="panel_razorpay" style="display:none;">
-                                <p class="text-muted small mb-3">Fast & secure checkout via Razorpay</p>
-                                <div class="p-3 rounded-3 mb-3" style="background:#fff8f5;border:1px solid #ffe0d6;">
-                                    <div class="d-flex align-items-center gap-3">
-                                        <span style="font-size:2rem;">âš¡</span>
-                                        <div>
-                                            <p class="fw-bold mb-0" style="color:#2d6a4f;">Razorpay Checkout</p>
-                                            <small class="text-muted">You'll be redirected to Razorpay's secure page to
-                                                complete payment. Supports UPI, Cards, Wallets.</small>
-                                        </div>
-                                    </div>
-                                </div>
-                                <input type="email" id="rzpEmail" class="form-control rounded-3 mb-2"
-                                    placeholder="Email for receipt" style="font-size:0.9rem;">
-                                <input type="text" id="rzpPhone" class="form-control rounded-3"
-                                    placeholder="Mobile number" style="font-size:0.9rem;">
-                            </div>
-
-                            <!-- Card Panel -->
-                            <div id="panel_card" style="display:none;">
-                                <p class="text-muted small mb-2">Visa, Mastercard, Rupay accepted</p>
-                                <div class="d-flex gap-2 mb-3">
-                                    <span class="badge"
-                                        style="background:#1a1f71;color:#fff;font-size:0.75rem;padding:6px 10px;border-radius:8px;">VISA</span>
-                                    <span class="badge"
-                                        style="background:#eb001b;color:#fff;font-size:0.75rem;padding:6px 10px;border-radius:8px;">Mastercard</span>
-                                    <span class="badge"
-                                        style="background:#00897b;color:#fff;font-size:0.75rem;padding:6px 10px;border-radius:8px;">RuPay</span>
-                                    <span class="badge"
-                                        style="background:#003087;color:#fff;font-size:0.75rem;padding:6px 10px;border-radius:8px;">AmEx</span>
-                                </div>
-                                <div class="mb-2">
-                                    <input type="text" id="cardNumber" class="form-control rounded-3"
-                                        placeholder="Card Number (1234 5678 9012 3456)" maxlength="19"
-                                        style="font-size:0.9rem;letter-spacing:1px;" oninput="formatCard(this)">
-                                </div>
-                                <input type="text" id="cardName" class="form-control rounded-3 mb-2"
-                                    placeholder="Name on Card" style="font-size:0.9rem;">
-                                <div class="row g-2">
-                                    <div class="col-6"><input type="text" id="cardExpiry" class="form-control rounded-3"
-                                            placeholder="MM / YY" maxlength="7" style="font-size:0.9rem;"
-                                            oninput="formatExpiry(this)"></div>
-                                    <div class="col-6"><input type="text" id="cardCVV" class="form-control rounded-3"
-                                            placeholder="CVV" maxlength="3" style="font-size:0.9rem;" type="password">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Net Banking Panel -->
-                            <div id="panel_netbanking" style="display:none;">
-                                <p class="text-muted small mb-3">Select your bank</p>
-                                <div class="row g-2 mb-3" id="bankGrid">
-                                    <div class="col-4">
-                                        <div class="bank-tile" onclick="selectBank(this,'SBI')"
-                                            style="border:2px solid #dee2e6;border-radius:10px;padding:10px;text-align:center;cursor:pointer;background:#fff;transition:all 0.2s;">
-                                            <div style="font-size:1.3rem;">ðŸ›ï¸</div><small class="fw-bold">SBI</small>
-                                        </div>
-                                    </div>
-                                    <div class="col-4">
-                                        <div class="bank-tile" onclick="selectBank(this,'HDFC')"
-                                            style="border:2px solid #dee2e6;border-radius:10px;padding:10px;text-align:center;cursor:pointer;background:#fff;transition:all 0.2s;">
-                                            <div style="font-size:1.3rem;">ðŸ¦</div><small class="fw-bold">HDFC</small>
-                                        </div>
-                                    </div>
-                                    <div class="col-4">
-                                        <div class="bank-tile" onclick="selectBank(this,'ICICI')"
-                                            style="border:2px solid #dee2e6;border-radius:10px;padding:10px;text-align:center;cursor:pointer;background:#fff;transition:all 0.2s;">
-                                            <div style="font-size:1.3rem;">ðŸ§</div><small class="fw-bold">ICICI</small>
-                                        </div>
-                                    </div>
-                                    <div class="col-4">
-                                        <div class="bank-tile" onclick="selectBank(this,'Axis')"
-                                            style="border:2px solid #dee2e6;border-radius:10px;padding:10px;text-align:center;cursor:pointer;background:#fff;transition:all 0.2s;">
-                                            <div style="font-size:1.3rem;">ðŸ’³</div><small class="fw-bold">Axis</small>
-                                        </div>
-                                    </div>
-                                    <div class="col-4">
-                                        <div class="bank-tile" onclick="selectBank(this,'Kotak')"
-                                            style="border:2px solid #dee2e6;border-radius:10px;padding:10px;text-align:center;cursor:pointer;background:#fff;transition:all 0.2s;">
-                                            <div style="font-size:1.3rem;">ðŸ”‘</div><small class="fw-bold">Kotak</small>
-                                        </div>
-                                    </div>
-                                    <div class="col-4">
-                                        <div class="bank-tile" onclick="selectBank(this,'PNB')"
-                                            style="border:2px solid #dee2e6;border-radius:10px;padding:10px;text-align:center;cursor:pointer;background:#fff;transition:all 0.2s;">
-                                            <div style="font-size:1.3rem;">ðŸ¢</div><small class="fw-bold">PNB</small>
-                                        </div>
-                                    </div>
-                                </div>
-                                <select class="form-select rounded-3" id="bankSelect" style="font-size:0.9rem;">
-                                    <option value="">-- or select other bank --</option>
-                                    <option>Bank of Baroda</option>
-                                    <option>Canara Bank</option>
-                                    <option>Union Bank</option>
-                                    <option>Yes Bank</option>
-                                    <option>Federal Bank</option>
-                                </select>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Footer -->
-                <div class="modal-footer border-0 px-4 pb-4 pt-2">
-                    <input type="hidden" id="payAppId">
-                    <input type="hidden" id="selectedMethod" value="UPI">
-                    <button type="button" class="btn btn-outline-secondary rounded-pill px-4"
-                        data-bs-dismiss="modal">Cancel</button>
-                    <button id="checkoutBtn" class="btn btn-success btn-lg rounded-pill px-5 fw-bold shadow-sm"
-                        onclick="processPayment()">
-                        <i class="fa fa-lock me-2"></i>Pay â‚¹1,000 Securely
+                <div class="d-flex gap-3">
+                    <button id="refreshBtn" class="btn btn-outline-light rounded-pill px-4">
+                        <i class="fas fa-sync-alt me-2"></i> Refresh
                     </button>
+                    <a href="student_room_details.html" class="btn btn-primary rounded-pill px-4 shadow">
+                        <i class="fas fa-plus me-2"></i> New Application
+                    </a>
                 </div>
+            </div>
 
+            <!-- Content Area -->
+            <div id="applicationsContainer">
+                <div class="text-center py-5">
+                    <div class="spinner-border text-primary shadow" role="status" style="width: 3rem; height: 3rem;"></div>
+                    <p class="mt-3 text-secondary">Loading your applications...</p>
+                </div>
             </div>
         </div>
     </div>
 
+    <!-- Scripts -->
+    <script src="../js/constants.js"></script>
+    <script src="../js/storage.js"></script>
     <script>
         let currentUserId = localStorage.getItem("loggedUser") || "Student";
         let applications = [];
 
-        window.onload = async function () {
+        window.onload = async function() {
+            // Wait for sidebar
+            await fetch("student_sidebar.html").then(res => res.text()).then(html => {
+                document.getElementById("sidebar-placeholder").innerHTML = html;
+                const scripts = document.getElementById("sidebar-placeholder").getElementsByTagName('script');
+                for (let script of scripts) { eval(script.innerText); }
+            });
+
             await initData();
-            document.getElementById("welcomeUser").textContent = "Hi, " + currentUserId;
             await loadApplications();
+
+            document.getElementById("refreshBtn").addEventListener("click", () => {
+                const container = document.getElementById("applicationsContainer");
+                container.innerHTML = `
+                    <div class="text-center py-5">
+                        <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;"></div>
+                        <p class="mt-3 text-secondary">Refreshing data...</p>
+                    </div>
+                `;
+                loadApplications();
+            });
+        };
+
+        async function initData() {
+            try {
+                const data = await fetchWithCache();
+                if (data) {
+                    window.rooms = data.rooms;
+                    window.students = data.students;
+                }
+            } catch (e) { console.error("Init Data Failed", e); }
         }
 
         async function loadApplications() {
             try {
+                console.log("Fetching applications for:", currentUserId);
                 const res = await fetch(`${API_URL}/data/applications`, { credentials: 'include' });
                 const allApps = await res.json();
 
+                if (!Array.isArray(allApps)) {
+                    throw new Error('Please login again to view your applications.');
+                }
+
                 // Filter by current student
                 applications = allApps.filter(app => app.student === currentUserId);
+                console.log("Loaded applications:", applications.length);
 
                 renderApplications();
             } catch (e) {
-                console.error(e);
-                document.getElementById('applicationsContainer').innerHTML = `<div class="alert alert-danger">Failed to load applications. Make sure server is running.</div>`;
+                console.error("Load Error:", e);
+                document.getElementById('applicationsContainer').innerHTML = `
+                    <div class="alert alert-danger border-0 rounded-4 text-center p-5 shadow-lg" style="background: rgba(220, 53, 69, 0.1);">
+                        <i class="fas fa-exclamation-triangle fa-3x mb-3 text-danger"></i>
+                        <h4 class="fw-bold">Unable to Load Applications</h4>
+                        <p class="text-secondary mb-4">${e.message}</p>
+                        <a href="../login.html" class="btn btn-danger rounded-pill px-5">Go to Login</a>
+                    </div>
+                `;
             }
         }
 
@@ -509,374 +143,71 @@
 
             if (applications.length === 0) {
                 container.innerHTML = `
-                    <div class="card shadow-sm border-0" style="border-radius: 16px;">
-                        <div class="card-body text-center p-5">
-                            <i class="fa fa-folder-open text-muted mb-3" style="font-size: 3rem;"></i>
-                            <h4 class="text-muted fw-bold">No Applications Yet</h4>
-                            <p class="text-muted">You haven't submitted any room applications. Go to Room Details to apply for a room.</p>
-                            <a href="student_room_details.html" class="btn btn-outline-primary mt-2 rounded-pill px-4">Browse Rooms</a>
-                        </div>
-                    </div>`;
+                    <div class="text-center py-5 text-secondary">
+                        <i class="fas fa-folder-open fa-4x mb-4 opacity-25"></i>
+                        <h3 class="fw-light">No applications found.</h3>
+                        <p>Would you like to <a href="student_room_details.html" class="text-primary text-decoration-none fw-bold">apply for a room</a>?</p>
+                    </div>
+                `;
                 return;
             }
 
-            let html = '';
-            // Sort by date/id descending (newest first)
-            applications.sort((a, b) => b.id - a.id).forEach(app => {
-                let badgeClass = 'status-pending';
-                if (app.status === 'Approved - Awaiting Payment') badgeClass = 'status-approved';
-                if (app.status === 'Allocated') badgeClass = 'status-allocated';
-                if (app.status === 'Rejected') badgeClass = 'status-rejected';
+            container.innerHTML = `<div class="row g-4" id="appsRow"></div>`;
+            const row = document.getElementById("appsRow");
 
-                
-                // Build progress timeline
-                const isRejected = app.status === 'Rejected';
-                const steps = [
-                    { label: 'Submitted', icon: 'fa-paper-plane', done: true },
-                    { label: isRejected ? 'Rejected' : 'Under Review', icon: isRejected ? 'fa-times' : 'fa-search', done: app.status !== 'Pending Review', active: app.status === 'Pending Review' },
-                    { label: 'Payment', icon: 'fa-credit-card', done: app.status === 'Allocated', active: app.status === 'Approved - Awaiting Payment', disabled: isRejected },
-                    { label: 'Allocated', icon: 'fa-key', done: app.status === 'Allocated', active: false, disabled: isRejected }
-                ];
-
-                let timelineHtml = '<div class="step-timeline">';
-                steps.forEach((s, i) => {
-                    let cls = '';
-                    if (isRejected && i === 1) cls = 'rejected';
-                    else if (s.done) cls = 'done';
-                    else if (s.active) cls = 'active';
-                    else if (s.disabled) cls = 'disabled opacity-50';
-
-                    let iconHtml = cls.includes('done') ? '<i class="fa fa-check"></i>' : `<i class="fa ${s.icon}"></i>`;
-                    if (isRejected && i === 1) iconHtml = '<i class="fa fa-times text-white"></i>';
-
-                    timelineHtml += `
-                        <div class="step-item ${cls}">
-                            <div class="step-icon shadow-sm" style="${isRejected && i === 1 ? 'background:#dc3545;' : ''}">${iconHtml}</div>
-                            <div class="step-label">${s.label}</div>
-                        </div>`;
-                });
-                timelineHtml += '</div>';
-
-
-                let paymentButtonHtml = '';
-                if (app.status === 'Approved - Awaiting Payment') {
-                    paymentButtonHtml = `
-                        <div class="mt-4 bg-success bg-opacity-10 p-3 rounded-3 border border-success border-opacity-25 d-flex justify-content-between align-items-center">
-                            <div>
-                                <h6 class="fw-bold text-success mb-1">Action Required</h6>
-                                <p class="text-success mb-0 small">Please pay â‚¹1000 down payment to secure this room.</p>
+            applications.forEach(app => {
+                const statusColor = getStatusColor(app.status || "Pending Review");
+                const card = `
+                    <div class="col-md-6 col-xl-4">
+                        <div class="application-card h-100 p-4">
+                            <div class="d-flex justify-content-between align-items-start mb-4">
+                                <span class="status-badge" style="background: ${statusColor}22; color: ${statusColor}; outline: 1px solid ${statusColor}44">
+                                    ${app.status || "Pending Review"}
+                                </span>
+                                <small class="text-secondary"><i class="far fa-calendar-alt me-2"></i> ${app.date}</small>
                             </div>
-                            <button class="btn btn-success fw-bold rounded-pill shadow-sm" onclick="openPayment(${app.id})">Pay â‚¹1000</button>
-                        </div>
-                    `;
-                }
-
-                html += `
-                    <div class="card shadow-sm border-0 mb-4" style="border-radius:16px;">
-                        <div class="card-body p-4">
-                            <div class="d-flex justify-content-between align-items-start mb-3">
-                                <div>
-                                    <h4 class="fw-bold mb-1">${app.roomType || 'Room Application'}</h4>
-                                    <p class="text-muted mb-0"><i class="fa fa-hashtag me-1"></i> Application #${app.id} &bull; <i class="fa fa-calendar me-1"></i> ${app.date}</p>
+                            
+                            <h4 class="fw-bold mb-3">${app.roomType} Room</h4>
+                            
+                            <div class="d-flex flex-column gap-2 mb-4">
+                                <div class="d-flex align-items-center gap-2 text-secondary">
+                                    <i class="fas fa-door-closed w-25px"></i>
+                                    <span>Room #${app.roomNumber}</span>
                                 </div>
-                                <span class="badge ${badgeClass} shadow-sm">${app.status}</span>
+                                <div class="d-flex align-items-center gap-2 text-secondary">
+                                    <i class="fas fa-hourglass-half w-25px"></i>
+                                    <span>${app.termMonths} Months Stay</span>
+                                </div>
+                                <div class="d-flex align-items-center gap-2 text-secondary">
+                                    <i class="fas fa-rupee-sign w-25px"></i>
+                                    <span>Monthly: ₹${app.monthlyRent.toLocaleString()}</span>
+                                </div>
                             </div>
 
-                            ${timelineHtml}
+                            <hr class="border-secondary opacity-10 my-4">
 
-                            <hr>
-                            <div class="row">
-                                <div class="col-md-3">
-                                    <p class="text-muted small mb-1">Room Number</p>
-                                    <h6 class="fw-bold">${app.roomNumber}</h6>
-                                </div>
-                                <div class="col-md-3">
-                                    <p class="text-muted small mb-1">Monthly Cost</p>
-                                    <h6 class="fw-bold">â‚¹${app.totalPrice}</h6>
-                                </div>
-                                <div class="col-md-6">
-                                    <p class="text-muted small mb-1">Included Facilities</p>
-                                    <h6 class="fw-bold">${app.facilities || 'None'}</h6>
-                                </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="text-secondary small">Total Due</div>
+                                <div class="h4 mb-0 fw-bold text-white">₹${app.totalAmount.toLocaleString()}</div>
                             </div>
-                            ${paymentButtonHtml}
                         </div>
                     </div>
                 `;
-            });
-            container.innerHTML = html;
-        }
-
-        let _selectedUpiApp = 'gpay';
-        let _selectedBank = '';
-
-        function openPayment(appId) {
-            document.getElementById('payAppId').value = appId;
-            selectMethod('upi', document.querySelector('.pay-method-btn'));
-            let modal = new bootstrap.Modal(document.getElementById('paymentModal'));
-            modal.show();
-        }
-
-        function selectMethod(method, btn) {
-            document.getElementById('selectedMethod').value = method.toUpperCase();
-            // Update button styles
-            document.querySelectorAll('.pay-method-btn').forEach(b => {
-                b.style.border = '2px solid #dee2e6';
-                b.style.background = '#fff';
-                b.style.color = '#555';
-            });
-            btn.style.border = '2px solid #0d6efd';
-            btn.style.background = '#e8f0fe';
-            btn.style.color = '#0d6efd';
-            // Show correct panel
-            ['upi', 'razorpay', 'card', 'netbanking'].forEach(p => {
-                document.getElementById('panel_' + p).style.display = p === method ? '' : 'none';
+                row.innerHTML += card;
             });
         }
 
-        function selectUpiApp(app, el) {
-            _selectedUpiApp = app;
-            document.querySelectorAll('.upi-app-card').forEach(c => {
-                c.style.border = '2px solid #dee2e6';
-                c.style.background = '#fff';
-            });
-            el.style.border = '2px solid #0d6efd';
-            el.style.background = '#e8f0fe';
-        }
-
-        function selectBank(el, bank) {
-            _selectedBank = bank;
-            document.querySelectorAll('.bank-tile').forEach(b => {
-                b.style.border = '2px solid #dee2e6';
-                b.style.background = '#fff';
-            });
-            el.style.border = '2px solid #0d6efd';
-            el.style.background = '#e8f0fe';
-        }
-
-        function formatCard(el) {
-            let v = el.value.replace(/\D/g, '').substring(0, 16);
-            el.value = v.replace(/(\d{4})/g, '$1 ').trim();
-        }
-
-        function formatExpiry(el) {
-            let v = el.value.replace(/\D/g, '').substring(0, 4);
-            if (v.length >= 2) v = v.substring(0, 2) + ' / ' + v.substring(2);
-            el.value = v;
-        }
-
-        async function processPayment() {
-            let appId = document.getElementById('payAppId').value;
-            let app = applications.find(a => a.id == appId);
-            if (!app) return;
-
-            let btn = document.getElementById('checkoutBtn');
-            btn.innerHTML = `<i class="fa fa-spinner fa-spin me-2"></i> Creating order...`;
-            btn.disabled = true;
-
-            try {
-                // Step 1: Create Razorpay order on our backend
-                const orderRes = await fetch(`${API_URL}/razorpay/create-order`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ amount: 1000, receipt: 'rcpt_' + app.id })
-                });
-                const { order, key_id, demo } = await orderRes.json();
-
-                btn.innerHTML = `<i class="fa fa-lock me-2"></i>Pay â‚¹1,000 Securely`;
-                btn.disabled = false;
-
-                if (demo) {
-                    // â”€â”€ DEMO MODE (no Razorpay keys set) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-                    // Simulate the payment success directly
-                    Swal.fire({
-                        icon: 'info',
-                        title: 'ðŸ§ª Demo Mode',
-                        html: `<p>Razorpay keys not configured yet.</p><p style="font-size:0.9rem;color:#666;">For real UPI/Card/Bank payments, add your keys in <code>.env</code>.<br>Simulating payment now...</p>`,
-                        confirmButtonText: 'Simulate Payment âœ“',
-                        confirmButtonColor: '#198754'
-                    }).then(async r => {
-                        if (r.isConfirmed) {
-                            await recordPayment(app, 'DEMO', order.id, 'demo_pay_' + Date.now());
-                        }
-                    });
-                    return;
-                }
-
-                // Step 2: Close our modal and open Razorpay's official popup
-                const bsModal = bootstrap.Modal.getInstance(document.getElementById('paymentModal'));
-                if (bsModal) bsModal.hide();
-
-                const options = {
-                    key: key_id,
-                    amount: order.amount,          // in paise
-                    currency: order.currency || 'INR',
-                    name: 'HostelSphere',
-                    description: 'Room Down Payment â€“ ' + (app.roomType || app.roomNumber),
-                    image: '../img/logo.jpg',
-                    order_id: order.id,
-                    prefill: {
-                        name: currentUserId,
-                        email: currentUserId + '@gmail.com',
-                        contact: ''
-                    },
-                    theme: { color: '#198754' },
-                    method: {                      // enable all payment methods
-                        upi: true,
-                        card: true,
-                        netbanking: true,
-                        wallet: true,
-                        emi: false
-                    },
-                    handler: async function (response) {
-                        // Step 3: Verify payment on backend
-                        try {
-                            const verifyRes = await fetch(`${API_URL}/razorpay/verify`, {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({
-                                    order_id: response.razorpay_order_id,
-                                    payment_id: response.razorpay_payment_id,
-                                    signature: response.razorpay_signature
-                                })
-                            });
-                            const verifyData = await verifyRes.json();
-                            if (verifyData.verified) {
-                                await recordPayment(app, 'Razorpay', response.razorpay_order_id, response.razorpay_payment_id);
-                            } else {
-                                Swal.fire('Error', 'Payment verification failed. Contact support.', 'error');
-                            }
-                        } catch (e) {
-                            Swal.fire('Error', 'Could not verify payment. Please contact support.', 'error');
-                        }
-                    },
-                    modal: {
-                        ondismiss: function () {
-                            Swal.fire({
-                                icon: 'warning',
-                                title: 'Payment Cancelled',
-                                text: 'You cancelled the payment. Your application is still approved â€” you can pay anytime.',
-                                confirmButtonColor: '#198754'
-                            });
-                        }
-                    }
-                };
-
-                const rzp = new Razorpay(options);
-                rzp.on('payment.failed', function (response) {
-                    Swal.fire('Payment Failed', response.error.description || 'Something went wrong.', 'error');
-                });
-                rzp.open();
-
-            } catch (e) {
-                console.error('Payment error:', e);
-                Swal.fire('Error', 'Could not initiate payment. Please try again.', 'error');
-                let btn = document.getElementById('checkoutBtn');
-                if (btn) { btn.innerHTML = `<i class="fa fa-lock me-2"></i>Pay â‚¹1,000 Securely`; btn.disabled = false; }
-            }
-        }
-
-        // â”€â”€ Record payment after successful Razorpay transaction â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-        async function recordPayment(app, method, orderId, paymentId) {
-            try {
-                // 1. Update application status â†’ Allocated
-                app.status = "Allocated";
-                const appUpdateRes = await fetch(`${API_URL}/data/applications/${app.id}`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(app)
-                });
-                
-                const appUpdateData = await appUpdateRes.json();
-                if (!appUpdateData.success) {
-                    throw new Error(appUpdateData.message || "Failed to update application status");
-                }
-                
-                // Invalidate frontend cache immediately
-                if (typeof invalidateCache === 'function') {
-                    invalidateCache('applications');
-                    invalidateCache('rooms'); // Also refresh rooms since occupancy changed
-                } else {
-                    sessionStorage.removeItem('applications');
-                    sessionStorage.removeItem('rooms');
-                }
-
-                // 2. Record payment
-                await fetch(`${API_URL}/data/payments`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        student: currentUserId,
-                        room: app.roomNumber,
-                        amount: 1000,
-                        method: method,
-                        orderId: orderId,
-                        paymentId: paymentId,
-                        receipt: 'RCPT-' + Date.now(),
-                        date: new Date().toLocaleDateString(),
-                        status: 'Paid',
-                        type: 'Down Payment'
-                    })
-                });
-
-                // 3. Update student record
-                const studentListRes = await fetch(`${API_URL}/data/students`);
-                const studentsList = await studentListRes.json();
-                let myStudentRec = studentsList.find(s => s.name === currentUserId || s.email === app.studentName);
-                if (myStudentRec) {
-                    myStudentRec.room = app.roomNumber;
-                    await fetch(`${API_URL}/data/students/${myStudentRec.id}`, {
-                        method: 'PUT',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(myStudentRec)
-                    });
-                } else {
-                    await fetch(`${API_URL}/data/students`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            name: currentUserId,
-                            email: currentUserId + '@gmail.com',
-                            phone: app.phone,
-                            course: app.course,
-                            room: app.roomNumber,
-                            gender: app.roomNumber.startsWith('G') ? 'Female' : 'Male',
-                            guardianName: app.guardian,
-                            address: 'See App',
-                            status: 'Active'
-                        })
-                    });
-                }
-
-                // 4. Update room occupancy
-                let roomObj = rooms.find(r => r.id == app.roomId);
-                if (roomObj) {
-                    roomObj.occupied = (roomObj.occupied || 0) + 1;
-                    if (roomObj.occupied >= roomObj.capacity) roomObj.status = 'Occupied';
-                    await fetch(`${API_URL}/data/rooms/${roomObj.id}`, {
-                        method: 'PUT',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(roomObj)
-                    });
-                }
-
-                Swal.fire({
-                    icon: 'success',
-                    title: 'ðŸŽ‰ Payment Successful!',
-                    html: `<p>Room <strong>${app.roomNumber}</strong> is now officially allocated to you.</p><p style="color:#888;font-size:0.9rem;">Payment ID: ${paymentId}</p>`,
-                    confirmButtonColor: '#198754'
-                }).then(() => window.location.reload());
-
-            } catch (e) {
-                console.error('Record payment error:', e);
-                Swal.fire('Error', 'Payment was received but recording failed. Please contact admin with Payment ID: ' + paymentId, 'error');
+        function getStatusColor(status) {
+            switch (status.toLowerCase()) {
+                case 'approved': return '#20c997';
+                case 'rejected': return '#ff4b5c';
+                case 'waitlisted': return '#ffca2c';
+                case 'paid': return '#0dcaf0';
+                default: return '#6c757d';
             }
         }
     </script>
-    <!-- Razorpay Official Checkout SDK -->
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script src="../js/bootstrap.bundle.js"></script>
     <script src="../js/student_notifications.js"></script>
 </body>
-
 </html>
