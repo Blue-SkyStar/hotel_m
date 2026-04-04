@@ -19,6 +19,7 @@
 
     <!-- JS -->
     <script src="../js/sweetalert.js"></script>
+    <script src="../js/constants.js"></script>
     <script src="../js/storage.js"></script>
 
 
@@ -175,7 +176,7 @@
             let awaitingCount = 0;
             let rejectedCount = 0;
             try {
-                const res = await fetch(`${API_URL}/data/applications`);
+                const res = await fetch(`${API_URL}/data/applications`, { credentials: 'include' });
                 const apps = await res.json();
                 allocatedCount = apps.filter(a => a.status === 'Allocated').length;
                 pendingCount = apps.filter(a => a.status === 'Pending Review').length;
@@ -191,7 +192,7 @@
 
             
             try {
-                const res = await fetch(`${API_URL}/finance/summary`);
+                const res = await fetch(`${API_URL}/finance/summary`, { credentials: 'include' });
                 const fin = await res.json();
                 document.getElementById("dash_fees").textContent = Math.round(fin.netProfit || 0).toLocaleString('en-IN');
                 if (fin.moveOutRequests && fin.moveOutRequests.length > 0) {
@@ -210,7 +211,6 @@
                 recent.forEach(student => {
                     let statusClass = student.status === "Active" ? "bg-success text-success border-success" : "bg-warning text-warning border-warning";
                     const isLeaving = applications.some(a => a.student === student.name && a.status === "Refund Pending");
-                    let statusClass = student.status === "Active" ? "bg-success text-success border-success" : "bg-warning text-warning border-warning";
                     if (isLeaving) statusClass = "bg-danger text-danger border-danger";
                     
                     table.innerHTML += `

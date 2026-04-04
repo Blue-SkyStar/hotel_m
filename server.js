@@ -121,14 +121,20 @@ app.get('/api/data/:key', verifyToken, async (req, res) => {
     try {
         const { rows } = await pool.query(`SELECT * FROM ${key}`);
         const parsed = rows.map(r => {
-            if (typeof r.idProof === 'string' && r.idProof.startsWith('{')) r.idProof = JSON.parse(r.idProof);
-            if (typeof r.photo === 'string' && r.photo.startsWith('{')) r.photo = JSON.parse(r.photo);
-            if (typeof r.facilities === 'string' && r.facilities.startsWith('[')) r.facilities = JSON.parse(r.facilities);
+            if (r.idProof && typeof r.idProof === 'string' && r.idProof.startsWith('{')) {
+                try { r.idProof = JSON.parse(r.idProof); } catch(e){}
+            }
+            if (r.photo && typeof r.photo === 'string' && r.photo.startsWith('{')) {
+                try { r.photo = JSON.parse(r.photo); } catch(e){}
+            }
+            if (r.facilities && typeof r.facilities === 'string' && r.facilities.startsWith('[')) {
+                try { r.facilities = JSON.parse(r.facilities); } catch(e){}
+            }
             return r;
         });
         res.json(parsed);
     } catch (e) { 
-        console.error(`Error fetching ${key}:`, e.message);
+        console.error(`Error fetching ${key}:`, e.stack);
         res.status(500).json([]); 
     }
 });
