@@ -226,8 +226,8 @@
                     document.getElementById("signupForm").reset();
                 } else {
                     if (typeof Swal !== 'undefined') {
-                        Swal.fire({ icon: 'error', title: 'Error', text: data.message });
-                    } else { alert(data.message); }
+                        Swal.fire({ icon: 'error', title: 'Registration Failed', text: data.message });
+                    } else { Swal.fire({ icon: 'error', title: 'Registration Failed', text: data.message }); }
                 }
             } catch (err) {
                 console.error("Signup error:", err);

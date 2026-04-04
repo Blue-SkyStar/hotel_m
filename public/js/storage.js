@@ -74,12 +74,19 @@ async function fetchWithCache(key) {
         return JSON.parse(cached);
     }
     
-    // If no cache, return dummy data instantly to avoid empty UI, while fetch is working
+    try {
+        const data = await bgFetch;
+        if (data && data.length > 0) return data;
+    } catch (e) {
+        console.warn("Failed to fetch from API, using fallback data.");
+    }
+    
+    // If API fails or returns no data, provide fallback
     if (FALLBACK_DATA[key]) {
         return FALLBACK_DATA[key];
     }
-
-    return await bgFetch;
+    
+    return [];
 }
 
 function initData() {
