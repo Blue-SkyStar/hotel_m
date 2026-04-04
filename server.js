@@ -120,7 +120,15 @@ app.get('/api/data/:key', verifyToken, async (req, res) => {
     if (!pool) return res.status(500).json({ success: false, message: 'Database not connected' });
     try {
         const { rows } = await pool.query(`SELECT * FROM ${key}`);
+        
+        // Optimisation for Vercel Payload Limits (4.5MB)
+        // We strip heavy binary/base64 strings from list views to prevent 500 errors.
         const parsed = rows.map(r => {
+            if (req.params.key === 'applications') {
+                r.idProof = null; // Exclude heavy data from lists
+                r.photo = null;   // Exclude heavy data from lists
+            }
+            
             if (r.idProof && typeof r.idProof === 'string' && r.idProof.startsWith('{')) {
                 try { r.idProof = JSON.parse(r.idProof); } catch(e){}
             }

@@ -38,9 +38,24 @@
     </style>
 </head>
 <body class="bg-dark text-white">
-    <div id="sidebar-placeholder"></div>
-
-    <div class="main-content p-4">
+    <div class="container-fluid" style="margin-top:80px">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-2 bg-dark text-white p-3 sidebar-nav" style="min-height:100vh">
+                <h5 class="text-center mt-2 mb-3 fw-bold">HOSTEL MENU</h5>
+                <hr>
+                <ul class="nav flex-column">
+                    <li class="nav-item mb-2"><a href="student_dashboard.html" class="nav-link text-white"><i class="fa fa-home me-2"></i> Dashboard</a></li>
+                    <li class="nav-item mb-3"><a href="student_profile.html" class="nav-link text-white"><i class="fa fa-user me-2"></i> Profile</a></li>
+                    <li class="nav-item mb-3"><a href="student_room.html" class="nav-link text-white"><i class="fa fa-bed me-2"></i> My Room</a></li>
+                    <li class="nav-item mb-3"><a href="student_room_details.html" class="nav-link text-white"><i class="fa fa-building me-2"></i> Room Details</a></li>
+                    <li class="nav-item mb-3"><a href="student_application_status.html" class="nav-link text-white active fw-bold" style="background:rgba(255,255,255,0.1); border-radius:8px;"><i class="fa fa-file-signature me-2"></i> My Applications</a></li>
+                    <li class="nav-item mb-3"><a href="student_payments.html" class="nav-link text-white"><i class="fa fa-credit-card me-2"></i> Payments</a></li>
+                    <li class="nav-item mb-3"><a href="student_complaints.html" class="nav-link text-white"><i class="fa fa-exclamation-circle me-2"></i> Complaints</a></li>
+                </ul>
+            </div>
+            
+            <div class="col-md-10 p-4">
         <div class="container-fluid">
             <!-- Header section -->
             <div class="d-flex justify-content-between align-items-center mb-5">
@@ -78,13 +93,6 @@
         let applications = [];
 
         window.onload = async function() {
-            // Wait for sidebar
-            await fetch("student_sidebar.html").then(res => res.text()).then(html => {
-                document.getElementById("sidebar-placeholder").innerHTML = html;
-                const scripts = document.getElementById("sidebar-placeholder").getElementsByTagName('script');
-                for (let script of scripts) { eval(script.innerText); }
-            });
-
             await initData();
             await loadApplications();
 
@@ -218,5 +226,8 @@
     </script>
     <script src="../js/bootstrap.bundle.js"></script>
     <script src="../js/student_notifications.js"></script>
+            </div> <!-- col-md-10 -->
+        </div> <!-- row -->
+    </div> <!-- container-fluid -->
 </body>
 </html>
